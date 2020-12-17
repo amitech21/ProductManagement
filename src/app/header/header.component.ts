@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducer'
 import { map } from 'rxjs/operators';
 import * as AuthActions from '../auth/store/auth.actions';
-import * as RecipeActions from '../recipes/store/recipe.actions';
+import * as ProductActions from '../products/store/product.actions';
 
 @Component({
     selector: 'app-header',
@@ -39,13 +39,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     onSaveData() {
-        //this.dataStorageService.storeRecipes();
-        this.store.dispatch(new RecipeActions.StoreRecipes() );
+        //this.dataStorageService.storeProducts();
+        this.store.dispatch(new ProductActions.StoreProducts() );
     }
 
     onFetchData() {
-        // this.dataStorageService.fetchRecipes().subscribe();
-        this.store.dispatch(new RecipeActions.FetchRecipes() );
+        // this.dataStorageService.fetchProducts().subscribe();
+        //this.store.dispatch(new ProductActions.FetchProducts() );
     }
 
     onLogout() {

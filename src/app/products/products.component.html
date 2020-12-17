@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-md-7">
+        <!-- <app-product-detail
+        *ngIf="selectedProduct; else infoText"
+        [product]="selectedProduct"></app-product-detail>
+        <ng-template #infoText>
+            <p>Please select product !</p>
+        </ng-template> -->
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+<br>
+<br>
+
+<div class="row">
+    <div class="col-md-5">
+        <app-product-list></app-product-list>
+    </div>
+</div>

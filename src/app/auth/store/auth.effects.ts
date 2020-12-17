@@ -204,7 +204,7 @@ export class AuthEffects {
                 console.log("AuthenticateSuccess called !!");
                 if(authSuccessAction.payload.redirect){
                     this.appService.setUserLoggedIn(true);
-                    this.router.navigate(['/recipes']);
+                    this.router.navigate(['/products']);
                 }
                     
             })
@@ -262,6 +262,8 @@ export class AuthEffects {
                 this.authService.clearLogoutTimer();
                 this.router.navigate(['/']);
                 localStorage.removeItem('userData');
+                localStorage.removeItem('products');
+                localStorage.removeItem('products_visibility');
             })
         )
 

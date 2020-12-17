@@ -12,7 +12,7 @@ import * as fromApp from './store/app.reducer'
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth/store/auth.effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
-import { RecipeEffects } from './recipes/store/recipe.effects';
+import { ProductEffects } from './products/store/product.effects';
 
 import { SocialLoginModule, SocialAuthServiceConfig } from "angularx-social-login";
 import { GoogleLoginProvider} from "angularx-social-login";
@@ -20,6 +20,7 @@ import { GoogleLoginProvider} from "angularx-social-login";
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { MomentModule } from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
+import { environment } from '../environments/environment'
 
 
 @NgModule({
@@ -34,7 +35,7 @@ import { MomentModule } from 'angular2-moment'; // optional, provides moment-sty
     HttpClientModule,
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects , RecipeEffects]),
+    EffectsModule.forRoot([AuthEffects , ProductEffects]),
     StoreRouterConnectingModule.forRoot(),
     SharedModule,
     CoreModule,
@@ -51,9 +52,7 @@ import { MomentModule } from 'angular2-moment'; // optional, provides moment-sty
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              '443817139519-5bjd35c0robn5k8c65g643gb9qe4lmoo.apps.googleusercontent.com'
-            )
+            provider: new GoogleLoginProvider(environment.googleID)
           }
         ]
       } as SocialAuthServiceConfig,
