@@ -53,7 +53,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     {
       //this.productService.updateProduct(this.id, this.productForm.value);
       this.store.dispatch(new ProductActions.UpdateProduct({
-        index: this.id,
+        index: this.productForm.value['id'],
         newProduct: this.productForm.value
       }));
     }
@@ -101,6 +101,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       .pipe(map(productsState => {
         return productsState.products.find((product, index) => {
           return index === this.id;
+          //return product.id === this.id;
         });
       }))
       .subscribe(product => {

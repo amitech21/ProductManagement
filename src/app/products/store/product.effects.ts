@@ -14,6 +14,7 @@ import { Product_add } from '../product_add.model';
 export class ProductEffects {
     product:Product;
     products:Product[];
+    updated_products:Product[] = [];
 
     @Effect()
     fetchProducts = this.actions$.pipe(
@@ -89,10 +90,19 @@ export class ProductEffects {
     @Effect({dispatch: false})
     updateProduct = this.actions$.pipe(
         ofType(ProductsActions.UPDATE_PRODUCT),
-        
-       
-        switchMap((productData: ProductsActions.AddProduct) => {
-            //console.log(productData.payload);
+        switchMap((productData: ProductsActions.UpdateProduct) => {
+            //console.log(productData.payload.newProduct);
+
+            this.products = JSON.parse(localStorage.getItem('products'));
+            this.products.filter((product, index)=> {
+                //return product.id !== productData.payload.index;
+                
+                if(product.id === productData.payload.index)
+                    this.updated_products.push(productData.payload.newProduct);
+                else 
+                    this.updated_products.push(product);
+            })
+            localStorage.setItem('products', JSON.stringify(this.updated_products));
 
             const headerDict = {
                 'Content-Type': 'application/json',
@@ -104,8 +114,8 @@ export class ProductEffects {
               };
 
             return this.http.put(
-                environment.webAppEndPoint + '/products/update/' +  productData.payload.id, 
-                productData.payload , 
+                environment.webAppEndPoint + '/products/update/' +  productData.payload.index.toString(), 
+                productData.payload.newProduct , 
                 requestOptions)
                 .pipe(
                     tap(response => {
@@ -140,24 +150,8 @@ export class ProductEffects {
                     )
             );
         })
-        // mapTo((payload: ProductsActions.DeleteProduct) => {
-        //     return new ProductsActions.DeleteProduct(payload.payload);
-        // })
     );
 
-    // @Effect()
-    // deleteProduct = this.actions$.pipe(
-    //     ofType(ProductsActions.DELETE_PRODUCT),
-    //     //map( action => action.payload ),
-    //     tap((payload: ProductsActions.DeleteProduct) => {
-    //         console.log(payload.payload);
-    //         this.http.delete(
-    //             environment.webAppEndPoint + '/products/delete/' + payload.payload.toString() );
-    //     }),
-    //     mapTo((payload: ProductsActions.DeleteProduct) => {
-    //         return new ProductsActions.DeleteProduct(payload.payload);
-    //     })
-    // );
 
     constructor(
         private actions$: Actions,
