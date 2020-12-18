@@ -4,8 +4,11 @@
     routerlinkActive="active"
     class="list-group-item clearfix">
             <div class="pull-left">
-                <h4 class="list-group-item-heading">Product Name : {{ product.name }}</h4>
+                <h4 class="list-group-item-heading">ID : P-{{ product.id }}</h4>
+                <p class="list-group-item-text">Name : {{ product.name }}</p>
                 <p class="list-group-item-text">Description : {{ product.description }}</p>
+                <p class="list-group-item-text">Price : {{ product.price }}</p>
+
             </div>
             <span class="pull-right">
                 <img src="{{ product.imagePath }}" 

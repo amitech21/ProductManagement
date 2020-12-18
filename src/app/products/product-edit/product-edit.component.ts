@@ -88,11 +88,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   // }
 
   private initForm(){
+    let productId = 0;
     let productName = '';
     let productDescription = '';
     let productImagePath = '';
-    let productPrice= '';
-    let productAmount = '';
+    let productPrice= 0;
 
     if(this.editMode){
       //const product = this.productService.getProduct(this.id);
@@ -104,9 +104,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         });
       }))
       .subscribe(product => {
-            productName = product.name;
+          productId = product.id;
+          productName = product.name;
           productImagePath = product.imagePath;
           productDescription = product.description;
+          productPrice = product.price;
           // if(product['ingredients']) {
           //   for (let ingredient of product.ingredients) {
           //     productIngredients.push(
@@ -126,11 +128,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     }
 
     this.productForm = new FormGroup({
+      'id' : new FormControl(productId),
       'name' : new FormControl(productName, Validators.required),
       'description' : new FormControl(productDescription, Validators.required),
       'imagePath' : new FormControl(productImagePath, Validators.required),
       'price' : new FormControl(productPrice, Validators.required),
-      'amount' : new FormControl(productAmount, Validators.required),
 
     });
 

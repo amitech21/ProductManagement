@@ -78,7 +78,7 @@ productsVisibility: boolean = true;
     this.store.dispatch(new ProductActions.SetVisibility(false) );
   }
 
-  onSelect(){
+  onNew(){
     this.productsVisibility = false;
     this.store.dispatch(new ProductActions.SetVisibility(false) );
     this.router.navigate(['new'] , {relativeTo: this.route} );

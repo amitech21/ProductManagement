@@ -67,9 +67,14 @@ export class ProductDetailComponent implements OnInit {
 
   onDeleteProduct(){
     //this.productService.deleteProduct(this.id);
-    this.store.dispatch(new ProductActions.DeleteProduct(this.id));
+    this.store.dispatch(new ProductActions.DeleteProduct(this.product.id));
+    //this.store.dispatch(new ProductActions.SetProducts(JSON.parse(localStorage.getItem('products'))));
     this.router.navigate(['../'], {relativeTo: this.route });
 
+  }
+
+  onCancelEditing(){
+    this.router.navigate(['../'], {relativeTo: this.route });
   }
 
 }

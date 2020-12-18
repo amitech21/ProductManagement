@@ -40,9 +40,10 @@ export function productReducer(state = initialState , action: ProductsActions.Pr
         case ProductsActions.DELETE_PRODUCT:
             return {
                 ...state,
-                products: state.products.filter((product, index)=> {
-                    return index !== action.payload;
-                })
+                products: []
+                // products: state.products.filter((product, index)=> {
+                //     return product.id !== action.payload;
+                // })
             };
 
         case ProductsActions.SET_VISIBILITY:

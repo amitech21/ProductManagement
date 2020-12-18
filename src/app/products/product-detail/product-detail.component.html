@@ -16,6 +16,13 @@
 
 <div class="row">
     <div class="col-xs-12">
+        <button class="btn btn-danger"
+        (click)="onCancelEditing()">Cancel Editing</button>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-xs-12">
         <div 
         class="btn-group"
          appDropdown>
@@ -32,19 +39,19 @@
     </div>
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-xs-12">
         {{ product.description }}
     </div>
-</div>
+</div> -->
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-xs-12">
-        <!-- <ul class="list-group">
+         <ul class="list-group">
             <li class="list-group-item"
                 *ngFor="let ingredient_in of product.ingredients">
                 {{ ingredient_in.name }} - {{ ingredient_in.amount }}
             </li>
-        </ul> -->
+        </ul>
     </div>
-</div>
+</div> -->

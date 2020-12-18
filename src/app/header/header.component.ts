@@ -33,18 +33,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     collapsed = true;
     @Output('featureSelected') featureSelected = new EventEmitter<string>();
 
-    onSelect(featureSelected: string){
-        //this.featureSelected = featureSelected;
-        this.featureSelected.emit(featureSelected);
-    }
+    // onSelect(featureSelected: string){
+    //     //this.featureSelected = featureSelected;
+    //     this.featureSelected.emit(featureSelected);
+    // }
 
     onSaveData() {
-        //this.dataStorageService.storeProducts();
-        this.store.dispatch(new ProductActions.StoreProducts() );
+        //this.store.dispatch(new ProductActions.StoreProducts() );
     }
 
     onFetchData() {
-        // this.dataStorageService.fetchProducts().subscribe();
         //this.store.dispatch(new ProductActions.FetchProducts() );
     }
 
