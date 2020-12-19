@@ -8,7 +8,10 @@ export interface State {
 
 const initialState: State = { products: [] , visibility: true };
 
+
 export function productReducer(state = initialState , action: ProductsActions.ProductsActions){
+
+    let updatedProducts: Product[] = [];
 
     switch(action.type) {
         case ProductsActions.SET_PRODUCTS:
@@ -24,26 +27,38 @@ export function productReducer(state = initialState , action: ProductsActions.Pr
             };
         
         case ProductsActions.UPDATE_PRODUCT:
-            const updatedProduct = {
-                ...state.products[action.payload.index],
-                ...action.payload.newProduct
-            };
-
-            const updatedProducts = [...state.products];
-            updatedProducts[action.payload.index] = updatedProduct;
-
+            state.products.filter((product, index)=> {
+                if(product.id !== action.payload.newProduct.id)
+                    updatedProducts.push(action.payload.newProduct);
+                else
+                    updatedProducts.push(product);
+            })
             return {
                 ...state,
+                //products: []
                 products: updatedProducts
             };
+
+            // const updatedProduct = {
+            //     ...state.products[action.payload.index],
+            //     ...action.payload.newProduct
+            // };
+
+            // const updatedProducts = [...state.products];
+            // updatedProducts[action.payload.index] = updatedProduct;
+
+            // return {
+            //     ...state,
+            //     products: updatedProducts
+            // };
 
         case ProductsActions.DELETE_PRODUCT:
             return {
                 ...state,
-                products: []
-                // products: state.products.filter((product, index)=> {
-                //     return product.id !== action.payload;
-                // })
+                //products: []
+                products: state.products.filter((product, index)=> {
+                    return product.id !== action.payload;
+                })
             };
 
         case ProductsActions.SET_VISIBILITY:

@@ -5,8 +5,6 @@ import * as fromApp from '../../store/app.reducer'
 import { Store } from '@ngrx/store';
 import { map, switchMap } from 'rxjs/operators';
 import * as ProductActions from '../store/product.actions';
-import * as ShoppingListActions from '../../shopping-list/store/shopping-list.actions';
-import * as ProductList from '../product-list/product-list.component';
 
 @Component({
   selector: 'app-product-detail',

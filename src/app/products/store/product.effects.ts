@@ -119,8 +119,8 @@ export class ProductEffects {
                 requestOptions)
                 .pipe(
                     tap(response => {
-                        console.log("http tap in update");
-                        console.log(response);
+                        //console.log("http tap in update");
+                        //console.log(response);
                     }),
                     map(()=>{
                         //console.log("http map");

@@ -29,7 +29,7 @@ export class ProductsResolverService implements Resolve<Product[]> {
                 }),
                 switchMap(products => {
                     if(products.length == 0){
-                        this.store.dispatch(new ProductActions.FetchProducts() );
+                        //this.store.dispatch(new ProductActions.FetchProducts() );
                         return this.actions$.pipe(
                             ofType(ProductActions.SET_PRODUCTS),  
                             take(1)

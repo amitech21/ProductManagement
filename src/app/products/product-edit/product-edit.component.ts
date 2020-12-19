@@ -57,13 +57,17 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         index: this.id,
         newProduct: this.productForm.value
       }));
-      //this.router.navigate(['../'], {relativeTo: this.route });
+      console.log(this.route.toString());
+      this.router.navigate(['../'], {relativeTo: this.route });
     }
     else{
       //this.productService.addProduct(this.productForm.value);
       this.store.dispatch(new ProductActions.AddProduct(this.productForm.value));
+      console.log(this.route.toString());
+      this.router.navigate(['../'], {relativeTo: this.route });
     }
-    this.router.navigate(['../'], {relativeTo: this.route });
+    // console.log(this.route.toString());
+    // this.router.navigate(['../'], {relativeTo: this.route });
   }
 
   // onAddIngredient() {
