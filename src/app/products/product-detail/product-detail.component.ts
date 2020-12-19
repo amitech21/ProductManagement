@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { map, switchMap } from 'rxjs/operators';
 import * as ProductActions from '../store/product.actions';
 import * as ShoppingListActions from '../../shopping-list/store/shopping-list.actions';
+import * as ProductList from '../product-list/product-list.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -19,7 +20,8 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private router: Router,
     private route:ActivatedRoute,
-    private store: Store<fromApp.AppState>) {}
+    private store: Store<fromApp.AppState>
+    ) {}
 
   ngOnInit(): void {
     // this.route.params
@@ -29,6 +31,10 @@ export class ProductDetailComponent implements OnInit {
     //       this.recipe = this.recipeService.getProduct(this.id);
     //     }
     //   );
+
+    //this.store.dispatch(new ProductActions.SetVisibility(false));
+    //localStorage.setItem('products_visibility', "false");
+    //this.productListComponent.productsVisibility = false;
 
     this.route.params
       .pipe(

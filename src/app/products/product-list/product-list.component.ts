@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy, Injectable} from '@angular/core';
 
 import { Product } from '../product.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,7 +19,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 subscription: Subscription;
 pre_subscription: Subscription;
 
-productsVisibility: boolean = true;
+public productsVisibility: boolean = true;
 
   products: Product[];
   // products: Product[] = [

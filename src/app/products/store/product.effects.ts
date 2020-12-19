@@ -97,7 +97,7 @@ export class ProductEffects {
             this.products.filter((product, index)=> {
                 //return product.id !== productData.payload.index;
                 
-                if(product.id === productData.payload.index)
+                if(product.id === productData.payload.newProduct.id)
                     this.updated_products.push(productData.payload.newProduct);
                 else 
                     this.updated_products.push(product);
@@ -114,7 +114,7 @@ export class ProductEffects {
               };
 
             return this.http.put(
-                environment.webAppEndPoint + '/products/update/' +  productData.payload.index.toString(), 
+                environment.webAppEndPoint + '/products/update/' +  productData.payload.newProduct.id.toString(), 
                 productData.payload.newProduct , 
                 requestOptions)
                 .pipe(
