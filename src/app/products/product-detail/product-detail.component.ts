@@ -44,13 +44,19 @@ export class ProductDetailComponent implements OnInit {
           return this.store.select('products');
         }),
         map(productsState => {
-          return productsState.products.find((product, index) => {
-            return index === this.id;
-          });
+          // return productsState.products.find((product, index) => {
+          //   return index === this.id;
+          // });
+          return productsState.products.filter((product, index)=> {
+            if(this.id === product.id)
+              {
+                return product; 
+              }           
+        });
         })
       )
       .subscribe(product =>{
-        this.product = product;
+        this.product = product[0];
       });
 
       

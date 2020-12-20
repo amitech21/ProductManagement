@@ -3,9 +3,10 @@ import {  ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import * as fromApp from '../../store/app.reducer'
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import * as ProductActions from '../store/product.actions'; 
 import { Subscription } from 'rxjs';
+import { Product } from '../product.model';
 
 @Component({
   selector: 'app-product-edit',
@@ -51,23 +52,15 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
     if(this.editMode)
     {
-      //this.productService.updateProduct(this.id, this.productForm.value);
       this.store.dispatch(new ProductActions.UpdateProduct({
-        // index: this.productForm.value['id'],
         index: this.id,
         newProduct: this.productForm.value
       }));
-      console.log(this.route.toString());
-      this.router.navigate(['../'], {relativeTo: this.route });
     }
     else{
-      //this.productService.addProduct(this.productForm.value);
       this.store.dispatch(new ProductActions.AddProduct(this.productForm.value));
-      console.log(this.route.toString());
-      this.router.navigate(['../'], {relativeTo: this.route });
     }
-    // console.log(this.route.toString());
-    // this.router.navigate(['../'], {relativeTo: this.route });
+    this.router.navigate(['../'], {relativeTo: this.route });
   }
 
   // onAddIngredient() {
@@ -106,7 +99,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       this.storeSub = this.store.select('products')
       .pipe(map(productsState => {
         return productsState.products.find((product, index) => {
-          return index === this.id;
+          return product.id === this.id;
           //return product.id === this.id;
         });
       }))

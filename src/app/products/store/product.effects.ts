@@ -82,6 +82,7 @@ export class ProductEffects {
                 tap((res: Product[]) =>{
                     // add product to cache
                     localStorage.setItem('products', JSON.stringify(res));
+                    this.store.dispatch(new ProductsActions.SetProducts(res));
                 } )
             );
         })

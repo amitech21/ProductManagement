@@ -38,7 +38,7 @@ public productsVisibility: boolean = true;
     this.products = JSON.parse(localStorage.getItem('products'));
     //console.log(JSON.parse(localStorage.getItem('products')));
     //this.store.dispatch(new ProductActions.SetProducts(this.products));
-
+    this.productsVisibility = JSON.parse(localStorage.getItem('products_visibility'));
     
 
     // this.subscription = this.productService.productsChanged.subscribe(
@@ -46,13 +46,13 @@ public productsVisibility: boolean = true;
     .select('products')
     .pipe
     (map(productsState => {
-      this.productsVisibility = productsState.visibility;
+      //this.productsVisibility = productsState.visibility;
       return productsState;
     }),
     map(productsState => productsState.products))
     .subscribe(
       (products: Product[]) => {
-        //this.products = products;
+        this.products = products;
         //console.log(this.products);
       }
     );

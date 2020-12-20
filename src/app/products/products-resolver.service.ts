@@ -17,7 +17,7 @@ export class ProductsResolverService implements Resolve<Product[]> {
     ) {}
     
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Product[] | import("rxjs").Observable<Product[]> | Promise<Product[]> {
-        // const products = this.productService.getProducts();
+        //const products_c: Product[] = JSON.parse(localStorage.getItem("products"));
         
         // if (products.length === 0) {
             //return this.dataStorageService.fetchProducts();
@@ -29,13 +29,15 @@ export class ProductsResolverService implements Resolve<Product[]> {
                 }),
                 switchMap(products => {
                     if(products.length == 0){
-                        //this.store.dispatch(new ProductActions.FetchProducts() );
+                        localStorage.removeItem("products");
+                        this.store.dispatch(new ProductActions.FetchProducts() );
                         return this.actions$.pipe(
                             ofType(ProductActions.SET_PRODUCTS),  
                             take(1)
                         );
+                        
                     }else {
-                        return of(products);
+                        return of(products); 
                     }
                 })
             );

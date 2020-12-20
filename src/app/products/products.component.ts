@@ -23,7 +23,9 @@ export class ProductsComponent implements OnInit {
   ngOnInit(): void {
     this.flag = (localStorage.getItem('products_visibility') === "false" ) ? false : true; 
 
-    this.store.dispatch(new ProductActions.FetchProducts() );
+    if(!localStorage.getItem('products'))
+      this.store.dispatch(new ProductActions.FetchProducts() );
+
     this.store.dispatch(new ProductActions.SetVisibility(this.flag) );
   }
 

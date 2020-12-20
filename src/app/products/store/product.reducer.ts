@@ -11,7 +11,7 @@ const initialState: State = { products: [] , visibility: true };
 
 export function productReducer(state = initialState , action: ProductsActions.ProductsActions){
 
-    let updatedProducts: Product[] = [];
+    //let updatedProducts: Product[] = [];
 
     switch(action.type) {
         case ProductsActions.SET_PRODUCTS:
@@ -27,11 +27,12 @@ export function productReducer(state = initialState , action: ProductsActions.Pr
             };
         
         case ProductsActions.UPDATE_PRODUCT:
-            state.products.filter((product, index)=> {
-                if(product.id !== action.payload.newProduct.id)
-                    updatedProducts.push(action.payload.newProduct);
-                else
-                    updatedProducts.push(product);
+            const updatedProducts = [...state.products];
+            state.products.filter((product, index)=> {  
+                if(product.id === action.payload.newProduct.id)
+                {
+                    updatedProducts[index] = action.payload.newProduct;
+                }
             })
             return {
                 ...state,
