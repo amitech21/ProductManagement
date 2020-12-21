@@ -21,6 +21,7 @@ import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { MomentModule } from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
 import { environment } from '../environments/environment'
+import { CustomerEffects } from './customers/store/customer.effects';
 
 
 @NgModule({
@@ -35,7 +36,7 @@ import { environment } from '../environments/environment'
     HttpClientModule,
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects , ProductEffects]),
+    EffectsModule.forRoot([AuthEffects , ProductEffects , CustomerEffects]),
     StoreRouterConnectingModule.forRoot(),
     SharedModule,
     CoreModule,

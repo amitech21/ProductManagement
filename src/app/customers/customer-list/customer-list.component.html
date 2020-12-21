@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-success"
+        (click)="onShow()">Show Customers</button>
+
+        <button class="btn btn-danger"
+        (click)="onHide()">Hide Customers</button>
+
+        <button class="btn btn-success"
+        (click)="onNew()">New Customer</button>
+    </div>
+</div>
+
+<hr>
+
+<div class="row" *ngIf="customersVisibility">
+    <div class="col-xs-12">
+        
+        <app-customer-item
+        *ngFor="let customerEl of customers; let i = index"
+        [customer]="customerEl"
+        ></app-customer-item>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<!-- <div class="row">
+    <div class="col-xs-12">
+        <img 
+        [src]="customer.imagePath" 
+        alt="{{ customer.name }}" 
+        class="img-responsive"
+        style="max-height: 300px;">
+    </div>
+</div> -->
+
+<div class="row">
+    <div class="col-xs-12">
+        <h1>Customer Name : {{ customer.name }}</h1>
+        <p>Mobile No : {{ customer.mobile_no }}</p>
+        <p>Address : {{ customer.address }}</p>
+        <p>GST No : {{ customer.gst_no }}</p>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-danger"
+        (click)="onCancelEditing()">Close Editing</button>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-xs-12">
+        <div 
+        class="btn-group"
+         appDropdown>
+            <button type="button" class="btn btn-primary dropdown-toggle">
+                Manage Customer <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu">
+                <li><a (click)="onAddToShoppingList()" style="cursor: pointer;">To shopping list</a></li>
+                <li><a style="cursor: pointer;" (click)="onEditCustomer()">Edit Customer</a></li>
+                <li><a style="cursor: pointer;" (click)="onDeleteCustomer()">Delete Customer</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="row">
+    <div class="col-xs-12">
+        {{ customer.description }}
+    </div>
+</div> -->
+
+<!-- <div class="row">
+    <div class="col-xs-12">
+         <ul class="list-group">
+            <li class="list-group-item"
+                *ngFor="let ingredient_in of customer.ingredients">
+                {{ ingredient_in.name }} - {{ ingredient_in.amount }}
+            </li>
+        </ul>
+    </div>
+</div> -->

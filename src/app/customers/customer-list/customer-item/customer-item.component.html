@@ -1,0 +1,18 @@
+<a 
+style="cursor: pointer;"
+[routerLink]="[customer.id]"
+routerlinkActive="active"
+class="list-group-item clearfix">
+        <div class="pull-left">
+            <h4 class="list-group-item-heading">ID : P-{{ customer.id }}</h4>
+            <p class="list-group-item-text">Name : {{ customer.name }}</p>
+            <p class="list-group-item-text">Mobile no : {{ customer.mobile_no }}</p>
+
+        </div>
+        <!-- <span class="pull-right">
+            <img src="{{ customer.imagePath }}" 
+            alt="{{ customer.name }}"
+            class="img-responsive" 
+            style="max-height: 150px;max-width: 150px;">
+        </span> -->
+    </a>
