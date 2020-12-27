@@ -61,7 +61,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbButtonModule,
     NbCardModule,
     NbProgressBarModule,
-    NbTabsetModule,
+    //NbTabsetModule,
     NbUserModule,
     NbIconModule,
     NbSelectModule,
