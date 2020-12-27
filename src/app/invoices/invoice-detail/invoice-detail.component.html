@@ -1,0 +1,61 @@
+<!-- <div class="row">
+    <div class="col-xs-12">
+        <img 
+        [src]="invoice.imagePath" 
+        alt="{{ invoice.name }}" 
+        class="img-responsive"
+        style="max-height: 300px;">
+    </div>
+</div> -->
+
+<div class="row">
+    <div class="col-xs-12">
+        <h1>Invoice Name : {{ invoice.name }}</h1>
+        <p>Mobile No : {{ invoice.mobile_no }}</p>
+        <p>Address : {{ invoice.address }}</p>
+        <p>GST No : {{ invoice.gst_no }}</p>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-danger"
+        (click)="onCancelEditing()">Close Editing</button>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-xs-12">
+        <div 
+        class="btn-group"
+         appDropdown>
+            <button type="button" class="btn btn-primary dropdown-toggle">
+                Manage Invoice <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu">
+                <li><a (click)="onAddToShoppingList()" style="cursor: pointer;">To shopping list</a></li>
+                <li><a style="cursor: pointer;" (click)="onEditInvoice()">Edit Invoice</a></li>
+                <li><a style="cursor: pointer;" (click)="onDeleteInvoice()">Delete Invoice</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="row">
+    <div class="col-xs-12">
+        {{ invoice.description }}
+    </div>
+</div> -->
+
+<!-- <div class="row">
+    <div class="col-xs-12">
+         <ul class="list-group">
+            <li class="list-group-item"
+                *ngFor="let ingredient_in of invoice.ingredients">
+                {{ ingredient_in.name }} - {{ ingredient_in.amount }}
+            </li>
+        </ul>
+    </div>
+</div> -->

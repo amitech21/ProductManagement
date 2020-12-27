@@ -12,6 +12,8 @@
                 <li routerLinkActive="active" *ngIf="!isAuthenticated"><a routerLink="/auth">Authentication</a></li>
                 <li routerLinkActive="active" *ngIf="isAuthenticated"><a routerLink="/products" >Products</a></li>
                 <li routerLinkActive="active" *ngIf="isAuthenticated"><a routerLink="/customers">Customers</a></li>
+                <li routerLinkActive="active" *ngIf="isAuthenticated"><a routerLink="/invoice">Invoice</a></li>
+
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li *ngIf="isAuthenticated">

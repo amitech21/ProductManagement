@@ -1,0 +1,18 @@
+<a 
+style="cursor: pointer;"
+[routerLink]="[invoice.id]"
+routerlinkActive="active"
+class="list-group-item clearfix">
+        <div class="pull-left">
+            <h4 class="list-group-item-heading">ID : P-{{ invoice.id }}</h4>
+            <p class="list-group-item-text">Name : {{ invoice.name }}</p>
+            <p class="list-group-item-text">Mobile no : {{ invoice.mobile_no }}</p>
+
+        </div>
+        <!-- <span class="pull-right">
+            <img src="{{ invoice.imagePath }}" 
+            alt="{{ invoice.name }}"
+            class="img-responsive" 
+            style="max-height: 150px;max-width: 150px;">
+        </span> -->
+    </a>

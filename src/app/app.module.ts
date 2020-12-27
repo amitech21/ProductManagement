@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
@@ -22,7 +22,19 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { MomentModule } from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
 import { environment } from '../environments/environment'
 import { CustomerEffects } from './customers/store/customer.effects';
-
+import { InvoiceEffects } from './invoices/store/invoice.effects';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { 
+  NbButtonModule,
+  NbCardModule,
+  NbProgressBarModule,
+  NbTabsetModule,
+  NbUserModule,
+  NbIconModule,
+  NbSelectModule,
+  NbListModule,
+ } from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 @NgModule({
   declarations: [
@@ -36,15 +48,26 @@ import { CustomerEffects } from './customers/store/customer.effects';
     HttpClientModule,
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects , ProductEffects , CustomerEffects]),
+    EffectsModule.forRoot([AuthEffects , ProductEffects , CustomerEffects , InvoiceEffects]),
     StoreRouterConnectingModule.forRoot(),
     SharedModule,
     CoreModule,
     SocialLoginModule,
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    BrowserAnimationsModule,
+    //NbThemeModule.forRoot({ name: 'default' }),
+    NbButtonModule,
+    NbCardModule,
+    NbProgressBarModule,
+    NbTabsetModule,
+    NbUserModule,
+    NbIconModule,
+    NbSelectModule,
+    NbListModule,
   ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA ],
   providers: [
     {
       provide: 'SocialAuthServiceConfig',

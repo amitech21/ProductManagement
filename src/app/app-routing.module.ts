@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
+import { InvoicesModule } from './invoices/invoices.module';
 
 const appRoutes: Routes = [
   //{path: '', component: ProductsComponent},
@@ -9,7 +10,9 @@ const appRoutes: Routes = [
   { path: 'products', loadChildren: () => import('./products/products.module').then(m => m.ProductsModule) },
   // customer-list
   { path: 'customers', loadChildren: () => import('./customers/customers.module').then(m => m.CustomersModule) },
-  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) }
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
+
+  { path: 'invoice', loadChildren: () => import('./invoices/invoices.module').then(m => InvoicesModule) }
 
 ];
 
