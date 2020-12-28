@@ -34,13 +34,13 @@
     "bootstrap": "^3.4.1",
     "eva-icons": "^1.1.2",
     "ngx-bootstrap": "^6.2.0",
-    "rxjs": "~6.5.4",
+    "rxjs": "^6.4.0",
     "tslib": "^1.14.1",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1100.5",
-    "@angular/compiler-cli": "~11.0.5",
+    "@angular/compiler-cli": "^9.1.7",
     "@ngrx/router-store": "^10.1.0",
     "@schematics/angular": "~9.1.7",
     "@types/jasmine": "~3.5.0",
