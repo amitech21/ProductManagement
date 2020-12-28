@@ -28,7 +28,7 @@ import {
   NbButtonModule,
   NbCardModule,
   NbProgressBarModule,
-  NbTabsetModule,
+  //NbTabsetModule,
   NbUserModule,
   NbIconModule,
   NbSelectModule,
