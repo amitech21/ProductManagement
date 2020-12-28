@@ -6,8 +6,8 @@ import { InvoiceStartComponent } from './invoice-start/invoice-start.component';
 import { InvoiceEditComponent } from './invoice-edit/invoice-edit.component';
 import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.component';
 import { InvoicesResolverService } from './invoices-resolver.service';
-import { NbSelectModule, NbThemeModule, NbLayoutModule, NbCardModule, NbAutocompleteModule } from '@nebular/theme';
-import { NbEvaIconsModule } from '@nebular/eva-icons';
+// import { NbSelectModule, NbThemeModule, NbLayoutModule, NbCardModule, NbAutocompleteModule } from '@nebular/theme';
+// import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 
 const routes: Routes = [
@@ -34,8 +34,8 @@ const routes: Routes = [
 
 @NgModule({
     imports: [
-        RouterModule.forChild(routes),  
-        NbCardModule
+        RouterModule.forChild(routes) 
+//        NbCardModule
     ],
     exports: [RouterModule]
 
