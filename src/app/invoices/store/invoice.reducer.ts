@@ -1,12 +1,14 @@
 import { Invoice } from '../invoice.model';
 import * as InvoicesActions from '../store/invoice.actions'
+import { Customer } from 'src/app/customers/customer.model';
 
 export interface State { 
-    invoices: Invoice[] ; 
+    invoices: Invoice[] ;
+    customers: Customer[] ; 
     visibility: boolean;
 }
 
-const initialState: State = { invoices: [] , visibility: true };
+const initialState: State = { invoices: [] , customers: [] , visibility: true };
 
 
 export function invoiceReducer(state = initialState , action: InvoicesActions.InvoicesActions){

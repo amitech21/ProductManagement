@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import { environment } from '../../../environments/environment'
 import { Invoice_add } from '../invoice_add.model';
+import { Customer } from 'src/app/customers/customer.model';
 
 
 @Injectable()
@@ -156,9 +157,24 @@ export class InvoiceEffects {
     );
 
 
+    @Effect()
+    fetchCustomersByName = this.actions$.pipe(
+        ofType(InvoicesActions.FETCH_CUSTOMERS_BY_NAME),
+        switchMap((cust_name_data: string) => {
+            console.log('fetchCustomersByName effect called');
+            console.log(cust_name_data);
+            return this.http.get<Customer[]>(environment.webAppEndPoint + '/customers/listByName/' + cust_name_data.toString);
+        }),
+        map(customers => {
+            return customers;
+        })
+    ); 
+
+
     constructor(
         private actions$: Actions,
         private http: HttpClient,
         private store: Store<fromApp.AppState>
-        ) {} 
+        ) {}
+         
 }

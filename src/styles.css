@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+body,
+html {
+  background-image: url("C:\Users\ABAP788\amit_bk\Study\Angular\product_management\src\img\1.jpg");
+  /* Full height */
+  height: 100%;
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}

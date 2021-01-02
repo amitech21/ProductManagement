@@ -33,7 +33,8 @@ export class CustomerEffects {
         map(customers => {
             return new CustomersActions.SetCustomers(customers);
         })
-    ); 
+    );
+
 
     @Effect({dispatch: false})
     storeCustomers = this.actions$.pipe(
@@ -117,7 +118,7 @@ export class CustomerEffects {
               };
 
             return this.http.put(
-                environment.webAppEndPoint + '/customers/update/' +  customerData.payload.newCustomer.id.toString(), 
+                environment.webAppEndPoint + '/customers/update/' +  customerData.payload.newCustomer.id, 
                 customerData.payload.newCustomer , 
                 requestOptions)
                 .pipe(
@@ -145,7 +146,7 @@ export class CustomerEffects {
             })
             localStorage.setItem('customers', JSON.stringify(this.customers));
 
-            return this.http.delete(environment.webAppEndPoint + '/customers/delete/' + payload.payload.toString() )
+            return this.http.delete(environment.webAppEndPoint + '/customers/delete/' + payload.payload )
             .pipe(
                 map(() => {
                             // return new CustomersActions.SetCustomers(this.customers);      

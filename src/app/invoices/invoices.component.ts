@@ -19,6 +19,7 @@ export class InvoicesComponent implements OnInit {
   ) {}
 
   flag: boolean;
+  selectedItem = '2';
 
   ngOnInit(): void {
     this.flag = (localStorage.getItem('invoices_visibility') === "false" ) ? false : true; 

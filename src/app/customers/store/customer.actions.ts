@@ -3,6 +3,7 @@ import { Customer } from '../customer.model';
 
 export const SET_CUSTOMERS = '[Customers] Set Customers';
 export const FETCH_CUSTOMERS = '[Customers] Fetch Customers';
+export const FETCH_CUSTOMERS_BY_NAME = '[Customers] Fetch Customers by name';
 export const ADD_CUSTOMER = '[Customers] Add Customer';
 export const UPDATE_CUSTOMER = '[Customers] Update Customer';
 export const DELETE_CUSTOMER = '[Customers] Delete Customer';
@@ -18,6 +19,7 @@ export class SetCustomers implements Action {
 export class FetchCustomers implements Action {
     readonly type = FETCH_CUSTOMERS;
 }
+
 
 export class AddCustomer implements Action {
     readonly type = ADD_CUSTOMER;

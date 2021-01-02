@@ -8,6 +8,9 @@ export const UPDATE_INVOICE = '[Invoices] Update Invoice';
 export const DELETE_INVOICE = '[Invoices] Delete Invoice';
 export const STORE_INVOICE = '[Invoices] Store Invoice';
 
+export const FETCH_CUSTOMERS_BY_NAME = '[Invoices] Fec=tch Customers By Name';
+
+
 export const SET_VISIBILITY = '[Invoices] Set Visibility';
 
 export class SetInvoices implements Action {

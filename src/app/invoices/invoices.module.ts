@@ -10,6 +10,20 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { InvoicesRoutingModule } from './invoices-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
+//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+    NbButtonModule,
+    NbCardModule,
+    NbProgressBarModule,
+    //NbTabsetModule,
+    NbUserModule,
+    NbIconModule,
+    NbSelectModule,
+    NbListModule,
+    NbAutocompleteModule
+   } from '@nebular/theme';
+import { FilterPipe } from './filter.pipe';
+   //import { NgSelectConfig, ɵs  } from '@ng-select/ng-select'; 
 
 @NgModule({
     declarations: [
@@ -18,8 +32,26 @@ import { SharedModule } from '../shared/shared.module';
     InvoiceDetailComponent,
     InvoiceItemComponent,
     InvoiceStartComponent,
-    InvoiceEditComponent
+    InvoiceEditComponent,
+    FilterPipe
     ],
-    imports: [RouterModule, SharedModule, ReactiveFormsModule, InvoicesRoutingModule]
+    imports: 
+    [RouterModule, 
+    SharedModule, 
+    ReactiveFormsModule, 
+    InvoicesRoutingModule, 
+    //BrowserAnimationsModule,
+    //NbThemeModule.forRoot({ name: 'default' }),
+    NbButtonModule, 
+    NbCardModule,
+    //NbProgressBarModule,
+    //NbTabsetModule,
+    //NbUserModule,
+    NbIconModule,
+    NbSelectModule,
+    NbListModule,
+    NbAutocompleteModule
+]
+
 })
 export class InvoicesModule {}
