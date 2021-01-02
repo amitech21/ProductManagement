@@ -12,7 +12,11 @@ import { Observable } from 'rxjs';
 
     constructor(private http: HttpClient){}
 
-    getCustomers(cust_name_data: string): Observable<any> {
+    getCustomersByName(cust_name_data: string): Observable<any> {
         return this.http.get<Customer[]>(environment.webAppEndPoint + '/customers/listByName/' + cust_name_data);
+    }
+
+    getCustomersById(cust_id_data: number): Observable<any> {
+        return this.http.get<Customer>(environment.webAppEndPoint + '/customers/get/' + cust_id_data);
     }
 }

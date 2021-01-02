@@ -36,70 +36,114 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label for="cust_name">Billed To : (Customer's Name)</label>
+                        <label for="cust_name_filter">Billed To : (Customer's Name)</label>
                         <!-- <input type="search" [(ngModel)]="searchText" placeholder="Search text"> -->
                         <input
                             type="search"
+                            list="customersname"
+                            [(ngModel)]="selectedCustId"
                             placeholder="Search text"
-                            id="cust_name"
+                            id="cust_name_filter"
                             [formControl]="cust_name_control"
                             class="form-control">
+                            <div class="panel panel-default panel-body datalist" *ngIf="customers.length > 0  && !(customers.length == 1 && customers[0].id == selectedCustId)">
+                                <ul>
+                                    <li *ngFor="let cust_n of customers | filter: cust_name_filter">
+                                    <a style="cursor:pointer;" (click)="selectCustId(cust_n.id)">{{ cust_n.name }} : ID - {{ cust_n.id }}</a></li>
+                                </ul>
+                            </div>
                     </div>
-                    <ul *ngFor="let cust_n of customers | filter: cust_name">
-                        <li>{{cust_n.name}}</li>
-                      </ul>
+                    
                 </div>
             </div>  
-              
-            <div class="row" *ngIf="!!selectedCustId">
+            <!-- <ul *ngFor="let cust_n of customers | filter: cust_name">
+                <li>{{cust_n.name}}</li>
+              </ul> -->
+
+            <div class="row" *ngIf="!!selectedCustId_flag">
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label for="name">Customer's Name</label>
+                        <label for="cust_id">Customer's ID</label>
                         <input
                             type="text"
-                            id="name"
-                            formControlName="name"
-                            class="form-control">
+                            id="cust_id"
+                            [formControl]="cust_id"
+                            class="form-control"
+                            [readonly]="true"
+                            style="border: 3px solid red;">
+                    </div>
+                </div>
+            </div>
+              
+            <div class="row" *ngIf="!!selectedCustId_flag">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="cust_name">Customer's Name</label>
+                        <input
+                            type="text"
+                            id="cust_name"
+                            [formControl]="cust_name"
+                            class="form-control"
+                            [readonly]="true"
+                            style="border: 3px solid red;">
                     </div>
                 </div>
             </div>     
             
-            <div class="row" *ngIf="!!selectedCustId">
+            <div class="row" *ngIf="!!selectedCustId_flag">
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label for="mobile_no">Customer's Mobile No</label>
+                        <label for="cust_mobile_no">Customer's Mobile No</label>
                         <input
                         type="number"
-                        id="mobile_no"
-                        formControlName="mobile_no"
-                        class="form-control">
+                        id="cust_mobile_no"
+                        [formControl]="cust_mobile_no"
+                        class="form-control"
+                        [readonly]="true"
+                        style="border: 3px solid red;">
                     </div>
                 </div>
             </div>
             
-            <div class="row" *ngIf="!!selectedCustId">
+            <div class="row" *ngIf="!!selectedCustId_flag">
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label for="address">Customer's Address</label>
+                        <label for="cust_address">Customer's Address</label>
                         <textarea
                             type="text"
-                            id="address"
-                            formControlName="address"
+                            id="cust_address"
+                            [formControl]="cust_address"
                             class="form-control"
-                            rows="2"></textarea>
+                            rows="2"
+                            [readonly]="true"
+                            style="border: 3px solid red;"></textarea>
                     </div>
                 </div>
             </div>
             
-            <div class="row" *ngIf="!!selectedCustId">
+            <div class="row" *ngIf="!!selectedCustId_flag">
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label for="gst_no">Customer's GST No</label>
+                        <label for="cust_gst_no">Customer's GST No</label>
                         <input
                         type="number"
-                        id="gst_no"
-                        formControlName="gst_no"
-                        class="form-control">
+                        id="cust_gst_no"
+                        [formControl]="cust_gst_no"
+                        class="form-control"
+                        [readonly]="true"
+                        style="border: 3px solid red;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="!!selectedCustId_flag">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <button 
+                        type="button" 
+                        class="btn btn-success"
+                        (click)="onSelectCustBtn()"
+                        >Select Customer</button>
                     </div>
                 </div>
             </div>
@@ -107,11 +151,11 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label for="name">Products to buy: </label>
+                        <label for="prod_name">Products to buy: </label>
                         <input
                             type="text"
-                            id="name"
-                            formControlName="name"
+                            id="prod_name"
+                            [formControl]="prod_name"
                             class="form-control">
                     </div>
                 </div>

@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import {  ActivatedRoute, Params, Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as fromApp from '../../store/app.reducer'
 import { Store } from '@ngrx/store';
 import { map, debounceTime, distinctUntilChanged, tap, delay } from 'rxjs/operators';
@@ -22,58 +22,100 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
   id: number;
   editMode: boolean = false;
   invoiceForm: FormGroup;
+  custForm: FormGroup;
 
 
-  selectedCustId = "";
+
+  selectedCustId:number;
+  selectedCustId_flag = false;
+  cust_list_flag = false;
+  private selectedCust:Customer;
   cust_names: Array<string> = ["asd","qwe","zxc"];
-  cust_name: string;
+  cust_name_filter: string;
 
   cust_name_control = new FormControl('');
-  subscription: Subscription;
-  subscription_cust: Subscription;
+  prod_name = new FormControl('');
+
+  cust_id = new FormControl('');
+  cust_name = new FormControl('');
+  cust_mobile_no = new FormControl('');
+  cust_address = new FormControl('');
+  cust_gst_no = new FormControl('');
+
+  //cust_names_array = new FormArray([]);
+
+  private storeSub: Subscription;
+  private sub_custControl: Subscription;
+  private sub_custName: Subscription;
+  private sub_selectedCust: Subscription;
   
   customers:Customer[];
 
 
-  private storeSub: Subscription;
+
 
   constructor(
     private route:ActivatedRoute, 
     private router: Router,
     private store: Store<fromApp.AppState>,
     private invoiceService: InvoiceService,
-    private http: HttpClient
+    private http: HttpClient,
+    private ref: ChangeDetectorRef
     ) { 
-      this.subscription = this.cust_name_control.valueChanges
+      this.sub_custControl = this.cust_name_control.valueChanges
       .pipe(
-        debounceTime(1500), // Waiting for 1.5 sec while you are typing
+        debounceTime(1000), // Waiting for 1.5 sec while you are typing
         distinctUntilChanged() // Prevents the emitting if the 'start' value and the 'end' value are the same
       )
       .subscribe(value => {
-        console.log('test2');
-        console.log(value);
-        
-        this.subscription_cust = this.invoiceService.getCustomers(value).subscribe(
+        this.sub_custName = this.invoiceService.getCustomersByName(value).pipe(
+          //delay( 2000 ) // Waiting for response
+        ).subscribe(
           (data:Customer[] ) => {
-            console.log('test3');
-            console.log(data);
-
             this.customers = data;
+            this.ref.detectChanges();
           }
         );
         // TODO: call BE here with this.httpClient...
       });
     }
 
+  selectCustId(data:number){
+    console.log('test4');
+    console.log(data);
+    this.selectedCustId_flag=true;
+    this.sub_selectedCust = this.invoiceService.getCustomersById(data).subscribe((data: Customer) => {
+      this.selectedCust = data;
+
+      this.cust_name_control.setValue(this.selectedCust.name + " with ID: " + +this.selectedCust.id);
+
+      this.cust_id.setValue(this.selectedCust.id);
+      this.cust_name.setValue(this.selectedCust.name);
+      this.cust_mobile_no.setValue(this.selectedCust.mobile_no);
+      this.cust_address.setValue(this.selectedCust.address);
+      this.cust_gst_no.setValue(this.selectedCust.gst_no);
+
+      //this.customers = [];
+    });
+  }
+
+  onSelectCustBtn(){
+      this.customers = [];
+      this.selectedCustId_flag = false;
+  }
+
   ngOnDestroy(){
     if(this.storeSub)
       this.storeSub.unsubscribe();
 
-    if(this.subscription)
-      this.subscription.unsubscribe();
+    if(this.sub_custControl)
+      this.sub_custControl.unsubscribe();
 
-    if(this.subscription_cust)
-      this.subscription_cust.unsubscribe();
+    if(this.sub_custName)
+      this.sub_custName.unsubscribe();
+
+    if(this.sub_selectedCust)
+      this.sub_selectedCust.unsubscribe();
 
   }
 
@@ -86,16 +128,9 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           this.initForm();
         }
       );
-
   }
 
   onSubmit() {
-    // const newInvoice = new Invoice(
-    //   this.invoiceForm.value['name'],
-    //   this.invoiceForm.value['description'],
-    //   this.invoiceForm.value['imagePath'],
-    //   this.invoiceForm.value['ingredients'],
-    //   );
 
     if(this.editMode)
     {
@@ -111,21 +146,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['../'], {relativeTo: this.route });
   }
 
-  // onAddIngredient() {
-  //   (<FormArray>this.invoiceForm.get('ingredients')).push(
-  //     new FormGroup({
-  //       'name' : new FormControl(null, Validators.required),
-  //       'amount' : new FormControl(null, [
-  //         Validators.required,
-  //         Validators.pattern(/^[1-9]+[0-9]*$/)
-  //       ])
-  //     })
-  //   );
-  // }
-
-  // OnDeleteIngrdient(index: number) {
-  //   (<FormArray>this.invoiceForm.get('ingredients')).removeAt(index);
-  // }
+ 
   onCancel() {   
     this.router.navigate(['../'], {relativeTo: this.route });
   }
@@ -158,19 +179,6 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           invoiceMobileNo = invoice.mobile_no;
           invoiceAddress = invoice.address;
           invoiceGstNo = invoice.gst_no;
-          // if(invoice['ingredients']) {
-          //   for (let ingredient of invoice.ingredients) {
-          //     invoiceIngredients.push(
-          //       new FormGroup({
-          //         'name' : new FormControl(ingredient.name, Validators.required),
-          //         'amount' : new FormControl(ingredient.amount, [
-          //           Validators.required,
-          //           Validators.pattern(/^[1-9]+[0-9]*$/)
-          //         ])
-          //       })
-          //     )
-          //   }
-          // }
       });
 
       
@@ -182,9 +190,6 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       'mobile_no' : new FormControl(invoiceMobileNo, Validators.required),
       'address' : new FormControl(invoiceAddress, Validators.required),
       'gst_no' : new FormControl(invoiceGstNo, Validators.required),
-
-      
-
     });
 
   }
