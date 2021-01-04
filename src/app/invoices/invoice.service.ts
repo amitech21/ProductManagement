@@ -4,6 +4,7 @@ import { Customer } from '../customers/customer.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Product } from '../products/product.model';
 
 @Injectable({
     providedIn: 'root'
@@ -18,5 +19,13 @@ import { Observable } from 'rxjs';
 
     getCustomersById(cust_id_data: number): Observable<any> {
         return this.http.get<Customer>(environment.webAppEndPoint + '/customers/get/' + cust_id_data);
+    }
+
+    getProductsByName(prod_name_data: string): Observable<any> {
+        return this.http.get<Product[]>(environment.webAppEndPoint + '/products/listByName/' + prod_name_data);
+    }
+
+    getProductsById(prod_id_data: number): Observable<any> {
+        return this.http.get<Product>(environment.webAppEndPoint + '/products/get/' + prod_id_data);
     }
 }

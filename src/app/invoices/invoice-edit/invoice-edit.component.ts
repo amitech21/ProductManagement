@@ -7,9 +7,9 @@ import { map, debounceTime, distinctUntilChanged, tap, delay } from 'rxjs/operat
 import * as InvoiceActions from '../store/invoice.actions'; 
 import { Subscription } from 'rxjs';
 import { Customer } from 'src/app/customers/customer.model';
+import { Product } from 'src/app/products/product.model';
 import { InvoiceService } from '../invoice.service'
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 
 @Component({ 
   selector: 'app-invoice-edit',
@@ -19,39 +19,50 @@ import { environment } from 'src/environments/environment';
 
 })
 export class InvoiceEditComponent implements OnInit, OnDestroy {
-  id: number;
-  editMode: boolean = false;
+  private id: number;
+  private editMode: boolean = false;
   invoiceForm: FormGroup;
-  custForm: FormGroup;
 
-
+  // ############# customer's details #############
+  cust_name_control = new FormControl('');
 
   selectedCustId:number;
   selectedCustId_flag = false;
-  cust_list_flag = false;
   private selectedCust:Customer;
-  cust_names: Array<string> = ["asd","qwe","zxc"];
   cust_name_filter: string;
-
-  cust_name_control = new FormControl('');
-  prod_name = new FormControl('');
-
+  customers:Customer[];
+  
   cust_id = new FormControl('');
   cust_name = new FormControl('');
   cust_mobile_no = new FormControl('');
   cust_address = new FormControl('');
   cust_gst_no = new FormControl('');
 
-  //cust_names_array = new FormArray([]);
+  // ############# product's details #############
+  prod_name_control = new FormControl('');
+
+  selectedProdId:number;
+  selectedProdId_flag = false;
+  private selectedProd:Product;
+  prod_name_filter: string;
+  products:Product[];
+  
+  prod_id = new FormControl('');
+  prod_name = new FormControl('');
+  prod_description = new FormControl('');
+  prod_imagePath = new FormControl('');
+  prod_price = new FormControl('');
+
+  // ############# product's list #############
+  products_to_sell:Product[] = [];
 
   private storeSub: Subscription;
   private sub_custControl: Subscription;
   private sub_custName: Subscription;
   private sub_selectedCust: Subscription;
-  
-  customers:Customer[];
-
-
+  private sub_prodControl: Subscription;
+  private sub_prodName: Subscription;
+  private sub_selectedProd: Subscription;
 
 
   constructor(
@@ -62,6 +73,8 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private ref: ChangeDetectorRef
     ) { 
+
+      // ############# Customer's Control #############
       this.sub_custControl = this.cust_name_control.valueChanges
       .pipe(
         debounceTime(1000), // Waiting for 1.5 sec while you are typing
@@ -78,31 +91,26 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         );
         // TODO: call BE here with this.httpClient...
       });
+
+      // ############# Product's Control #############
+      this.sub_prodControl = this.prod_name_control.valueChanges
+      .pipe(
+        debounceTime(1000), // Waiting for 1.5 sec while you are typing
+        distinctUntilChanged() // Prevents the emitting if the 'start' value and the 'end' value are the same
+      )
+      .subscribe(value => {
+        this.sub_prodName = this.invoiceService.getProductsByName(value).pipe(
+          //delay( 2000 ) // Waiting for response
+        ).subscribe(
+          (data:Product[] ) => {
+            this.products = data;
+            this.ref.detectChanges();
+          }
+        );
+        // TODO: call BE here with this.httpClient...
+      });
+
     }
-
-  selectCustId(data:number){
-    console.log('test4');
-    console.log(data);
-    this.selectedCustId_flag=true;
-    this.sub_selectedCust = this.invoiceService.getCustomersById(data).subscribe((data: Customer) => {
-      this.selectedCust = data;
-
-      this.cust_name_control.setValue(this.selectedCust.name + " with ID: " + +this.selectedCust.id);
-
-      this.cust_id.setValue(this.selectedCust.id);
-      this.cust_name.setValue(this.selectedCust.name);
-      this.cust_mobile_no.setValue(this.selectedCust.mobile_no);
-      this.cust_address.setValue(this.selectedCust.address);
-      this.cust_gst_no.setValue(this.selectedCust.gst_no);
-
-      //this.customers = [];
-    });
-  }
-
-  onSelectCustBtn(){
-      this.customers = [];
-      this.selectedCustId_flag = false;
-  }
 
   ngOnDestroy(){
     if(this.storeSub)
@@ -116,6 +124,15 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
     if(this.sub_selectedCust)
       this.sub_selectedCust.unsubscribe();
+
+    if(this.sub_prodControl)
+      this.sub_prodControl.unsubscribe();
+
+    if(this.sub_prodName)
+      this.sub_prodName.unsubscribe();
+
+    if(this.sub_selectedProd)
+      this.sub_selectedProd.unsubscribe();
 
   }
 
@@ -193,5 +210,56 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     });
 
   }
+
+  // ########### customers #############
+  selectCustId(data:number){
+    this.selectedCustId_flag=true;
+    this.sub_selectedCust = this.invoiceService.getCustomersById(data).subscribe((data: Customer) => {
+      this.selectedCust = data;
+
+      this.cust_name_control.setValue(this.selectedCust.name + " with ID: " + +this.selectedCust.id);
+
+      this.cust_id.setValue(this.selectedCust.id);
+      this.cust_name.setValue(this.selectedCust.name);
+      this.cust_mobile_no.setValue(this.selectedCust.mobile_no);
+      this.cust_address.setValue(this.selectedCust.address);
+      this.cust_gst_no.setValue(this.selectedCust.gst_no);
+    });
+  }
+
+  onSelectCustBtn(){
+      console.log('onSelectCustBtn');
+      console.log(this.cust_id.value);
+      
+      this.customers = [];
+      this.selectedCustId_flag = false;
+  }
+
+    // ########### products #############
+    selectProdId(data:number){
+      this.selectedProdId_flag=true;
+      this.sub_selectedProd = this.invoiceService.getProductsById(data).subscribe((data: Product) => {
+        this.selectedProd = data;
+  
+        this.prod_name_control.setValue(this.selectedProd.name + " with ID: " + +this.selectedProd.id);
+  
+        this.prod_id.setValue(this.selectedProd.id);
+        this.prod_name.setValue(this.selectedProd.name);
+        this.prod_description.setValue(this.selectedProd.description);
+        this.prod_imagePath.setValue(this.selectedProd.imagePath);
+        this.prod_price.setValue(this.selectedProd.price);
+  
+        //this.customers = [];
+      });
+    }
+  
+    onSelectProdBtn(){
+        this.products_to_sell.push(this.selectedProd);
+        console.log('onSelectProdBtn');
+        console.log(this.selectedProd.id);
+
+        this.products = [];
+        this.selectedProdId_flag = false;
+    }
 
 }

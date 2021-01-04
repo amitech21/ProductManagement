@@ -16,23 +16,6 @@
                 </div>
             </div>
 
-            <!-- <div class="row">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="cust_id">Billed To : (Customer's Id)</label>
-                        <select 
-                        #custIdSelect 
-                        class="form-control" 
-                        id="cust_id" 
-                        formControlName="cust_id"
-                        [(ngModel)]="selectedCustId">
-                            <option value="" disabled selected>{{placeholder}}</option>
-                            <option *ngFor="let id of cust_ids; let i = index" [(value)]="cust_ids[i]">{{ id }}</option>
-                          </select>
-                    </div>
-                </div>
-            </div>     -->
-
             <div class="row">
                 <div class="col-xs-12">
                     <div class="form-group">
@@ -42,11 +25,11 @@
                             type="search"
                             list="customersname"
                             [(ngModel)]="selectedCustId"
-                            placeholder="Search text"
+                            placeholder="Search Customer"
                             id="cust_name_filter"
                             [formControl]="cust_name_control"
                             class="form-control">
-                            <div class="panel panel-default panel-body datalist" *ngIf="customers.length > 0  && !(customers.length == 1 && customers[0].id == selectedCustId)">
+                            <div class="panel panel-default panel-body datalist" *ngIf="(!!customers) && customers.length > 0  && !(customers.length == 1 && customers[0].id == selectedCustId)">
                                 <ul>
                                     <li *ngFor="let cust_n of customers | filter: cust_name_filter">
                                     <a style="cursor:pointer;" (click)="selectCustId(cust_n.id)">{{ cust_n.name }} : ID - {{ cust_n.id }}</a></li>
@@ -56,9 +39,19 @@
                     
                 </div>
             </div>  
-            <!-- <ul *ngFor="let cust_n of customers | filter: cust_name">
-                <li>{{cust_n.name}}</li>
-              </ul> -->
+<!-- ##################################### Customer details ################################################# -->
+
+            <div class="row" *ngIf="!!selectedCustId_flag">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <button 
+                        type="button" 
+                        class="btn btn-success"
+                        (click)="onSelectCustBtn()"
+                        >Select Customer</button>
+                    </div>
+                </div>
+            </div>
 
             <div class="row" *ngIf="!!selectedCustId_flag">
                 <div class="col-xs-12">
@@ -136,30 +129,138 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="!!selectedCustId_flag">
+<!-- ###################################################################################### -->
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="prod_name_filter">Products to sell:</label>
+                        <br>
+                        <label for="prod_name_filter">Select Product:</label>
+                        <!-- <input type="search" [(ngModel)]="searchText" placeholder="Search text"> -->
+                        <input
+                            type="search"
+                            list="productsname"
+                            [(ngModel)]="selectedProdId"
+                            placeholder="Search Product"
+                            id="prod_name_filter"
+                            [formControl]="prod_name_control"
+                            class="form-control">
+                            <div class="panel panel-default panel-body datalist" *ngIf="(!!products) && products.length > 0  && !(products.length == 1 && products[0].id == selectedProdId)">
+                                <ul>
+                                    <li *ngFor="let prod_n of products | filter: prod_name_filter">
+                                    <a style="cursor:pointer;" (click)="selectProdId(prod_n.id)">{{ prod_n.name }} : ID - {{ prod_n.id }}</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                    
+                </div>
+            </div> 
+            
+            
+            <!-- <div *ngIf="(!!products_to_sell) && products_to_sell.length > 0 ">
+                <label for="prod_name_filter">List :</label>
+                <input
+                *ngFor="let prod_n of products_to_sell"
+                type="text"
+                value = "{{prod_n.name}} with ID: {{prod_n.id}}"
+                class="form-control"
+                [readonly]="true">            
+            </div> -->
+
+            <div *ngIf="(!!products_to_sell) && products_to_sell.length > 0 ">
+                <label for="prod_name_filter">List :</label>
+                <ul>
+                    <li *ngFor="let prod_n of products_to_sell">
+                        {{prod_n.name}} with ID: {{prod_n.id}}
+                    </li>
+                </ul>            
+            </div>
+<!-- #################################### product details ################################################## -->
+
+            <div class="row" *ngIf="!!selectedProdId_flag">
                 <div class="col-xs-12">
                     <div class="form-group">
                         <button 
                         type="button" 
                         class="btn btn-success"
-                        (click)="onSelectCustBtn()"
-                        >Select Customer</button>
+                        (click)="onSelectProdBtn()"
+                        >Select Product</button>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" *ngIf="!!selectedProdId_flag">
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label for="prod_name">Products to buy: </label>
+                        <label for="prod_id">ID : </label>
+                        <input
+                            type="text"
+                            id="prod_id"
+                            [formControl]="prod_id"
+                            class="form-control"
+                            [readonly]="true"
+                            style="border: 3px solid red;">
+                    </div>
+                </div>
+            </div>  
+            
+            <div class="row" *ngIf="!!selectedProdId_flag">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="prod_name">Name</label>
                         <input
                             type="text"
                             id="prod_name"
                             [formControl]="prod_name"
-                            class="form-control">
+                            class="form-control"
+                            [readonly]="true"
+                            style="border: 3px solid red;">
                     </div>
                 </div>
-            </div>  
+            </div>            
+            
+            <div class="row" *ngIf="!!selectedProdId_flag">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="prod_description">Description</label>
+                        <textarea
+                            type="text"
+                            id="prod_description"
+                            [formControl]="prod_description"
+                            class="form-control"
+                            rows="3"
+                            [readonly]="true"
+                            style="border: 3px solid red;"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="!!selectedProdId_flag">
+                <div class="col-xs-12">
+                    <img 
+                    [src]="prod_imagePath.value" 
+                    class="img-responsive" 
+                    style="max-height: 150px;max-width: 150px;">
+                </div>
+            </div>
+
+            <div class="row" *ngIf="!!selectedProdId_flag">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="prod_price">Price</label>
+                        <input
+                        type="number"
+                        id="prod_price"
+                        [formControl]="prod_price"
+                        class="form-control"
+                        [readonly]="true"
+                        style="border: 3px solid red;">
+                    </div>
+                </div>
+            </div>
+
+<!-- ###################################################################################### -->
 
             <div class="row">
                 <div class="col-xs-12">
