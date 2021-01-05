@@ -18,8 +18,13 @@ import * as ProductActions from '../../products/store/product.actions';
 export class ProductListComponent implements OnInit, OnDestroy {
 subscription: Subscription;
 pre_subscription: Subscription;
+sub_fetchCount: Subscription;
 
 public productsVisibility: boolean = true;
+
+page = 1;
+count = 0;
+tableSize = 4;
 
   products: Product[];
   // products: Product[] = [
@@ -34,6 +39,11 @@ public productsVisibility: boolean = true;
   ) { }
 
   ngOnInit(): void {
+    console.log('ngOnInitngOnInit prod list');
+    this.store.dispatch(new ProductActions.FetchProductsCount());
+    this.sub_fetchCount = this.store.select('products').subscribe(productsState => {
+      this.count = productsState.prod_total_count;
+    });
 
     this.products = JSON.parse(localStorage.getItem('products'));
     //console.log(JSON.parse(localStorage.getItem('products')));
@@ -85,7 +95,23 @@ public productsVisibility: boolean = true;
   }
 
   ngOnDestroy() {
-    //this.subscription.unsubscribe();
+    if(!!this.subscription)
+      this.subscription.unsubscribe();
+
+    if(!!this.pre_subscription)
+      this.pre_subscription.unsubscribe();
+
+    if(!!this.sub_fetchCount)
+      this.sub_fetchCount.unsubscribe();
   }
+
+  onTableDataChange(event){
+    this.store.dispatch(new ProductActions.FetchProductsByPg({
+      pgNo: event-1,
+      item_count: this.tableSize
+    }));
+
+    //this.fetchPosts();
+  } 
 
 }

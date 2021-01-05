@@ -16,11 +16,47 @@ export class ProductEffects {
     products:Product[];
     updated_products:Product[] = [];
 
+    // @Effect()
+    // fetchProducts = this.actions$.pipe(
+    //     ofType(ProductsActions.FETCH_PRODUCTS),
+    //     switchMap(() => {
+    //         return this.http.get<Product[]>(environment.webAppEndPoint + '/products/list')
+    //     }),
+    //     map(products => {
+    //         return products.map( product => {
+    //              return {...product};
+    //         });
+    //     }),
+    //     tap(products => {
+    //         localStorage.setItem('products', JSON.stringify(products));
+    //     }),
+    //     map(products => {
+    //         return new ProductsActions.SetProducts(products);
+    //     })
+    // ); 
+
+    @Effect({dispatch: false})
     @Effect()
-    fetchProducts = this.actions$.pipe(
-        ofType(ProductsActions.FETCH_PRODUCTS),
+    fetchProductsCount = this.actions$.pipe(
+        ofType(ProductsActions.FETCH_PRODUCTS_COUNT),
         switchMap(() => {
-            return this.http.get<Product[]>(environment.webAppEndPoint + '/products/list')
+            return this.http.get<number>(environment.webAppEndPoint + '/products/listCount')
+        }),
+        map((count: number) => {
+            return new ProductsActions.SetProductsCount(count);
+        })
+    );
+
+    @Effect()
+    fetchProductsByPg = this.actions$.pipe(
+        ofType(ProductsActions.FETCH_PRODUCTS_BY_PAGE),
+        switchMap((paylod_data: ProductsActions.FetchProductsByPg) => {
+            return this.http.get<Product[]>(
+                environment.webAppEndPoint + '/products/listByPage/'
+                + paylod_data.payload.pgNo
+                + '/'
+                + paylod_data.payload.item_count                
+            )
         }),
         map(products => {
             return products.map( product => {
@@ -33,7 +69,7 @@ export class ProductEffects {
         map(products => {
             return new ProductsActions.SetProducts(products);
         })
-    ); 
+    );
 
     @Effect({dispatch: false})
     storeProducts = this.actions$.pipe(

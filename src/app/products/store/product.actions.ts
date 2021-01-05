@@ -1,8 +1,12 @@
 import { Action } from '@ngrx/store';
 import { Product } from '../product.model';
+import { FetchCustomersByPg } from 'src/app/customers/store/customer.actions';
 
 export const SET_PRODUCTS = '[Products] Set Products';
-export const FETCH_PRODUCTS = '[Products] Fetch Products';
+// export const FETCH_PRODUCTS = '[Products] Fetch Products';
+export const SET_PRODUCTS_COUNT = '[Products] Set Products Count';
+export const FETCH_PRODUCTS_COUNT = '[Products] Fetch Products Count';
+export const FETCH_PRODUCTS_BY_PAGE = '[Products] Fetch Products by page';
 export const ADD_PRODUCT = '[Products] Add Product';
 export const UPDATE_PRODUCT = '[Products] Update Product';
 export const DELETE_PRODUCT = '[Products] Delete Product';
@@ -17,8 +21,22 @@ export class SetProducts implements Action {
     constructor( public payload: Product[] ) {}
 }
 
-export class FetchProducts implements Action {
-    readonly type = FETCH_PRODUCTS;
+// export class FetchProducts implements Action {
+//     readonly type = FETCH_PRODUCTS;
+// }
+
+export class FetchProductsCount implements Action {
+    readonly type = FETCH_PRODUCTS_COUNT;
+}
+
+export class SetProductsCount implements Action {
+    readonly type = SET_PRODUCTS_COUNT;
+    constructor(public payload: number) {}
+}
+
+export class FetchProductsByPg implements Action {
+    readonly type = FETCH_PRODUCTS_BY_PAGE;
+    constructor(public payload: {pgNo: number; item_count: number}) {}
 }
 
 export class AddProduct implements Action {
@@ -47,7 +65,10 @@ export class SetVisibility implements Action {
 
 export type ProductsActions =
 | SetProducts
-| FetchProducts
+// | FetchProducts
+| FetchProductsCount
+| SetProductsCount
+| FetchCustomersByPg
 | AddProduct
 | UpdateProduct
 | DeleteProduct

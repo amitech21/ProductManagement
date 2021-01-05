@@ -19,8 +19,24 @@
     <div class="col-xs-12">
         
         <app-product-item
-        *ngFor="let productEl of products; let i = index"
+        *ngFor="let productEl of products | paginate : {
+            itemsPerPage: tableSize,
+            currentPage: page,
+            totalItems: count
+          }; let i = index"
         [product]="productEl"
         ></app-product-item>
     </div>
+
+    <div class="d-flex justify-content-center">
+        <pagination-controls 
+          responsive="true" 
+          previousLabel="Prev" 
+          nextLabel="Next" 
+          (pageChange)="onTableDataChange($event)"
+          >
+        </pagination-controls>
+      </div>
 </div>
+
+

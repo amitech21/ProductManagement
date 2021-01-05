@@ -30,7 +30,11 @@ export class ProductsResolverService implements Resolve<Product[]> {
                 switchMap(products => {
                     if(products.length == 0){
                         localStorage.removeItem("products");
-                        this.store.dispatch(new ProductActions.FetchProducts() );
+                        // this.store.dispatch(new ProductActions.FetchProducts() );
+                        this.store.dispatch(new ProductActions.FetchProductsByPg({
+                            pgNo: 0,
+                            item_count: 4
+                          }) );
                         return this.actions$.pipe(
                             ofType(ProductActions.SET_PRODUCTS),  
                             take(1)

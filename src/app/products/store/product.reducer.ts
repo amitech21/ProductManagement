@@ -4,9 +4,11 @@ import * as ProductsActions from '../store/product.actions'
 export interface State { 
     products: Product[] ; 
     visibility: boolean;
+    prod_total_count: number;
+
 }
 
-const initialState: State = { products: [] , visibility: true };
+const initialState: State = { products: [] , visibility: true , prod_total_count: 0};
 
 
 export function productReducer(state = initialState , action: ProductsActions.ProductsActions){
@@ -18,6 +20,12 @@ export function productReducer(state = initialState , action: ProductsActions.Pr
             return {
                 ...state,
                 products: [...action.payload]
+            };
+
+        case ProductsActions.SET_PRODUCTS_COUNT:
+            return {
+                ...state,
+                prod_total_count: action.payload
             };
 
         case ProductsActions.ADD_PRODUCT:

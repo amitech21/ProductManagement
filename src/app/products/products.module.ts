@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductsRoutingModule } from './products-routing.module';
 import { SharedModule } from '../shared/shared.module';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -18,8 +19,14 @@ import { SharedModule } from '../shared/shared.module';
     ProductDetailComponent,
     ProductItemComponent,
     ProductStartComponent,
-    ProductEditComponent
+    ProductEditComponent    
     ],
-    imports: [RouterModule, SharedModule, ReactiveFormsModule, ProductsRoutingModule]
+    imports: [
+        RouterModule, 
+        SharedModule, 
+        ReactiveFormsModule, 
+        ProductsRoutingModule,
+        NgxPaginationModule
+    ]
 })
 export class ProductsModule {}

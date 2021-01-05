@@ -24,7 +24,10 @@ export class ProductsComponent implements OnInit {
     this.flag = (localStorage.getItem('products_visibility') === "false" ) ? false : true; 
 
     if(!localStorage.getItem('products'))
-      this.store.dispatch(new ProductActions.FetchProducts() );
+      this.store.dispatch(new ProductActions.FetchProductsByPg({
+        pgNo: 0,
+        item_count: 4
+      }) );
 
     this.store.dispatch(new ProductActions.SetVisibility(this.flag) );
   }
