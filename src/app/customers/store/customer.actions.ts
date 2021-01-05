@@ -3,7 +3,9 @@ import { Customer } from '../customer.model';
 
 export const SET_CUSTOMERS = '[Customers] Set Customers';
 export const FETCH_CUSTOMERS = '[Customers] Fetch Customers';
-export const FETCH_CUSTOMERS_BY_NAME = '[Customers] Fetch Customers by name';
+export const SET_CUSTOMERS_COUNT = '[Customers] Set Customers Count';
+export const FETCH_CUSTOMERS_COUNT = '[Customers] Fetch Customers Count';
+export const FETCH_CUSTOMERS_BY_PAGE = '[Customers] Fetch Customers by page';
 export const ADD_CUSTOMER = '[Customers] Add Customer';
 export const UPDATE_CUSTOMER = '[Customers] Update Customer';
 export const DELETE_CUSTOMER = '[Customers] Delete Customer';
@@ -16,8 +18,22 @@ export class SetCustomers implements Action {
     constructor( public payload: Customer[] ) {}
 }
 
-export class FetchCustomers implements Action {
-    readonly type = FETCH_CUSTOMERS;
+// export class FetchCustomers implements Action {
+//     readonly type = FETCH_CUSTOMERS;
+// }
+
+export class FetchCustomersCount implements Action {
+    readonly type = FETCH_CUSTOMERS_COUNT;
+}
+
+export class SetCustomersCount implements Action {
+    readonly type = SET_CUSTOMERS_COUNT;
+    constructor(public payload: number) {}
+}
+
+export class FetchCustomersByPg implements Action {
+    readonly type = FETCH_CUSTOMERS_BY_PAGE;
+    constructor(public payload: {pgNo: number; item_count: number}) {}
 }
 
 
@@ -47,7 +63,10 @@ export class SetVisibility implements Action {
 
 export type CustomersActions =
 | SetCustomers
-| FetchCustomers
+//| FetchCustomers
+| FetchCustomersCount
+| SetCustomersCount
+| FetchCustomersByPg
 | AddCustomer
 | UpdateCustomer
 | DeleteCustomer

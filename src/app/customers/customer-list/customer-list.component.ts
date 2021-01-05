@@ -18,8 +18,13 @@ import * as CustomerActions from '../../customers/store/customer.actions';
 export class CustomerListComponent implements OnInit, OnDestroy {
 subscription: Subscription;
 pre_subscription: Subscription;
+sub_fetchCount: Subscription;
 
 public customersVisibility: boolean = true;
+
+page = 1;
+count = 0;
+tableSize = 4;
 
   customers: Customer[];
   // customers: Customer[] = [
@@ -34,6 +39,12 @@ public customersVisibility: boolean = true;
   ) { }
 
   ngOnInit(): void {
+
+
+    this.store.dispatch(new CustomerActions.FetchCustomersCount());
+    this.sub_fetchCount = this.store.select('customers').subscribe(customersState => {
+      this.count = customersState.cust_total_count;
+    });
 
     this.customers = JSON.parse(localStorage.getItem('customers'));
     //console.log(JSON.parse(localStorage.getItem('customers')));
@@ -57,6 +68,7 @@ public customersVisibility: boolean = true;
       }
     );
 
+    this.customersVisibility = false;
     //this.customers = this.customerService.getCustomers();
     
   }
@@ -85,7 +97,30 @@ public customersVisibility: boolean = true;
   }
 
   ngOnDestroy() {
-    //this.subscription.unsubscribe();
+    if(!!this.subscription)
+      this.subscription.unsubscribe();
+
+    if(!!this.pre_subscription)
+      this.pre_subscription.unsubscribe();
+
+    if(!!this.sub_fetchCount)
+      this.sub_fetchCount.unsubscribe();
   }
+
+  onTableDataChange(event){
+    this.store.dispatch(new CustomerActions.FetchCustomersByPg({
+      pgNo: event-1,
+      item_count: this.tableSize
+    }));
+
+    //this.fetchPosts();
+  } 
+
+  // onTableSizeChange(event): void {
+  //   console.log('onTableSizeChange called !!');
+  //   //this.tableSize = event.target.value;
+  //   //this.page = 1;
+  //   //this.fetchPosts();
+  // }
 
 }

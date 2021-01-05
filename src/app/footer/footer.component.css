@@ -1,0 +1,14 @@
+p {
+    text-align: center;
+    background-color: snow;
+    color: black;
+
+    left: 0;
+    bottom: 0; 
+    width: 100%;
+ 
+}
+
+.navbar {
+    min-height:20px
+}

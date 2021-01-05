@@ -23,8 +23,14 @@ export class CustomersComponent implements OnInit {
   ngOnInit(): void {
     this.flag = (localStorage.getItem('customers_visibility') === "false" ) ? false : true; 
 
-    if(!localStorage.getItem('customers'))
-      this.store.dispatch(new CustomerActions.FetchCustomers() );
+    if(!localStorage.getItem('customers')){
+      this.store.dispatch(new CustomerActions.FetchCustomersByPg({
+        pgNo: 0,
+        item_count: 4
+      }));
+    }
+//      this.store.dispatch(new CustomerActions.FetchCustomers());
+
 
     this.store.dispatch(new CustomerActions.SetVisibility(this.flag) );
   }

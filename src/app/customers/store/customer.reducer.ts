@@ -4,9 +4,10 @@ import * as CustomersActions from '../store/customer.actions'
 export interface State { 
     customers: Customer[] ; 
     visibility: boolean;
+    cust_total_count: number;
 }
 
-const initialState: State = { customers: [] , visibility: true };
+const initialState: State = { customers: [] , visibility: true , cust_total_count: 0 };
 
 
 export function customerReducer(state = initialState , action: CustomersActions.CustomersActions){
@@ -14,6 +15,13 @@ export function customerReducer(state = initialState , action: CustomersActions.
     //let updatedCustomers: Customer[] = [];
 
     switch(action.type) {
+
+        case CustomersActions.SET_CUSTOMERS_COUNT:
+            return {
+                ...state,
+                cust_total_count: action.payload
+            };
+
         case CustomersActions.SET_CUSTOMERS:
             return {
                 ...state,

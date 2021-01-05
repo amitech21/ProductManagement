@@ -5,6 +5,8 @@ import { HttpClientModule } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
+
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core.module';
 import { StoreModule } from '@ngrx/store';
@@ -36,12 +38,14 @@ import {
   NbListModule,
  } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import {NgbPaginationModule, NgbAlertModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent
-    
+    HeaderComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -65,8 +69,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     //NbTabsetModule,
     NbUserModule,
     NbIconModule,
-    NbSelectModule,
-    NbListModule,
+    NgxPaginationModule
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA ],
   providers: [

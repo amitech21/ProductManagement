@@ -9,6 +9,8 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CustomersRoutingModule } from './customers-routing.module';
 import { SharedModule } from '../shared/shared.module';
+import { NgbPaginationModule, NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -18,8 +20,15 @@ import { SharedModule } from '../shared/shared.module';
     CustomerDetailComponent,
     CustomerItemComponent,
     CustomerStartComponent,
-    CustomerEditComponent
+    CustomerEditComponent,
+    
     ],
-    imports: [RouterModule, SharedModule, ReactiveFormsModule, CustomersRoutingModule]
+    imports: [
+        RouterModule, 
+        SharedModule, 
+        ReactiveFormsModule, 
+        CustomersRoutingModule,
+        NgxPaginationModule
+    ]
 })
 export class CustomersModule {}

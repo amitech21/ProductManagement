@@ -2,15 +2,20 @@
 
   <nb-layout-header fixed>
   <!-- Insert header here -->
+  <app-header></app-header>
   </nb-layout-header>
 
   <nb-layout-column>
 
-    <app-header></app-header>
     
+
+    <br><br><br><br>
     <div class="container">
       <div class="row">
-        <router-outlet></router-outlet> 
+        <router-outlet></router-outlet>
+        <br>
+        <br>
+        <br> 
       </div>
     </div>
     
@@ -44,6 +49,7 @@
 
   <nb-layout-footer fixed>
   <!-- Insert footer here -->
+  <app-footer></app-footer>
   </nb-layout-footer>
 
 </nb-layout>

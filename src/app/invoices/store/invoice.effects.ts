@@ -168,7 +168,7 @@ export class InvoiceEffects {
         map(customers => {
             return customers;
         })
-    ); 
+    );
 
 
     constructor(
