@@ -20,8 +20,12 @@
                 <div class="col-xs-12">
                     <div class="form-group">
                         <label for="cust_name_filter">Billed To : (Customer's Name)</label>
+                        <br>
+                        <input #search class="search" type="text" placeholder="Search..." (keydown.enter)="onSearch(search.value)">
+                        <br><br>
+                        <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
                         <!-- <input type="search" [(ngModel)]="searchText" placeholder="Search text"> -->
-                        <input
+                         <input
                             type="search"
                             list="customersname"
                             [(ngModel)]="selectedCustId"
@@ -29,12 +33,12 @@
                             id="cust_name_filter"
                             [formControl]="cust_name_control"
                             class="form-control">
-                            <div class="panel panel-default panel-body datalist" *ngIf="(!!customers) && customers.length > 0  && !(customers.length == 1 && customers[0].id == selectedCustId)">
+                        <!--    <div class="panel panel-default panel-body datalist" *ngIf="(!!customers) && customers.length > 0  && !(customers.length == 1 && customers[0].id == selectedCustId)">
                                 <ul>
                                     <li *ngFor="let cust_n of customers | filter: cust_name_filter">
                                     <a style="cursor:pointer;" (click)="selectCustId(cust_n.id)">{{ cust_n.name }} : ID - {{ cust_n.id }}</a></li>
                                 </ul>
-                            </div>
+                            </div> -->
                     </div>
                     
                 </div>

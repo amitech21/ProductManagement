@@ -12,7 +12,7 @@ const appRoutes: Routes = [
   { path: 'customers', loadChildren: () => import('./customers/customers.module').then(m => m.CustomersModule) },
   { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
 
-  { path: 'invoice', loadChildren: () => import('./invoices/invoices.module').then(m => InvoicesModule) }
+  { path: 'invoice', loadChildren: () => import('./invoices/invoices.module').then(m => m.InvoicesModule) }
 
 ];
 

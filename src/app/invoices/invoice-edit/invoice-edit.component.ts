@@ -10,6 +10,7 @@ import { Customer } from 'src/app/customers/customer.model';
 import { Product } from 'src/app/products/product.model';
 import { InvoiceService } from '../invoice.service'
 import { HttpClient } from '@angular/common/http';
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({ 
   selector: 'app-invoice-edit',
@@ -22,6 +23,11 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
   private id: number;
   private editMode: boolean = false;
   invoiceForm: FormGroup;
+
+  source: LocalDataSource; // add a property to the component
+  // data = [
+  //   // ... our data here
+  // ];
 
   // ############# customer's details #############
   cust_name_control = new FormControl('');
@@ -73,6 +79,8 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private ref: ChangeDetectorRef
     ) { 
+
+      // this.source = new LocalDataSource(this.customers); // create the source
 
       // ############# Customer's Control #############
       this.sub_custControl = this.cust_name_control.valueChanges
@@ -137,6 +145,17 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.sub_custName = this.invoiceService.getCustomersByName("a").pipe(
+      //delay( 2000 ) // Waiting for response
+    ).subscribe(
+      (data:Customer[] ) => {
+        this.customers = data;
+        this.source = new LocalDataSource(data); // create the source
+//        this.ref.detectChanges();
+      }
+    );
+
     this.route.params
       .subscribe(
         (params: Params) => {
@@ -261,5 +280,61 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         this.products = [];
         this.selectedProdId_flag = false;
     }
+
+    onSearch(query: string = '') {
+      console.log(query);
+      this.source.setFilter([
+        // fields we want to include in the search
+        {
+          field: 'id',
+          search: query
+        },
+        {
+          field: 'name',
+          search: query
+        },
+        {
+          field: 'mobile_no',
+          search: query
+        },
+        {
+          field: 'address',
+          search: query
+        },
+        {
+          field: 'gst_no',
+          search: query
+        }
+      ], false); 
+      // second parameter specifying whether to perform 'AND' or 'OR' search 
+      // (meaning all columns should contain search query or at least one)
+      // 'AND' by default, so changing to 'OR' by setting false here
+    }
+
+    settings = {
+      actions: false,
+      columns: {
+        id: {
+          title: 'ID',
+          filter: true
+        },
+        name: {
+          title: 'Full Name',
+          filter: true
+        },
+        mobile_no: {
+          title: 'Mobile No',
+          filter: true
+        },
+        address: {
+          title: 'Address',
+          filter: true
+        },
+        gst_no: {
+          title: 'GST No',
+          filter: true
+        }
+      }
+    };
 
 }

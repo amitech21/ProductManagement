@@ -40,6 +40,9 @@ import {
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import {NgbPaginationModule, NgbAlertModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';  
+import { Ng2CompleterModule } from '@akveo/ng2-completer';
+
 
 @NgModule({
   declarations: [
@@ -69,7 +72,10 @@ import { NgxPaginationModule } from 'ngx-pagination';
     //NbTabsetModule,
     NbUserModule,
     NbIconModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    Ng2SmartTableModule,
+    Ng2CompleterModule
+    //LocalDataSource
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA ],
   providers: [

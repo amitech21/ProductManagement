@@ -23,7 +23,8 @@ import {
     NbAutocompleteModule
    } from '@nebular/theme';
 import { FilterPipe } from './filter.pipe';
-   //import { NgSelectConfig, ɵs  } from '@ng-select/ng-select'; 
+import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
+import { Ng2CompleterModule } from '@akveo/ng2-completer';
 
 @NgModule({
     declarations: [
@@ -50,7 +51,10 @@ import { FilterPipe } from './filter.pipe';
     NbIconModule,
     NbSelectModule,
     NbListModule,
-    NbAutocompleteModule
+    NbAutocompleteModule,
+    Ng2SmartTableModule,
+    Ng2CompleterModule
+    //LocalDataSource
 ]
 
 })
