@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import {  ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as fromApp from '../../store/app.reducer'
@@ -11,6 +11,7 @@ import { Product } from 'src/app/products/product.model';
 import { InvoiceService } from '../invoice.service'
 import { HttpClient } from '@angular/common/http';
 import { LocalDataSource } from 'ng2-smart-table';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({ 
   selector: 'app-invoice-edit',
@@ -24,19 +25,27 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
   private editMode: boolean = false;
   invoiceForm: FormGroup;
 
-  source: LocalDataSource; // add a property to the component
+  //public source: LocalDataSource; // add a property to the component
+
   // data = [
   //   // ... our data here
   // ];
 
   // ############# customer's details #############
   cust_name_control = new FormControl('');
+  cust_input_name_control = new FormControl('');
+  show_cust_search_flag = false;
+  @ViewChild('divClick') divClick: ElementRef;
+  @ViewChild('divClick2') divClick2: ElementRef;
+
 
   selectedCustId:number;
   selectedCustId_flag = false;
   private selectedCust:Customer;
   cust_name_filter: string;
   customers:Customer[];
+  public source = new LocalDataSource(this.customers); // create the source
+
   
   cust_id = new FormControl('');
   cust_name = new FormControl('');
@@ -82,23 +91,33 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
       // this.source = new LocalDataSource(this.customers); // create the source
 
+      // this.sub_custName = this.invoiceService.getCustomersByName("a").pipe(
+      //   //delay( 4000 ) // Waiting for response
+      // ).subscribe(
+      //   (data:Customer[] ) => {
+      //     this.customers = data;
+      //     this.source = new LocalDataSource(this.customers); // create the source
+      //   }
+      // );
+
       // ############# Customer's Control #############
-      this.sub_custControl = this.cust_name_control.valueChanges
-      .pipe(
-        debounceTime(1000), // Waiting for 1.5 sec while you are typing
-        distinctUntilChanged() // Prevents the emitting if the 'start' value and the 'end' value are the same
-      )
-      .subscribe(value => {
-        this.sub_custName = this.invoiceService.getCustomersByName(value).pipe(
-          //delay( 2000 ) // Waiting for response
-        ).subscribe(
-          (data:Customer[] ) => {
-            this.customers = data;
-            this.ref.detectChanges();
-          }
-        );
-        // TODO: call BE here with this.httpClient...
-      });
+      // this.sub_custControl = this.cust_name_control.valueChanges
+      // .pipe(
+      //   debounceTime(1000), // Waiting for 1.5 sec while you are typing
+      //   distinctUntilChanged() // Prevents the emitting if the 'start' value and the 'end' value are the same
+      // )
+      // .subscribe(value => {
+      //   this.sub_custName = this.invoiceService.getCustomersByName(value).pipe(
+      //     //delay( 2000 ) // Waiting for response
+      //   ).subscribe(
+      //     (data:Customer[] ) => {
+      //       this.customers = data;
+      //       this.ref.detectChanges();
+      //     }
+      //   );
+      //   // TODO: call BE here with this.httpClient...
+      // });  
+    
 
       // ############# Product's Control #############
       this.sub_prodControl = this.prod_name_control.valueChanges
@@ -146,15 +165,17 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.sub_custName = this.invoiceService.getCustomersByName("a").pipe(
-      //delay( 2000 ) // Waiting for response
-    ).subscribe(
-      (data:Customer[] ) => {
-        this.customers = data;
-        this.source = new LocalDataSource(data); // create the source
-//        this.ref.detectChanges();
-      }
-    );
+//     this.sub_custName = this.invoiceService.getCustomersByName("a").pipe(
+//       //delay( 4000 ) // Waiting for response
+//     ).subscribe(
+//       (data:Customer[] ) => {
+//         this.customers = data;
+//         this.source = new LocalDataSource(this.customers); // create the source
+//         //this.source.refresh;
+//         console.log(data);
+// //        this.ref.detectChanges();
+//       }
+//     );
 
     this.route.params
       .subscribe(
@@ -281,6 +302,58 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         this.selectedProdId_flag = false;
     }
 
+    onClickCustSearchBtn2(){
+    }
+
+    count: number = 0;
+    onClickCustSearchBtn(){
+      this.show_cust_search_flag = true;
+      this.selectedCustId_flag = false;
+
+      this.sub_custName = this.invoiceService.getCustomersByName("a").pipe(
+        //delay( 4000 ) // Waiting for response
+      ).subscribe(
+        (data:Customer[] ) => {
+          this.customers = data;
+          //this.source = new LocalDataSource(this.customers); // create the source
+          this.source.load(this.customers);
+          console.log('Table refreshed !!');
+          console.log(this.customers);
+        }
+      );
+
+      //this.show_cust_search_flag = !this.show_cust_search_flag;
+
+        setTimeout(() => {
+          this.divClick.nativeElement.click();
+          // this.count++;
+          }, 200);
+
+    }
+
+    onCustomAction(event) {
+      switch ( event.action) {
+        case 'selectRecord':
+          this.selectRecord(event.data);
+          break;
+      }
+    }
+
+    public selectRecord(formData: any) {
+      console.log("selectRecord !!");
+      console.log(formData.id);
+      //this.settings = Object.assign({}, this.newSettings );
+      //this.settings = this.newSettings;
+
+        this.customers = [formData];
+        this.selectedCustId_flag = true;
+         this.source.load(this.customers);
+         setTimeout(() => {
+          this.divClick.nativeElement.click();
+          // this.count++;
+          }, 200);
+    }
+
     onSearch(query: string = '') {
       console.log(query);
       this.source.setFilter([
@@ -312,7 +385,16 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     }
 
     settings = {
-      actions: false,
+      actions: {
+        columnTitle: 'Actions',
+        add: false,
+        edit: false,
+        delete: false,
+        custom: [
+        { name: 'selectRecord', title: '<i class="ion-document" title="selectRecord"> Select </i>'}
+      ],
+        position: 'right'
+      },
       columns: {
         id: {
           title: 'ID',
@@ -336,5 +418,33 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         }
       }
     };
+
+    newSettings = { 
+      actions: false,
+      columns: {
+        id: {
+          title: 'ID',
+          filter: false
+        },
+        name: {
+          title: 'Full Name',
+          filter: false
+        },
+        mobile_no: {
+          title: 'Mobile No',
+          filter: false
+        },
+        address: {
+          title: 'Address',
+          filter: false
+        },
+        gst_no: {
+          title: 'GST No',
+          filter: false
+        }
+      }
+     }
+
+
 
 }

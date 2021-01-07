@@ -2,7 +2,7 @@
     <div class="col-xs-12">
         <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
             
-            <div class="row">
+            <div class="row" >
                 <div class="col-xs-12">
                     <div class="form-group">
                         <label for="name">ID : </label>
@@ -21,18 +21,46 @@
                     <div class="form-group">
                         <label for="cust_name_filter">Billed To : (Customer's Name)</label>
                         <br>
-                        <input #search class="search" type="text" placeholder="Search..." (keydown.enter)="onSearch(search.value)">
+                        <button          
+                        type="button"
+                        class="btn btn-success"
+                        (click)="onClickCustSearchBtn()">Search</button>
+                        
+                        <button
+                        #divClick
+                        type="button"
+                        class="btn btn-success"
+                        (click)="onClickCustSearchBtn2()">Refresh</button>
+                        <!-- <input 
+                        #search class="search" 
+                        type="text" 
+                        placeholder="Search..." 
+                        [formControl]="cust_input_name_control"
+                        class="form-control"
+                        (keydown.enter)="onSearch(search.value)"> -->
                         <br><br>
-                        <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
-                        <!-- <input type="search" [(ngModel)]="searchText" placeholder="Search text"> -->
-                         <input
+
+                        <ng2-smart-table
+                            *ngIf="show_cust_search_flag && !selectedCustId_flag" 
+                            [settings]="settings" 
+                            [source]="source" 
+                            (custom)="onCustomAction($event)"
+                        ></ng2-smart-table>
+                        <ng2-smart-table
+                            *ngIf="selectedCustId_flag" 
+                            [settings]="newSettings" 
+                            [source]="source" 
+                        ></ng2-smart-table>
+                        
+                        <!-- <input type="search" [(ngModel)]="searchText" placeholder="Search text">  *ngIf="(!!customers)"-->
+                         <!-- <input
                             type="search"
                             list="customersname"
                             [(ngModel)]="selectedCustId"
                             placeholder="Search Customer"
                             id="cust_name_filter"
                             [formControl]="cust_name_control"
-                            class="form-control">
+                            class="form-control"> -->
                         <!--    <div class="panel panel-default panel-body datalist" *ngIf="(!!customers) && customers.length > 0  && !(customers.length == 1 && customers[0].id == selectedCustId)">
                                 <ul>
                                     <li *ngFor="let cust_n of customers | filter: cust_name_filter">
@@ -43,95 +71,6 @@
                     
                 </div>
             </div>  
-<!-- ##################################### Customer details ################################################# -->
-
-            <div class="row" *ngIf="!!selectedCustId_flag">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <button 
-                        type="button" 
-                        class="btn btn-success"
-                        (click)="onSelectCustBtn()"
-                        >Select Customer</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row" *ngIf="!!selectedCustId_flag">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="cust_id">Customer's ID</label>
-                        <input
-                            type="text"
-                            id="cust_id"
-                            [formControl]="cust_id"
-                            class="form-control"
-                            [readonly]="true"
-                            style="border: 3px solid red;">
-                    </div>
-                </div>
-            </div>
-              
-            <div class="row" *ngIf="!!selectedCustId_flag">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="cust_name">Customer's Name</label>
-                        <input
-                            type="text"
-                            id="cust_name"
-                            [formControl]="cust_name"
-                            class="form-control"
-                            [readonly]="true"
-                            style="border: 3px solid red;">
-                    </div>
-                </div>
-            </div>     
-            
-            <div class="row" *ngIf="!!selectedCustId_flag">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="cust_mobile_no">Customer's Mobile No</label>
-                        <input
-                        type="number"
-                        id="cust_mobile_no"
-                        [formControl]="cust_mobile_no"
-                        class="form-control"
-                        [readonly]="true"
-                        style="border: 3px solid red;">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row" *ngIf="!!selectedCustId_flag">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="cust_address">Customer's Address</label>
-                        <textarea
-                            type="text"
-                            id="cust_address"
-                            [formControl]="cust_address"
-                            class="form-control"
-                            rows="2"
-                            [readonly]="true"
-                            style="border: 3px solid red;"></textarea>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row" *ngIf="!!selectedCustId_flag">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="cust_gst_no">Customer's GST No</label>
-                        <input
-                        type="number"
-                        id="cust_gst_no"
-                        [formControl]="cust_gst_no"
-                        class="form-control"
-                        [readonly]="true"
-                        style="border: 3px solid red;">
-                    </div>
-                </div>
-            </div>
 
 <!-- ###################################################################################### -->
 

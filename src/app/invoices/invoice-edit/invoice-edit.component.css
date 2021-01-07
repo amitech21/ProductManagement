@@ -10,17 +10,19 @@ label, ul {
 /* ng2-smart-table*/
 :host /deep/ ng2-smart-table table {
     box-shadow: 0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12) !important;
-    height: 350px;
     background-color: snow;
+    font-size: small; 
+
 }
 
 :host /deep/ ng2-smart-table tbody > tr > td:first-child {
     color: royalblue;
+    font-size: small;
 }
 
 :host /deep/ ng2-smart-table tbody > tr > td {
     border-bottom: 1px solid grey;
-    font-size: .875em;
+    font-size: small;
     padding: .375em .75em;
 }
 
@@ -50,7 +52,7 @@ label, ul {
 :host /deep/ ng2-smart-table tbody > tr > th > a {
     color: grey;
     text-decoration: none;
-    font-size: small;
+    font-size: medium;
     font-weight: bold;
 }
 
@@ -128,3 +130,15 @@ label, ul {
     font-weight: bold;
     line-height: 6px;
 }
+
+/* Custom Actions */
+:host /deep/ ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+    font-size: small;
+  }
+  
+  :host /deep/ ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom:hover {
+    color: #5dcfe3;
+  }
