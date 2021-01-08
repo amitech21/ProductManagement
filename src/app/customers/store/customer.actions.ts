@@ -18,9 +18,9 @@ export class SetCustomers implements Action {
     constructor( public payload: Customer[] ) {}
 }
 
-// export class FetchCustomers implements Action {
-//     readonly type = FETCH_CUSTOMERS;
-// }
+export class FetchCustomers implements Action {
+    readonly type = FETCH_CUSTOMERS;
+}
 
 export class FetchCustomersCount implements Action {
     readonly type = FETCH_CUSTOMERS_COUNT;
@@ -63,7 +63,7 @@ export class SetVisibility implements Action {
 
 export type CustomersActions =
 | SetCustomers
-//| FetchCustomers
+| FetchCustomers
 | FetchCustomersCount
 | SetCustomersCount
 | FetchCustomersByPg

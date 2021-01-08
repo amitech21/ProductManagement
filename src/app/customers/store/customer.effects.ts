@@ -16,24 +16,24 @@ export class CustomerEffects {
     customers:Customer[];
     updated_customers:Customer[] = [];
 
-    // @Effect()
-    // fetchCustomers = this.actions$.pipe(
-    //     ofType(CustomersActions.FETCH_CUSTOMERS),
-    //     switchMap(() => {
-    //         return this.http.get<Customer[]>(environment.webAppEndPoint + '/customers/list')
-    //     }),
-    //     map(customers => {
-    //         return customers.map( customer => {
-    //              return {...customer};
-    //         });
-    //     }),
-    //     tap(customers => {
-    //         localStorage.setItem('customers', JSON.stringify(customers));
-    //     }),
-    //     map(customers => {
-    //         return new CustomersActions.SetCustomers(customers);
-    //     })
-    // );
+    @Effect()
+    fetchCustomers = this.actions$.pipe(
+        ofType(CustomersActions.FETCH_CUSTOMERS),
+        switchMap(() => {
+            return this.http.get<Customer[]>(environment.webAppEndPoint + '/customers/list')
+        }),
+        map(customers => {
+            return customers.map( customer => {
+                 return {...customer};
+            });
+        }),
+        tap(customers => {
+            localStorage.setItem('customers', JSON.stringify(customers));
+        }),
+        map(customers => {
+            return new CustomersActions.SetCustomers(customers);
+        })
+    );
 
     @Effect({dispatch: false})
     @Effect()

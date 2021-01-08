@@ -13,6 +13,11 @@ import { Product } from '../products/product.model';
 
     constructor(private http: HttpClient){}
 
+    // /listByPage/{pgNo}/{item_count}
+    getCustomersByPage(pgNo: number , item_count: number): Observable<any> {
+        return this.http.get<Customer[]>(environment.webAppEndPoint + '/customers/listByPage/'+pgNo+"/"+item_count);
+    }
+
     getCustomersByName(cust_name_data: string): Observable<any> {
         return this.http.get<Customer[]>(environment.webAppEndPoint + '/customers/listByName/' + cust_name_data);
     }

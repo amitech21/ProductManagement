@@ -16,24 +16,24 @@ export class ProductEffects {
     products:Product[];
     updated_products:Product[] = [];
 
-    // @Effect()
-    // fetchProducts = this.actions$.pipe(
-    //     ofType(ProductsActions.FETCH_PRODUCTS),
-    //     switchMap(() => {
-    //         return this.http.get<Product[]>(environment.webAppEndPoint + '/products/list')
-    //     }),
-    //     map(products => {
-    //         return products.map( product => {
-    //              return {...product};
-    //         });
-    //     }),
-    //     tap(products => {
-    //         localStorage.setItem('products', JSON.stringify(products));
-    //     }),
-    //     map(products => {
-    //         return new ProductsActions.SetProducts(products);
-    //     })
-    // ); 
+    @Effect()
+    fetchProducts = this.actions$.pipe(
+        ofType(ProductsActions.FETCH_PRODUCTS),
+        switchMap(() => {
+            return this.http.get<Product[]>(environment.webAppEndPoint + '/products/list')
+        }),
+        map(products => {
+            return products.map( product => {
+                 return {...product};
+            });
+        }),
+        tap(products => {
+            localStorage.setItem('products', JSON.stringify(products));
+        }),
+        map(products => {
+            return new ProductsActions.SetProducts(products);
+        })
+    ); 
 
     @Effect({dispatch: false})
     @Effect()

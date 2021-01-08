@@ -25,7 +25,7 @@ export function customerReducer(state = initialState , action: CustomersActions.
         case CustomersActions.SET_CUSTOMERS:
             return {
                 ...state,
-                customers: [...action.payload]
+                customers: action.payload
             };
 
         case CustomersActions.ADD_CUSTOMER:

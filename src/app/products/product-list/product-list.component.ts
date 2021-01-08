@@ -39,7 +39,6 @@ tableSize = 4;
   ) { }
 
   ngOnInit(): void {
-    console.log('ngOnInitngOnInit prod list');
     this.store.dispatch(new ProductActions.FetchProductsCount());
     this.sub_fetchCount = this.store.select('products').subscribe(productsState => {
       this.count = productsState.prod_total_count;

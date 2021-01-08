@@ -1,5 +1,8 @@
 import { Action } from '@ngrx/store';
 import { Invoice } from '../invoice.model';
+import { Customer } from 'src/app/customers/customer.model';
+import { Product } from 'src/app/products/product.model';
+import { SetCustomersCount } from 'src/app/customers/store/customer.actions';
 
 export const SET_INVOICES = '[Invoices] Set Invoices';
 export const FETCH_INVOICES = '[Invoices] Fetch Invoices';
@@ -12,6 +15,10 @@ export const FETCH_CUSTOMERS_BY_NAME = '[Invoices] Fec=tch Customers By Name';
 
 
 export const SET_VISIBILITY = '[Invoices] Set Visibility';
+export const SET_CUSTOMERS = '[Invoices] Set Customers';
+export const SET_CUST_COUNT = '[Invoices] Set Cust Count';
+export const SET_PRODUCTS = '[Invoices] Set Products';
+export const SET_PROD_COUNT = '[Invoices] Set Prod Count';
 
 export class SetInvoices implements Action {
     readonly type = SET_INVOICES;
@@ -46,6 +53,26 @@ export class SetVisibility implements Action {
     constructor(public payload: boolean) {}
 }
 
+export class SetCustomers implements Action {
+    readonly type = SET_CUSTOMERS;
+    constructor(public payload: Customer[]) {}
+}
+
+export class SetCustCount implements Action {
+    readonly type = SET_CUST_COUNT;
+    constructor(public payload: number) {}
+}
+
+export class SetProducts implements Action {
+    readonly type = SET_PRODUCTS;
+    constructor(public payload: Product[]) {}
+}
+
+export class SetProdCount implements Action {
+    readonly type = SET_PROD_COUNT;
+    constructor(public payload: number) {}
+}
+
 export type InvoicesActions =
 | SetInvoices
 | FetchInvoices
@@ -53,4 +80,8 @@ export type InvoicesActions =
 | UpdateInvoice
 | DeleteInvoice
 | StoreInvoices
-| SetVisibility;
+| SetVisibility
+| SetCustomers
+| SetCustomersCount
+| SetProducts
+| SetProdCount;
