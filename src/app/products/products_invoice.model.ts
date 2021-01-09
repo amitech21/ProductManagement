@@ -1,3 +1,4 @@
+import { Product } from './product.model';
 
 
 export class ProductInvoice {
@@ -7,15 +8,22 @@ export class ProductInvoice {
     public imagePath: string;
     public price: number;
     public quantity: number;
-    public selected: String;
 
-    constructor(id: number, name: string,desc: string, imagePath:string, price: number, quantity: number, selected: string){
-        this.id = id;
-        this.name = name;
-        this.description = desc;
-        this.imagePath = imagePath;
-        this.price = price;
+    // constructor(id: number, name: string,desc: string, imagePath:string, price: number, quantity: number){
+    //     this.id = id;
+    //     this.name = name;
+    //     this.description = desc;
+    //     this.imagePath = imagePath;
+    //     this.price = price;
+    //     this.quantity = quantity;
+    // }
+
+    constructor(product: Product, quantity: number){
+        this.id = product.id;
+        this.name = product.name;
+        this.description = product.description;
+        this.imagePath = product.imagePath;
+        this.price = product.price;
         this.quantity = quantity;
-        this.selected = selected;  
     }
 }

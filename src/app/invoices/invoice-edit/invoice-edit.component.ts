@@ -62,9 +62,9 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
 
   // ############# product's list #############
-  sold_products_invoice:ProductInvoice[] = [];
+  //sold_products_invoice:ProductInvoice[] = [];
   selected_products:Product[] = [];
-  sold_products:Product[] = [];
+  sold_products:ProductInvoice[] = [];
   //sold_products: Array<Product> = [];
 
   selectedProdRows: any;
@@ -176,9 +176,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       this.store.select('customers').subscribe(custState=>{
           this.customers = custState.customers;
           this.cust_source.load(this.customers);
-          setTimeout(() => {
-            this.cust_divClick.nativeElement.click();
-            }, 200);
+          setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
       });       
 
     }
@@ -301,63 +299,17 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     }
 
     onClickProdSearchBtn(){
-      // if(this.selectedProdId_flag)
-      //   this.show_prod_search_flag = true;
-      // else
-        this.show_prod_search_flag = !this.show_prod_search_flag;
-
-      //this.selectedProdId_flag = false;
-
+      this.show_prod_search_flag = !this.show_prod_search_flag;
       this.store.dispatch(new ProductActions.FetchProducts());
       this.store.select('products').subscribe(prodState=>{
           this.products = prodState.products;
           this.prod_source.load(this.products);
-          setTimeout(() => {
-            this.prod_divClick.nativeElement.click();
-            }, 200);
+          setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
       });       
-
     }
 
-    // onCustomAction_prod(event) {
-    //   switch ( event.action) {
-    //     case 'selectRecord':
-    //       this.selectRecord_prod(event.data);
-    //       break;
-    //   }
-    // }
-
-    // public selectRecord_prod(formData: any) {
-    //     this.products = [formData];
-    //     this.selectedProdId_flag = true;
-    //      this.prod_source.load(this.products);
-    //      setTimeout(() => {
-    //       this.prod_divClick.nativeElement.click();
-    //       }, 200);
-    // }
-
-    // UserRowSelected Event handler
     onRowSelect(event) {
-    //  console.log(event.selected.checkbox.value);
-    this.selected_products = event.selected;
-    // this.sold_products_invoice = [];
-    // for(var index in this.sold_products)
-    // { 
-    //     this.sold_products_invoice.push(
-    //       new ProductInvoice(
-    //         this.sold_products[index].id,
-    //         this.sold_products[index].name,
-    //         this.sold_products[index].description,
-    //         this.sold_products[index].imagePath,
-    //         this.sold_products[index].price,
-    //         1,
-    //         "Yes"
-    //       )
-    //     );
-    // }
-
-    //this.prod_source.
-    
+    this.selected_products = event.selected;    
   }
 
   onSelectProducts() {
@@ -368,10 +320,17 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
     if(this.sold_products.length === 0)
     {
-      console.log('sold_products empty')
-      this.sold_products = this.selected_products;
+      this.selected_products.forEach(selected_product => {
+        this.sold_products.push(
+          new ProductInvoice(
+            selected_product,
+            0
+          )
+        );
+      });
+
+      //this.sold_products = this.selected_products;
     }else {
-      console.log('sold_products not empty')
       this.sold_products.forEach((item_sold, index_sold) => {
         this.selected_products.forEach((item_selected, index_selected) => {
           if(item_sold.id === item_selected.id)
@@ -384,8 +343,13 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       if(flag)
         alert('At least one of the product is already added');
       else{
-        this.selected_products.forEach((item_sold, index_sold) => {
-          this.sold_products.push(item_sold);
+        this.selected_products.forEach(selected_product => {
+          this.sold_products.push(
+            new ProductInvoice(
+              selected_product,
+              0
+            )
+          );
         });
       }
     }
@@ -394,11 +358,59 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.prod_divClick.nativeElement.click();
       }, 200);
-    
-      //if(item.id !== )
-    
-
   }
+
+  onCustomAction_prod(event) {
+    switch ( event.action) {
+      
+      case 'addQuantity':
+        this.addQuantity_prod(event.data);
+        break;
+
+      case 'removeQuantity':
+        this.removeQuantity_prod(event.data);
+        break;
+
+      case 'removeRow':
+        this.removeRow_prod(event.data);
+        break;
+    }
+  }
+
+  public addQuantity_prod(formData: any) {
+    let product:ProductInvoice = formData;
+    this.sold_products.forEach((sold_product, index) => {
+      if(sold_product.id === product.id){
+        product.quantity = product.quantity + 1;
+        this.sold_products[index] = product;
+      }
+        
+    });
+       this.selected_prod_source.load(this.sold_products);
+       setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
+  }
+
+  public removeQuantity_prod(formData: any) {
+    let product:ProductInvoice = formData;
+    this.sold_products.forEach((sold_product, index) => {
+      if(sold_product.id === product.id){
+        if(sold_product.quantity > 0)
+          product.quantity = product.quantity - 1;
+        this.sold_products[index] = product;
+      }
+        
+    });
+    this.selected_prod_source.load(this.sold_products);
+    setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
+  }
+
+  public removeRow_prod(formData: any) {
+    let product:ProductInvoice = formData;
+    this.sold_products = this.sold_products.filter(sold_product => sold_product.id !== product.id);
+    this.selected_prod_source.load(this.sold_products);
+    setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
+  }
+
 
     onSearch_prod(query: string = '') {
       this.cust_source.setFilter([
@@ -449,18 +461,33 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         price: {
           title: 'Price',
           filter: true
-        },
-        quantity: {
-          title: 'Quantity',
-          filter: {
-            type: 'number'
-          }
         }
       }
     };
 
     prod_newSettings = { 
-      actions: false,
+      actions: {
+        columnTitle: 'Quantity',
+        add: false,
+        edit: false,
+        delete: false,
+        custom: [
+        { 
+          name: 'addQuantity', 
+          title: '<i class="ion-document" title="addQuantity">+ add</i>'
+        },
+        { 
+          name: 'removeQuantity', 
+          title: '<i class="ion-document" title="removeQuantity">- sub</i>'
+        }
+        ,
+        { 
+          name: 'removeRow', 
+          title: '<i class="ion-document" title="removeRow">Delete</i>'
+        }
+      ],
+        position: 'right'
+      },
       columns: {
         id: {
           title: 'ID',

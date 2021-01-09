@@ -93,6 +93,7 @@
                             <ng2-smart-table
                                 [settings]="prod_newSettings" 
                                 [source]="selected_prod_source" 
+                                (custom)="onCustomAction_prod($event)"
                             ></ng2-smart-table>
                         </div>
                         
