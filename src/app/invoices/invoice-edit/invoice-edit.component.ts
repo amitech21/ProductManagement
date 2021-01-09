@@ -12,6 +12,7 @@ import { Customer } from 'src/app/customers/customer.model';
 import { Product } from 'src/app/products/product.model';
 import { InvoiceService } from '../invoice.service'
 import { LocalDataSource } from 'ng2-smart-table';
+import { ProductInvoice } from 'src/app/products/products_invoice.model';
 
 @Component({ 
   selector: 'app-invoice-edit',
@@ -55,12 +56,17 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
   //private selectedProd:Product;
   //prod_name_filter: string;
   products:Product[];
-  public prod_source = new LocalDataSource(this.products); // create the source
+  public prod_source = new LocalDataSource(); // create the source
+  public selected_prod_source = new LocalDataSource(); // create the source
 
 
 
   // ############# product's list #############
-  products_to_sell:Product[] = [];
+  sold_products_invoice:ProductInvoice[] = [];
+  selected_products:Product[] = [];
+  sold_products:Product[] = [];
+  //sold_products: Array<Product> = [];
+
   selectedProdRows: any;
   private storeSub: Subscription;
 
@@ -232,7 +238,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         custom: [
         { name: 'selectRecord', title: '<i class="ion-document" title="selectRecord"> Select </i>'}
       ],
-        position: 'right'
+        position: 'left'
       },
 
       pager: {
@@ -295,12 +301,12 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     }
 
     onClickProdSearchBtn(){
-      if(this.selectedProdId_flag)
-        this.show_prod_search_flag = true;
-      else
+      // if(this.selectedProdId_flag)
+      //   this.show_prod_search_flag = true;
+      // else
         this.show_prod_search_flag = !this.show_prod_search_flag;
 
-      this.selectedProdId_flag = false;
+      //this.selectedProdId_flag = false;
 
       this.store.dispatch(new ProductActions.FetchProducts());
       this.store.select('products').subscribe(prodState=>{
@@ -313,31 +319,85 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
     }
 
-    onCustomAction_prod(event) {
-      switch ( event.action) {
-        case 'selectRecord':
-          this.selectRecord_prod(event.data);
-          break;
-      }
-    }
+    // onCustomAction_prod(event) {
+    //   switch ( event.action) {
+    //     case 'selectRecord':
+    //       this.selectRecord_prod(event.data);
+    //       break;
+    //   }
+    // }
 
-    public selectRecord_prod(formData: any) {
-        this.products = [formData];
-        this.selectedProdId_flag = true;
-         this.prod_source.load(this.products);
-         setTimeout(() => {
-          this.prod_divClick.nativeElement.click();
-          }, 200);
-    }
+    // public selectRecord_prod(formData: any) {
+    //     this.products = [formData];
+    //     this.selectedProdId_flag = true;
+    //      this.prod_source.load(this.products);
+    //      setTimeout(() => {
+    //       this.prod_divClick.nativeElement.click();
+    //       }, 200);
+    // }
 
     // UserRowSelected Event handler
     onRowSelect(event) {
-    this.selectedProdRows = event.selected;
-    console.log(event.selected);
+    //  console.log(event.selected.checkbox.value);
+    this.selected_products = event.selected;
+    // this.sold_products_invoice = [];
+    // for(var index in this.sold_products)
+    // { 
+    //     this.sold_products_invoice.push(
+    //       new ProductInvoice(
+    //         this.sold_products[index].id,
+    //         this.sold_products[index].name,
+    //         this.sold_products[index].description,
+    //         this.sold_products[index].imagePath,
+    //         this.sold_products[index].price,
+    //         1,
+    //         "Yes"
+    //       )
+    //     );
+    // }
+
+    //this.prod_source.
+    
   }
 
   onSelectProducts() {
-    console.log(this.selectedProdRows);
+    this.show_prod_search_flag = !this.show_prod_search_flag;
+    this.selectedProdId_flag = true;
+    let flag:Boolean;
+    flag = false;
+
+    if(this.sold_products.length === 0)
+    {
+      console.log('sold_products empty')
+      this.sold_products = this.selected_products;
+    }else {
+      console.log('sold_products not empty')
+      this.sold_products.forEach((item_sold, index_sold) => {
+        this.selected_products.forEach((item_selected, index_selected) => {
+          if(item_sold.id === item_selected.id)
+          {
+            flag = true;
+          }
+        });
+      });
+      
+      if(flag)
+        alert('At least one of the product is already added');
+      else{
+        this.selected_products.forEach((item_sold, index_sold) => {
+          this.sold_products.push(item_sold);
+        });
+      }
+    }
+
+    this.selected_prod_source.load(this.sold_products);
+    setTimeout(() => {
+      this.prod_divClick.nativeElement.click();
+      }, 200);
+    
+      //if(item.id !== )
+    
+
   }
 
     onSearch_prod(query: string = '') {
@@ -352,15 +412,11 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           search: query
         },
         {
-          field: 'mobile_no',
+          field: 'description',
           search: query
         },
         {
-          field: 'address',
-          search: query
-        },
-        {
-          field: 'gst_no',
+          field: 'price',
           search: query
         }
       ], false); 
@@ -393,6 +449,12 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         price: {
           title: 'Price',
           filter: true
+        },
+        quantity: {
+          title: 'Quantity',
+          filter: {
+            type: 'number'
+          }
         }
       }
     };
@@ -405,19 +467,19 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           filter: false
         },
         name: {
-          title: 'Full Name',
+          title: 'Product Name',
           filter: false
         },
-        mobile_no: {
-          title: 'Mobile No',
+        description: {
+          title: 'Description',
           filter: false
         },
-        address: {
-          title: 'Address',
+        price: {
+          title: 'Price',
           filter: false
         },
-        gst_no: {
-          title: 'GST No',
+        quantity: {
+          title: 'Quantity',
           filter: false
         }
       }

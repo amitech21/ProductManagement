@@ -25,6 +25,7 @@ import {
 import { FilterPipe } from './filter.pipe';
 import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
 import { Ng2CompleterModule } from '@akveo/ng2-completer';
+import { CheckboxComponent } from './invoice-edit/checkbox.component';
 
 @NgModule({
     declarations: [
@@ -34,6 +35,7 @@ import { Ng2CompleterModule } from '@akveo/ng2-completer';
     InvoiceItemComponent,
     InvoiceStartComponent,
     InvoiceEditComponent,
+    CheckboxComponent,
     FilterPipe
     ],
     imports: 

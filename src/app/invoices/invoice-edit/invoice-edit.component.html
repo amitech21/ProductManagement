@@ -16,6 +16,8 @@
                 </div>
             </div>
 
+<!-- ##################################### Customers ################################################# -->
+
             <div class="row">
                 <div class="col-xs-12">
                     <div class="form-group">
@@ -48,7 +50,7 @@
                 </div>
             </div>  
 
-<!-- ###################################################################################### -->
+<!-- ##################################### Products ################################################# -->
 
             <div class="row">
                 <div class="col-xs-12">
@@ -57,6 +59,7 @@
                         <br>
                         <label for="prod_name_filter">Select Product:</label>
                         <br>
+
                         <button          
                         type="button"
                         class="btn btn-success"
@@ -68,29 +71,46 @@
                         type="button"
                         class="btn btn-success"
                         (click)="onClickProdSearchBtn2()">Refresh</button>
-                        <br><br>
-                        <button class="btn btn-success" (click)="onSelectProducts()"> Select Products </button>
-                        <br>
+
+                        <div *ngIf="show_prod_search_flag">
+                            <br><br>
+                            <button 
+                            class="btn btn-success" 
+                            type="button"
+                            (click)="onSelectProducts()"> Select Products </button>
+                            <br><br>
+                        </div>
+                        
                         <ng2-smart-table
-                            *ngIf="show_prod_search_flag && !selectedProdId_flag" 
+                            *ngIf="show_prod_search_flag" 
                             [settings]="prod_settings" 
                             [source]="prod_source" 
                             (userRowSelect)="onRowSelect($event)"
                         ></ng2-smart-table>
+
+                        <div *ngIf="selectedProdId_flag" >
+                            <br><br>
+                            <ng2-smart-table
+                                [settings]="prod_newSettings" 
+                                [source]="selected_prod_source" 
+                            ></ng2-smart-table>
+                        </div>
+                        
                     </div>
                     
                 </div>
             </div> 
  
 
-<!-- ###################################################################################### -->
+<!-- ##################################### End ################################################# -->
 
             <div class="row">
                 <div class="col-xs-12">
+                    <br>
                     <button 
                     type="submit" 
                     class="btn btn-success"
-                    [disabled]="!invoiceForm.valid">Save</button>
+                    [disabled]="!invoiceForm.valid">Create Invoice</button>
                     <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
                 </div>
             </div>
