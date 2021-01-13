@@ -27,6 +27,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
         ReactiveFormsModule, 
         ProductsRoutingModule,
         NgxPaginationModule
-    ]
+    ],
+    
 })
 export class ProductsModule {}

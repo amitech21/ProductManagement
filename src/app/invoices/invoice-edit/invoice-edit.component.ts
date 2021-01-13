@@ -3,7 +3,7 @@ import {  ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as fromApp from '../../store/app.reducer'
 import { Store } from '@ngrx/store';
-import { map} from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import * as InvoiceActions from '../store/invoice.actions'; 
 import * as CustomerActions from '../../customers/store/customer.actions'; 
 import * as ProductActions from '../../products/store/product.actions'; 
@@ -13,6 +13,7 @@ import { Product } from 'src/app/products/product.model';
 import { InvoiceService } from '../invoice.service'
 import { LocalDataSource } from 'ng2-smart-table';
 import { ProductInvoice } from 'src/app/products/products_invoice.model';
+import { Invoice } from '../invoice.model';
 
 @Component({ 
   selector: 'app-invoice-edit',
@@ -23,8 +24,12 @@ import { ProductInvoice } from 'src/app/products/products_invoice.model';
 })
 export class InvoiceEditComponent implements OnInit, OnDestroy {
   private id: number;
-  private editMode: boolean = false;
+  public editMode: boolean = false;
   invoiceForm: FormGroup;
+  public products_price: number = 0;
+  public gst_: number = 0;
+  public discount_: number = 0;
+  public total_price: number = 0;
 
   //public source: LocalDataSource; // add a property to the component
 
@@ -42,6 +47,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
   selectedCustId_flag = false;
   //cust_name_filter: string;
   customers:Customer[];
+  selectedCustomer: Customer;
   //private total_cust_count: number = 0;
   public cust_source = new LocalDataSource(this.customers); // create the source
 
@@ -70,6 +76,10 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
   selectedProdRows: any;
   private storeSub: Subscription;
 
+ // ############# total price #############
+//  show_totalPrice_flag = false;
+
+
 
   constructor(
     private route:ActivatedRoute, 
@@ -78,7 +88,15 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     private invoiceService: InvoiceService,
     private ref: ChangeDetectorRef
     ) { 
+
+      // this.invoiceForm.get('total_gst').valueChanges.subscribe(data => {
+      //   console.log(data);
+      // });
     }
+
+  // getTotalPrice(){
+  //   this.show_totalPrice_flag = true;
+  // }
 
   ngOnDestroy(){
     if(this.storeSub)
@@ -99,6 +117,41 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           this.initForm();
         }
       );
+      
+      this.invoiceForm.get('total_gst').valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      )
+      .subscribe((data:number) => {
+        this.gst_ = data;
+        this.calculateTotalPrice(
+          this.products_price,
+          this.gst_,
+          this.discount_
+        );
+        this.invoiceForm.get('total_price').setValue(this.total_price);
+      });
+
+      this.invoiceForm.get('total_discount').valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      )
+      .subscribe((data:number) => {
+        this.discount_ = data;
+        this.calculateTotalPrice(
+          this.products_price,
+          this.gst_,
+          this.discount_
+        );
+        this.invoiceForm.get('total_price').setValue(this.total_price);
+      });  
+  }
+
+  calculateTotalPrice(products: number, gst:number, discount: number) {
+    let gst_val: number = (products * gst)/100;
+    this.total_price = products + gst_val - discount;
   }
 
   onSubmit() {
@@ -111,7 +164,18 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       }));
     }
     else{
-      this.store.dispatch(new InvoiceActions.AddInvoice(this.invoiceForm.value));
+      this.store.dispatch(new InvoiceActions.AddInvoice(
+        new Invoice(
+        0,
+        '',
+        '', 
+        this.selectedCustomer.id,
+        this.sold_products, 
+        this.invoiceForm.get('total_gst').value,
+        this.invoiceForm.get('total_discount').value,
+        this.invoiceForm.get('total_price').value
+        )
+      ));
     }
     this.router.navigate(['../'], {relativeTo: this.route });
   }
@@ -123,11 +187,17 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
   private initForm(){
     let invoiceId = 0;
-    let invoiceName = '';
-    let invoiceMobileNo = 0;
-    let invoiceAddress = '';
-    let invoiceGstNo= 0;
-    let cust_name= '';
+    // let invoiceCDate = '';
+    // let invoiceMDate = '';
+    // let invoiceCustId = 0;
+    // let invoiceProducts = ProductInvoice[];
+    // let invoiceGst = 0;
+    // let invoiceDiscount = 0;
+    // let invoiceTotalPrice = 0;
+    let invoiceProducts_price = 0;
+    let invoiceTotal_gst = 0;
+    let invoiceTotal_discount = 0;
+    let invoiceTotal_price = 0;
 
     if(this.editMode){
       //const invoice = this.invoiceService.getInvoice(this.id);
@@ -140,11 +210,11 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         });
       }))
       .subscribe(invoice => {
-          invoiceId = invoice.id;
-          invoiceName = invoice.name;
-          invoiceMobileNo = invoice.mobile_no;
-          invoiceAddress = invoice.address;
-          invoiceGstNo = invoice.gst_no;
+          // invoiceId = invoice.id;
+          // invoiceName = invoice.;
+          // invoiceMobileNo = invoice.mobile_no;
+          // invoiceAddress = invoice.address;
+          // invoiceGstNo = invoice.gst_no;
       });
 
       
@@ -152,10 +222,19 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
     this.invoiceForm = new FormGroup({
       'id' : new FormControl(invoiceId),
-      'name' : new FormControl(invoiceName, Validators.required),
-      'mobile_no' : new FormControl(invoiceMobileNo, Validators.required),
-      'address' : new FormControl(invoiceAddress, Validators.required),
-      'gst_no' : new FormControl(invoiceGstNo, Validators.required),
+      'products_price' : new FormControl(invoiceProducts_price),
+      'total_gst' : new FormControl(invoiceTotal_gst),
+      'total_discount' : new FormControl(invoiceTotal_discount),
+      'total_price' : new FormControl(invoiceTotal_price),
+
+      // 'cDate' : new FormControl(invoiceCDate, Validators.required),
+      // 'mDate' : new FormControl(invoiceMDate, Validators.required),
+      // 'cust_id' : new FormControl(invoiceCustId, Validators.required),
+      // 'products_id' : new FormControl(invoiceProducts, Validators.required),
+      // 'gst_no' : new FormControl(invoiceGst, Validators.required),
+      // 'gst_no' : new FormControl(invoiceDiscount, Validators.required),
+      // 'gst_no' : new FormControl(invoiceTotalPrice, Validators.required),
+
     });
 
   }
@@ -190,9 +269,10 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     }
 
     public selectRecord_cust(formData: any) {
-        this.customers = [formData];
+        let selectedCustomers: Customer[] = [formData];
+        this.selectedCustomer = selectedCustomers[0];
         this.selectedCustId_flag = true;
-         this.cust_source.load(this.customers);
+         this.cust_source.load(selectedCustomers);
          setTimeout(() => {
           this.cust_divClick.nativeElement.click();
           }, 200);
@@ -383,10 +463,21 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       if(sold_product.id === product.id){
         product.quantity = product.quantity + 1;
         this.sold_products[index] = product;
+        this.products_price = this.products_price + product.price;
       }
         
     });
        this.selected_prod_source.load(this.sold_products);
+       this.invoiceForm.get('products_price').setValue(this.products_price);
+       this.total_price = this.products_price;
+
+        this.calculateTotalPrice(
+          this.products_price,
+          this.gst_,
+          this.discount_
+        );
+        this.invoiceForm.get('total_price').setValue(this.total_price);
+
        setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
   }
 
@@ -396,11 +487,20 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       if(sold_product.id === product.id){
         if(sold_product.quantity > 0)
           product.quantity = product.quantity - 1;
-        this.sold_products[index] = product;
+          this.sold_products[index] = product;
+          this.products_price = this.products_price - product.price;
       }
         
     });
     this.selected_prod_source.load(this.sold_products);
+    this.invoiceForm.get('products_price').setValue(this.products_price);
+    this.total_price = this.products_price;
+    this.calculateTotalPrice(
+      this.products_price,
+      this.gst_,
+      this.discount_
+    );
+    this.invoiceForm.get('total_price').setValue(this.total_price);
     setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
   }
 
@@ -408,6 +508,15 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     let product:ProductInvoice = formData;
     this.sold_products = this.sold_products.filter(sold_product => sold_product.id !== product.id);
     this.selected_prod_source.load(this.sold_products);
+    this.products_price = this.products_price - (product.price * product.quantity);
+    this.invoiceForm.get('products_price').setValue(this.products_price);
+    this.total_price = this.products_price;
+    this.calculateTotalPrice(
+      this.products_price,
+      this.gst_,
+      this.discount_
+    );
+    this.invoiceForm.get('total_price').setValue(this.total_price);
     setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
   }
 

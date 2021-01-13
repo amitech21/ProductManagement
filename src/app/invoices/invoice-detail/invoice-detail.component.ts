@@ -57,6 +57,7 @@ export class InvoiceDetailComponent implements OnInit {
       )
       .subscribe(invoice =>{
         this.invoice = invoice[0];
+        window.scroll(0,0);
       });
 
       

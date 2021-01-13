@@ -2,7 +2,7 @@
     <div class="col-xs-12">
         <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
             
-            <div class="row" >
+            <div class="row" *ngIf="editMode">
                 <div class="col-xs-12">
                     <div class="form-group">
                         <label for="name">ID : </label>
@@ -10,6 +10,30 @@
                             type="text"
                             id="id"
                             formControlName="id"
+                            class="form-control"
+                            [readonly]="true">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="editMode">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="cDate">Created Date : </label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [readonly]="true">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="editMode">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="mDate">Modified Date : </label>
+                        <input
+                            type="text"
                             class="form-control"
                             [readonly]="true">
                     </div>
@@ -44,7 +68,7 @@
                         <ng2-smart-table
                             *ngIf="selectedCustId_flag" 
                             [settings]="cust_newSettings" 
-                            [source]="cust_source" 
+                            [source]="cust_source"
                         ></ng2-smart-table>
                     </div>
                 </div>
@@ -96,6 +120,47 @@
                                 (custom)="onCustomAction_prod($event)"
                             ></ng2-smart-table>
                         </div>
+
+<!-- ##################################### Total Price ################################################# -->
+
+                        <div *ngIf="selectedCustId_flag && selectedProdId_flag">
+                            <!-- <br>
+                            <button type="button" class="btn btn-success" (click)="getTotalPrice()">Get Total Price</button>
+                            <br> -->
+                            
+                            <label for="products_price">Product's Price: </label>
+                            <input
+                            type="text"
+                            id="products_price"
+                            formControlName="products_price"
+                            class="form-control"
+                            [readonly]="true">
+
+                            <label for="total_gst">Total GST: </label>
+                            <input
+                            type="text"
+                            id="total_gst"
+                            formControlName="total_gst"
+                            class="form-control">
+
+                            <label for="total_discount">Total Discount: </label>
+                            <input
+                            type="text"
+                            id="total_discount"
+                            formControlName="total_discount"
+                            class="form-control">
+
+                            <label 
+                            for="total_price"
+                            style="color: red;">Total Price: </label>
+                            <input
+                            type="text"
+                            id="total_price"
+                            formControlName="total_price"
+                            class="form-control"
+                            [readonly]="true">
+
+                        </div>
                         
                     </div>
                     
@@ -111,7 +176,7 @@
                     <button 
                     type="submit" 
                     class="btn btn-success"
-                    [disabled]="!invoiceForm.valid">Create Invoice</button>
+                    [disabled]="!(selectedCustId_flag && selectedProdId_flag)">Create Invoice</button>
                     <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
                 </div>
             </div>

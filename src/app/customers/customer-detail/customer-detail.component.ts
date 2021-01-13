@@ -57,6 +57,7 @@ export class CustomerDetailComponent implements OnInit {
       )
       .subscribe(customer =>{
         this.customer = customer[0];
+        window.scroll(0,0);
       });
 
       

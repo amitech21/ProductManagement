@@ -34,6 +34,7 @@ export class ProductDetailComponent implements OnInit {
     //localStorage.setItem('products_visibility', "false");
     //this.productListComponent.productsVisibility = false;
 
+
     this.route.params
       .pipe(
         map(params => {
@@ -57,6 +58,7 @@ export class ProductDetailComponent implements OnInit {
       )
       .subscribe(product =>{
         this.product = product[0];
+        window.scroll(0,0);
       });
 
       

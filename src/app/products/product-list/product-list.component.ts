@@ -109,7 +109,6 @@ tableSize = 4;
       pgNo: event-1,
       item_count: this.tableSize
     }));
-
     //this.fetchPosts();
   } 
 

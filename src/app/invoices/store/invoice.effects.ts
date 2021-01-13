@@ -58,8 +58,6 @@ export class InvoiceEffects {
        
         switchMap((invoiceData: InvoicesActions.AddInvoice) => {
 
-            console.log('add invoice');
-
             const headerDict = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -69,13 +67,20 @@ export class InvoiceEffects {
                 headers: new HttpHeaders(headerDict), 
               };
 
+              console.log(invoiceData.payload);
+
             return this.http.post(
                 environment.webAppEndPoint + '/invoices/add' ,
-                new Invoice_add(
-                    invoiceData.payload.name,
-                    invoiceData.payload.mobile_no,
-                    invoiceData.payload.address,
-                    invoiceData.payload.gst_no
+                new Invoice(
+                    0,
+                    "",
+                    "",
+                    invoiceData.payload.cust_id,
+                    invoiceData.payload.products,
+                    invoiceData.payload.gst,
+                    invoiceData.payload.discount,
+                    invoiceData.payload.total_price
+
                 ), 
                 
                 requestOptions);
