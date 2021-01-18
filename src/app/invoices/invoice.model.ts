@@ -1,10 +1,10 @@
 import { ProductInvoice } from '../products/products_invoice.model';
+import { Customer } from '../customers/customer.model';
 
 export class Invoice {
     public id: number;
     public created_date_time: string;
-    public modified_date_time: string;
-    public cust_id: number;
+    public customer: Customer;
     public products: ProductInvoice[];
     public gst: number;
     public discount: number;
@@ -14,8 +14,7 @@ export class Invoice {
     constructor(
         id: number, 
         created_date_time: string,
-        modified_date_time: string, 
-        cust_id: number,
+        customer: Customer,
         products:ProductInvoice[], 
         gst: number,
         discount: number,
@@ -23,8 +22,7 @@ export class Invoice {
         ){
         this.id = id;
         this.created_date_time = created_date_time;
-        this.modified_date_time = modified_date_time;
-        this.cust_id = cust_id;
+        this.customer = customer;
         this.products = products;
         this.gst = gst;
         this.discount = discount;

@@ -7,7 +7,6 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import { environment } from '../../../environments/environment'
-import { Invoice_add } from '../invoice_add.model';
 import { Customer } from 'src/app/customers/customer.model';
 
 
@@ -74,8 +73,7 @@ export class InvoiceEffects {
                 new Invoice(
                     0,
                     "",
-                    "",
-                    invoiceData.payload.cust_id,
+                    invoiceData.payload.customer,
                     invoiceData.payload.products,
                     invoiceData.payload.gst,
                     invoiceData.payload.discount,

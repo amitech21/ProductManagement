@@ -13,6 +13,7 @@ export class InvoiceItemComponent implements OnInit {
   constructor( ) { }
 
   ngOnInit(): void {
+    //console.log(this.invoice);
   }
 
 

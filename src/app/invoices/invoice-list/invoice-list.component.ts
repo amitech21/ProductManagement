@@ -53,7 +53,7 @@ public invoicesVisibility: boolean = true;
     .subscribe(
       (invoices: Invoice[]) => {
         this.invoices = invoices;
-        //console.log(this.invoices);
+        // console.log(this.invoices);
       }
     );
 
@@ -65,10 +65,11 @@ public invoicesVisibility: boolean = true;
     
     // this.store.dispatch(new InvoiceActions.FetchInvoices() );
     // this.store.dispatch(new InvoiceActions.SetVisibility(true) );
+    // console.log('test 1');
     this.invoicesVisibility = true;
     localStorage.setItem('invoices_visibility', "true");
     this.invoices = JSON.parse(localStorage.getItem('invoices'));
-
+    // console.log(this.invoices[3].customer.name);
     //this.router.navigate(['new'] , {relativeTo: this.route} );
   }
 

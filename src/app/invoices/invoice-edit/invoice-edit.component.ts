@@ -168,8 +168,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         new Invoice(
         0,
         '',
-        '', 
-        this.selectedCustomer.id,
+        this.selectedCustomer,
         this.sold_products, 
         this.invoiceForm.get('total_gst').value,
         this.invoiceForm.get('total_discount').value,
@@ -194,7 +193,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     // let invoiceGst = 0;
     // let invoiceDiscount = 0;
     // let invoiceTotalPrice = 0;
-    let invoiceProducts_price = 0;
+    let invoiceCDate = "";
     let invoiceTotal_gst = 0;
     let invoiceTotal_discount = 0;
     let invoiceTotal_price = 0;
@@ -210,11 +209,24 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         });
       }))
       .subscribe(invoice => {
-          // invoiceId = invoice.id;
-          // invoiceName = invoice.;
-          // invoiceMobileNo = invoice.mobile_no;
-          // invoiceAddress = invoice.address;
-          // invoiceGstNo = invoice.gst_no;
+          invoiceId = invoice.id;
+          invoiceCDate = invoice.created_date_time + "test";
+          invoiceTotal_gst = invoice.gst;
+          invoiceTotal_discount = invoice.discount;
+          invoiceTotal_price = invoice.total_price;
+
+          // let selectedCustomers: Customer[];
+          // selectedCustomers[0] = invoice.customer;
+          // this.cust_source.load(selectedCustomers);
+
+          this.selected_prod_source.load(invoice.products);
+
+          setTimeout(() => {
+          this.cust_divClick.nativeElement.click();
+          }, 200);
+
+          this.selectedCustId_flag = true;
+          this.selectedProdId_flag = true;
       });
 
       
@@ -222,7 +234,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
     this.invoiceForm = new FormGroup({
       'id' : new FormControl(invoiceId),
-      'products_price' : new FormControl(invoiceProducts_price),
+      'cDate' : new FormControl(invoiceCDate),
       'total_gst' : new FormControl(invoiceTotal_gst),
       'total_discount' : new FormControl(invoiceTotal_discount),
       'total_price' : new FormControl(invoiceTotal_price),
