@@ -25,7 +25,7 @@ import { Invoice } from '../invoice.model';
 export class InvoiceEditComponent implements OnInit, OnDestroy {
   private id: number;
   public editMode: boolean = false;
-  invoiceForm: FormGroup;
+  public invoiceForm: FormGroup;
   public products_price: number = 0;
   public gst_: number = 0;
   public discount_: number = 0;
@@ -40,28 +40,28 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
   // ############# customer's details #############
   //cust_name_control = new FormControl('');
   //cust_input_name_control = new FormControl('');
-  show_cust_search_flag = false;
+  public show_cust_search_flag = false;
   @ViewChild('cust_divClick') cust_divClick: ElementRef;
  
-  selectedCustId:number;
-  selectedCustId_flag = false;
+  public selectedCustId:number;
+  public selectedCustId_flag = false;
   //cust_name_filter: string;
-  customers:Customer[];
-  selectedCustomer: Customer;
+  public customers:Customer[];
+  public selectedCustomer: Customer;
   //private total_cust_count: number = 0;
   public cust_source = new LocalDataSource(this.customers); // create the source
 
 
   // ############# product's details #############
   //prod_name_control = new FormControl('');
-  show_prod_search_flag = false;
+  public  show_prod_search_flag = false;
   @ViewChild('prod_divClick') prod_divClick: ElementRef;
 
-  selectedProdId:number;
-  selectedProdId_flag = false;
+  public selectedProdId:number;
+  public selectedProdId_flag = false;
   //private selectedProd:Product;
   //prod_name_filter: string;
-  products:Product[];
+  public products:Product[];
   public prod_source = new LocalDataSource(); // create the source
   public selected_prod_source = new LocalDataSource(); // create the source
 
@@ -69,11 +69,11 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
   // ############# product's list #############
   //sold_products_invoice:ProductInvoice[] = [];
-  selected_products:Product[] = [];
-  sold_products:ProductInvoice[] = [];
+  public selected_products:Product[] = [];
+  public sold_products:ProductInvoice[] = [];
   //sold_products: Array<Product> = [];
 
-  selectedProdRows: any;
+  public selectedProdRows: any;
   private storeSub: Subscription;
 
  // ############# total price #############
@@ -192,8 +192,9 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     // let invoiceProducts = ProductInvoice[];
     // let invoiceGst = 0;
     // let invoiceDiscount = 0;
-    // let invoiceTotalPrice = 0;
+
     let invoiceCDate = "";
+    let invoiceProducts_price = 0;
     let invoiceTotal_gst = 0;
     let invoiceTotal_discount = 0;
     let invoiceTotal_price = 0;
@@ -215,10 +216,23 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           invoiceTotal_discount = invoice.discount;
           invoiceTotal_price = invoice.total_price;
 
-          // let selectedCustomers: Customer[];
-          // selectedCustomers[0] = invoice.customer;
-          // this.cust_source.load(selectedCustomers);
+          this.gst_ = invoice.gst;
+          this.discount_ = invoice.discount;
+          this.total_price = invoice.total_price;
 
+          this.products_price = 0;
+          invoice.products.forEach(sold_prod => {
+            //console.log(sold_prod.quantity * sold_prod.price);
+            this.products_price = this.products_price + (sold_prod.quantity * sold_prod.price) ;
+          });
+
+          invoiceProducts_price = this.products_price;
+
+          let selectedCustomers: Customer[] = [];
+          selectedCustomers[0] = invoice.customer;
+          this.cust_source.load(selectedCustomers);
+
+          this.sold_products = invoice.products;
           this.selected_prod_source.load(invoice.products);
 
           setTimeout(() => {
@@ -235,6 +249,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     this.invoiceForm = new FormGroup({
       'id' : new FormControl(invoiceId),
       'cDate' : new FormControl(invoiceCDate),
+      'products_price' : new FormControl(invoiceProducts_price),
       'total_gst' : new FormControl(invoiceTotal_gst),
       'total_discount' : new FormControl(invoiceTotal_discount),
       'total_price' : new FormControl(invoiceTotal_price),
@@ -471,10 +486,21 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
   public addQuantity_prod(formData: any) {
     let product:ProductInvoice = formData;
+    let products:ProductInvoice[] = JSON.parse(JSON.stringify(this.sold_products)); 
     this.sold_products.forEach((sold_product, index) => {
+      
       if(sold_product.id === product.id){
-        product.quantity = product.quantity + 1;
-        this.sold_products[index] = product;
+        product = new ProductInvoice(
+              new Product(
+                product.id,
+                product.name,
+                product.description,
+                product.imagePath,
+                product.price
+              ),product.quantity+1);
+              
+        products.splice(index,1,product);
+        this.sold_products = JSON.parse(JSON.stringify(products)); 
         this.products_price = this.products_price + product.price;
       }
         
