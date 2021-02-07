@@ -47,11 +47,7 @@ tableSize = 4;
   }
 
   ngOnInit(): void {
-    console.log("product list init");
-    this.store.dispatch(new ProductActions.FetchProductsCount());
-
-    // this.store.dispatch(new ProductActions.FetchProductsCount());
-    
+    this.store.dispatch(new ProductActions.FetchProductsCount());    
 
     if(!!this.products)
     {
@@ -91,14 +87,7 @@ tableSize = 4;
   }
 
   onShow(){
-    
-    // this.store.dispatch(new ProductActions.FetchProducts() );
-    // this.store.dispatch(new ProductActions.SetVisibility(true) );
     this.productsVisibility = true;
-    //localStorage.setItem('products_visibility', "true");
-    //this.products = JSON.parse(localStorage.getItem('products'));
-
-    console.log("product list onShow");
 
     this.store.dispatch(new ProductActions.FetchProductsCount());
     this.store.dispatch(new ProductActions.FetchProductsByPg({
@@ -111,18 +100,11 @@ tableSize = 4;
       this.productsVisibility = productsState.visibility;
       this.error = productsState.prodError;
       this.isLoading = productsState.prodLoading;
-
-      console.log(productsState.products);
-      console.log(productsState.prodError);
-
     });
 
-
-    //this.router.navigate(['new'] , {relativeTo: this.route} );
   }
 
   onHide(){
-    //localStorage.setItem('products_visibility', "false");
     this.productsVisibility = false;
     this.store.dispatch(new ProductActions.SetVisibility(false) );
   }
@@ -156,7 +138,6 @@ tableSize = 4;
     this.store.select('products').subscribe(
       prodState => {
         this.products = prodState.products;
-        // this.table_config.currentPage = event;
         this.table_config = {
           id: 'basicPaginate',
           itemsPerPage: this.tableSize,
@@ -165,13 +146,9 @@ tableSize = 4;
         }
       }
     );
-
-    // this.table_config.currentPage = event;
-    //this.fetchPosts();
   } 
 
   onHandleError() {
-    //this.error = null;
     this.store.dispatch(new ProductActions.ClearError());
   }
 

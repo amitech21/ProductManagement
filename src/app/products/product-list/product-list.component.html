@@ -1,4 +1,7 @@
 <app-alert [message]="error" *ngIf="error" (close)="onHandleError()"></app-alert>
+<div *ngIf="isLoading" style="text-align: center;">
+    <app-loading-spinner></app-loading-spinner>
+</div>
 
 <div class="row">
     <div class="col-xs-3">
@@ -17,9 +20,7 @@
 
 <hr>
 
-<div *ngIf="isLoading" style="text-align: center;">
-    <app-loading-spinner></app-loading-spinner>
-</div>
+
 
 <div class="row" *ngIf="productsVisibility">
     <div class="d-flex justify-content-center">

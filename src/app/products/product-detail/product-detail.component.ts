@@ -14,6 +14,7 @@ import * as ProductActions from '../store/product.actions';
 export class ProductDetailComponent implements OnInit {
   product: Product;
   id: number;
+  error: string = null;   // Managed by NgRX
 
   constructor(
     private router: Router,
@@ -22,18 +23,6 @@ export class ProductDetailComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-    // this.route.params
-    //   .subscribe(
-    //     (params: Params) => {
-    //       this.id = +params['id'];
-    //       this.recipe = this.recipeService.getProduct(this.id);
-    //     }
-    //   );
-
-    //this.store.dispatch(new ProductActions.SetVisibility(false));
-    //localStorage.setItem('products_visibility', "false");
-    //this.productListComponent.productsVisibility = false;
-
 
     this.route.params
       .pipe(
@@ -45,15 +34,13 @@ export class ProductDetailComponent implements OnInit {
           return this.store.select('products');
         }),
         map(productsState => {
-          // return productsState.products.find((product, index) => {
-          //   return index === this.id;
-          // });
+
           return productsState.products.filter((product, index)=> {
             if(this.id === product.id)
               {
                 return product; 
               }           
-        });
+          });
         })
       )
       .subscribe(product =>{
@@ -61,7 +48,9 @@ export class ProductDetailComponent implements OnInit {
         window.scroll(0,0);
       });
 
-      
+      this.store.select('products').subscribe(prodState => {
+        this.error = prodState.prodError;
+      });
   }
 
   onAddToShoppingList() {
@@ -78,15 +67,20 @@ export class ProductDetailComponent implements OnInit {
   }
 
   onDeleteProduct(){
-    //this.productService.deleteProduct(this.id);
     this.store.dispatch(new ProductActions.DeleteProduct(this.product.id));
-    //this.store.dispatch(new ProductActions.SetProducts(JSON.parse(localStorage.getItem('products'))));
+    this.store.select('products').subscribe(prodState => {
+      this.error = prodState.prodError;
+    });
     this.router.navigate(['../'], {relativeTo: this.route });
 
   }
 
   onCancelEditing(){
     this.router.navigate(['../'], {relativeTo: this.route });
+  }
+
+  onHandleError() {
+    this.store.dispatch(new ProductActions.ClearError());
   }
 
 }

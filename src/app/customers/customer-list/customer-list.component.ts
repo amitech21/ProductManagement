@@ -20,6 +20,9 @@ subscription: Subscription;
 pre_subscription: Subscription;
 sub_fetchCount: Subscription;
 
+isLoading = false;      // Managed by NgRX
+error: string = null;   // Managed by NgRX
+
 public customersVisibility: boolean = true;
 
 page = 1;
@@ -32,6 +35,8 @@ tableSize = 4;
   //   new Customer('test1 resipe' , 'test 1 desc' , 'https://www.bbcgoodfood.com/sites/default/files/customer-collections/collection-image/2013/05/epic-summer-salad.jpg')
   // ];
 
+  table_config: any;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -39,53 +44,64 @@ tableSize = 4;
   ) { }
 
   ngOnInit(): void {
-
-
     this.store.dispatch(new CustomerActions.FetchCustomersCount());
-    this.sub_fetchCount = this.store.select('customers').subscribe(customersState => {
-      this.count = customersState.cust_total_count;
-    });
 
-    this.customers = JSON.parse(localStorage.getItem('customers'));
-    //console.log(JSON.parse(localStorage.getItem('customers')));
-    //this.store.dispatch(new CustomerActions.SetCustomers(this.customers));
-    this.customersVisibility = JSON.parse(localStorage.getItem('customers_visibility'));
-    
+    if(!!this.customers)
+    {
+      this.sub_fetchCount = this.store.select('customers').subscribe(customersState => {
+        this.count = customersState.cust_total_count;
+        this.customers = customersState.customers;
+        this.customersVisibility = customersState.visibility;
 
-    // this.subscription = this.customerService.customersChanged.subscribe(
-    this.subscription = this.store
-    .select('customers')
-    .pipe
-    (map(customersState => {
-      //this.customersVisibility = customersState.visibility;
-      return customersState;
-    }),
-    map(customersState => customersState.customers))
-    .subscribe(
-      (customers: Customer[]) => {
-        this.customers = customers;
-        //console.log(this.customers);
-      }
-    );
+        this.table_config = {
+          id: 'basicPaginate',
+          itemsPerPage: this.tableSize,
+          currentPage: this.page,
+          totalItems: this.count
+        }
 
-    this.customersVisibility = false;
-    //this.customers = this.customerService.getCustomers();
-    
+      });
+    } else {
+      this.store.dispatch(new CustomerActions.FetchCustomersByPg({
+        pgNo: 0,
+        item_count: 4
+      }) );
+
+      this.sub_fetchCount = this.store.select('customers').subscribe(customersState => {
+        this.count = customersState.cust_total_count;
+        this.customers = customersState.customers;
+        this.customersVisibility = customersState.visibility;
+
+        this.table_config = {
+          id: 'basicPaginate',
+          itemsPerPage: this.tableSize,
+          currentPage: this.page,
+          totalItems: this.count
+        }
+
+      });
+    }
   }
 
   onShow(){
     
-    // this.store.dispatch(new CustomerActions.FetchCustomers() );
-    // this.store.dispatch(new CustomerActions.SetVisibility(true) );
     this.customersVisibility = true;
-    localStorage.setItem('customers_visibility', "true");
-    this.customers = JSON.parse(localStorage.getItem('customers'));
+    
+    this.store.dispatch(new CustomerActions.FetchCustomersCount());
+    this.store.dispatch(new CustomerActions.FetchCustomersByPg({
+      pgNo: 0, item_count: this.tableSize
+    }));
 
-    //this.router.navigate(['new'] , {relativeTo: this.route} );
+    this.sub_fetchCount = this.store.select('customers').subscribe(custState => {
+      this.count = custState.cust_total_count;
+      this.customers = custState.customers;
+      this.customersVisibility = custState.visibility;
+      this.error = custState.custError;
+      this.isLoading = custState.custLoading;
+    });
   }
 
   onHide(){
-    localStorage.setItem('customers_visibility', "false");
     this.customersVisibility = false;
     this.store.dispatch(new CustomerActions.SetVisibility(false) );
   }
@@ -108,19 +124,29 @@ tableSize = 4;
   }
 
   onTableDataChange(event){
-    this.store.dispatch(new CustomerActions.FetchCustomersByPg({
+    console.log(event);
+    this.store.dispatch(
+      new CustomerActions.FetchCustomersByPg({
       pgNo: event-1,
       item_count: this.tableSize
-    }));
+      })
+    );
 
-    //this.fetchPosts();
+    this.store.select('customers').subscribe(
+      custState => {
+        this.customers = custState.customers;
+        this.table_config = {
+          id: 'basicPaginate',
+          itemsPerPage: this.tableSize,
+          currentPage: event,
+          totalItems: this.count
+        }
+      }
+    );
   } 
 
-  // onTableSizeChange(event): void {
-  //   console.log('onTableSizeChange called !!');
-  //   //this.tableSize = event.target.value;
-  //   //this.page = 1;
-  //   //this.fetchPosts();
-  // }
+  onHandleError() {
+    this.store.dispatch(new CustomerActions.ClearError());
+  }
 
 }

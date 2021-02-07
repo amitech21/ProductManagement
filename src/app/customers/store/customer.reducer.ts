@@ -5,9 +5,17 @@ export interface State {
     customers: Customer[] ; 
     visibility: boolean;
     cust_total_count: number;
+    custError: string;
+    custLoading: boolean;
 }
 
-const initialState: State = { customers: [] , visibility: true , cust_total_count: 0 };
+const initialState: State = { 
+    customers: [] , 
+    visibility: true , 
+    cust_total_count: 0 ,
+    custError: null,
+    custLoading: false
+};
 
 
 export function customerReducer(state = initialState , action: CustomersActions.CustomersActions){
@@ -16,22 +24,38 @@ export function customerReducer(state = initialState , action: CustomersActions.
 
     switch(action.type) {
 
-        case CustomersActions.SET_CUSTOMERS_COUNT:
-            return {
-                ...state,
-                cust_total_count: action.payload
-            };
-
         case CustomersActions.SET_CUSTOMERS:
             return {
                 ...state,
-                customers: action.payload
+                customers: [...action.payload],
+                visibility: true,
+                custLoading: false
+            };
+
+        case CustomersActions.FETCH_CUSTOMERS_BY_PAGE:
+            return {
+                ...state,
+                custLoading: true
+            };
+
+        case CustomersActions.FETCH_CUSTOMERS_COUNT:
+            return {
+                ...state,
+                custLoading: true
+            };
+
+        case CustomersActions.SET_CUSTOMERS_COUNT:
+            return {
+                ...state,
+                cust_total_count: action.payload,
+                custLoading: false
             };
 
         case CustomersActions.ADD_CUSTOMER:
             return {
                 ...state,
-                customers: [...state.customers, action.payload]
+                customers: [...state.customers, action.payload],
+                custLoading: true
             };
         
         case CustomersActions.UPDATE_CUSTOMER:
@@ -45,21 +69,9 @@ export function customerReducer(state = initialState , action: CustomersActions.
             return {
                 ...state,
                 //customers: []
-                customers: updatedCustomers
+                customers: updatedCustomers,
+                custLoading: true
             };
-
-            // const updatedCustomer = {
-            //     ...state.customers[action.payload.index],
-            //     ...action.payload.newCustomer
-            // };
-
-            // const updatedCustomers = [...state.customers];
-            // updatedCustomers[action.payload.index] = updatedCustomer;
-
-            // return {
-            //     ...state,
-            //     customers: updatedCustomers
-            // };
 
         case CustomersActions.DELETE_CUSTOMER:
             return {
@@ -67,13 +79,27 @@ export function customerReducer(state = initialState , action: CustomersActions.
                 //customers: []
                 customers: state.customers.filter((customer, index)=> {
                     return customer.id !== action.payload;
-                })
+                }),
+                custLoading: true
             };
 
         case CustomersActions.SET_VISIBILITY:
             return {
                 ...state,
                 visibility: action.payload
+            };
+
+         case CustomersActions.FAIL_CUSTOMER:
+            return {
+                ...state,
+                custError: action.payload , 
+                custLoading: false
+            };
+
+        case CustomersActions.CLEAR_ERROR:
+            return {
+                ...state,
+                custError: null
             };
         
         default:

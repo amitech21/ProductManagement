@@ -1,3 +1,8 @@
+<app-alert [message]="error" *ngIf="error" (close)="onHandleError()"></app-alert>
+<div *ngIf="isLoading" style="text-align: center;">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+
 <div class="row">
     <div class="col-xs-3">
         <button class="btn btn-success"
@@ -16,27 +21,26 @@
 <hr>
 
 <div class="row" *ngIf="customersVisibility && !!customers">
-    <div class="col-xs-12">
-        
-        <app-customer-item
-        *ngFor="let customerEl of customers | paginate : {
-            itemsPerPage: tableSize,
-            currentPage: page,
-            totalItems: count
-          }; let i = index"
-        [customer]="customerEl"
-        ></app-customer-item>
-    </div>
-    <!-- <ngb-pagination [collectionSize]="120" [(page)]="page" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination> -->
-
     <div class="d-flex justify-content-center">
         <pagination-controls 
+          id="basicPaginate"
           responsive="true" 
+          directionLinks="true"
+          autoHide="true"
           previousLabel="Prev" 
           nextLabel="Next" 
+          screenReaderPaginationLabel="Pagination"
           (pageChange)="onTableDataChange($event)"
           >
         </pagination-controls>
-      </div>
+    </div>
+
+    <div class="col-xs-12">
+        
+        <app-customer-item
+        *ngFor="let customerEl of customers | paginate : table_config; let i = index"
+        [customer]="customerEl"
+        ></app-customer-item>
+    </div>
 
 </div>

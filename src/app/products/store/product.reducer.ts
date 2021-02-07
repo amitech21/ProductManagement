@@ -28,12 +28,6 @@ export function productReducer(
 
     switch(action.type) {
 
-        case ProductsActions.FETCH_PRODUCTS_BY_PAGE:
-            return {
-                ...state,
-                prodLoading: true
-            };
-
         case ProductsActions.SET_PRODUCTS:
             return {
                 ...state,
@@ -41,6 +35,12 @@ export function productReducer(
                 visibility: true,
                 prodLoading: false
 
+            };
+
+        case ProductsActions.FETCH_PRODUCTS_BY_PAGE:
+            return {
+                ...state,
+                prodLoading: true
             };
 
         case ProductsActions.FETCH_PRODUCTS_COUNT:
@@ -59,7 +59,8 @@ export function productReducer(
         case ProductsActions.ADD_PRODUCT:
             return {
                 ...state,
-                products: [...state.products, action.payload]
+                products: [...state.products, action.payload],
+                prodLoading: true
             };
         
         case ProductsActions.UPDATE_PRODUCT:
@@ -73,21 +74,9 @@ export function productReducer(
             return {
                 ...state,
                 //products: []
-                products: updatedProducts
+                products: updatedProducts,
+                prodLoading: true
             };
-
-            // const updatedProduct = {
-            //     ...state.products[action.payload.index],
-            //     ...action.payload.newProduct
-            // };
-
-            // const updatedProducts = [...state.products];
-            // updatedProducts[action.payload.index] = updatedProduct;
-
-            // return {
-            //     ...state,
-            //     products: updatedProducts
-            // };
 
         case ProductsActions.DELETE_PRODUCT:
             return {
@@ -95,7 +84,8 @@ export function productReducer(
                 //products: []
                 products: state.products.filter((product, index)=> {
                     return product.id !== action.payload;
-                })
+                }),
+                prodLoading: true
             };
 
         case ProductsActions.SET_VISIBILITY:
@@ -107,7 +97,6 @@ export function productReducer(
         case ProductsActions.FAIL_PRODUCT:
             return {
                 ...state,
-                products: null,
                 prodError: action.payload , 
                 prodLoading: false
             };

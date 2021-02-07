@@ -13,23 +13,29 @@ import * as fromApp from '../store/app.reducer'
 })
 export class ProductsComponent implements OnInit {
   selectedProduct: Product;
+  isLoading = false;      // Managed by NgRX
+  error: string = null;   // Managed by NgRX
+
+  flag: boolean;
+
   constructor(
     private store: Store<fromApp.AppState>
   ) {}
 
-  flag: boolean;
 
   ngOnInit(): void {
-    console.log("/products on init");
-
-    // this.flag = (localStorage.getItem('products_visibility') === "false" ) ? false : true; 
 
     this.store.select('products').subscribe(prodState => {
-      //if(prodState.products.length == 0)
       this.flag = (!!prodState.products) ? true : false; 
+      this.error = prodState.prodError;
     });
 
     this.store.dispatch(new ProductActions.SetVisibility(this.flag) );
   }
+
+  onHandleError() {
+    this.store.dispatch(new ProductActions.ClearError());
+  }
+
 
 }

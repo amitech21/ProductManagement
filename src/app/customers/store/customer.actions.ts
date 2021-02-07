@@ -11,6 +11,8 @@ export const UPDATE_CUSTOMER = '[Customers] Update Customer';
 export const DELETE_CUSTOMER = '[Customers] Delete Customer';
 export const STORE_CUSTOMER = '[Customers] Store Customer';
 
+export const FAIL_CUSTOMER = '[Customers] Fail Customers';
+export const CLEAR_ERROR = '[Customers] Clear Error';
 export const SET_VISIBILITY = '[Customers] Set Visibility';
 
 export class SetCustomers implements Action {
@@ -61,6 +63,15 @@ export class SetVisibility implements Action {
     constructor(public payload: boolean) {}
 }
 
+export class CustomerFail implements Action {
+    readonly type = FAIL_CUSTOMER;
+    constructor(public payload: string ) {}
+}
+
+export class ClearError implements Action{
+    readonly type = CLEAR_ERROR;
+}
+
 export type CustomersActions =
 | SetCustomers
 | FetchCustomers
@@ -71,4 +82,6 @@ export type CustomersActions =
 | UpdateCustomer
 | DeleteCustomer
 | StoreCustomers
-| SetVisibility;
+| SetVisibility
+| CustomerFail
+| ClearError;

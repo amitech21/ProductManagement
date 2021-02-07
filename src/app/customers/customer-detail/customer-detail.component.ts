@@ -14,6 +14,7 @@ import * as CustomerActions from '../store/customer.actions';
 export class CustomerDetailComponent implements OnInit {
   customer: Customer;
   id: number;
+  error: string = null;   // Managed by NgRX
 
   constructor(
     private router: Router,
@@ -22,17 +23,6 @@ export class CustomerDetailComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-    // this.route.params
-    //   .subscribe(
-    //     (params: Params) => {
-    //       this.id = +params['id'];
-    //       this.recipe = this.recipeService.getCustomer(this.id);
-    //     }
-    //   );
-
-    //this.store.dispatch(new CustomerActions.SetVisibility(false));
-    //localStorage.setItem('customers_visibility', "false");
-    //this.customerListComponent.customersVisibility = false;
 
     this.route.params
       .pipe(
@@ -44,9 +34,7 @@ export class CustomerDetailComponent implements OnInit {
           return this.store.select('customers');
         }),
         map(customersState => {
-          // return customersState.customers.find((customer, index) => {
-          //   return index === this.id;
-          // });
+
           return customersState.customers.filter((customer, index)=> {
             if(this.id === customer.id)
               {
@@ -60,7 +48,9 @@ export class CustomerDetailComponent implements OnInit {
         window.scroll(0,0);
       });
 
-      
+      this.store.select('customers').subscribe(custState => {
+        this.error = custState.custError;
+      });
   }
 
   onAddToShoppingList() {
@@ -79,13 +69,19 @@ export class CustomerDetailComponent implements OnInit {
   onDeleteCustomer(){
     //this.customerService.deleteCustomer(this.id);
     this.store.dispatch(new CustomerActions.DeleteCustomer(this.customer.id));
-    //this.store.dispatch(new CustomerActions.SetCustomers(JSON.parse(localStorage.getItem('customers'))));
+    this.store.select('customers').subscribe(custState => {
+      this.error = custState.custError;
+    });
     this.router.navigate(['../'], {relativeTo: this.route });
 
   }
 
   onCancelEditing(){
     this.router.navigate(['../'], {relativeTo: this.route });
+  }
+
+  onHandleError() {
+    this.store.dispatch(new CustomerActions.ClearError());
   }
 
 }

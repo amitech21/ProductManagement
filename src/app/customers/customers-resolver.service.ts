@@ -17,7 +17,6 @@ export class CustomersResolverService implements Resolve<Customer[]> {
     ) {}
     
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Customer[] | import("rxjs").Observable<Customer[]> | Promise<Customer[]> {
-        //const customers_c: Customer[] = JSON.parse(localStorage.getItem("customers"));
         
         // if (customers.length === 0) {
             //return this.dataStorageService.fetchCustomers();
@@ -27,23 +26,23 @@ export class CustomersResolverService implements Resolve<Customer[]> {
                 map(customersState => {
                     return customersState.customers;
                 }),
-                switchMap(customers => {
-                    if(customers.length == 0){
-                        localStorage.removeItem("customers");
-                        // this.store.dispatch(new CustomerActions.FetchCustomers() );
-                        this.store.dispatch(new CustomerActions.FetchCustomersByPg({
-                            pgNo: 0,
-                            item_count: 4
-                          }));
-                        return this.actions$.pipe(
-                            ofType(CustomerActions.SET_CUSTOMERS),  
-                            take(1)
-                        );
+            //     switchMap(customers => {
+            //         if(customers.length == 0){
+            //             
+            //             // this.store.dispatch(new CustomerActions.FetchCustomers() );
+            //             this.store.dispatch(new CustomerActions.FetchCustomersByPg({
+            //                 pgNo: 0,
+            //                 item_count: 4
+            //               }));
+            //             return this.actions$.pipe(
+            //                 ofType(CustomerActions.SET_CUSTOMERS),  
+            //                 take(1)
+            //             );
                         
-                    }else {
-                        return of(customers); 
-                    }
-                })
+            //         }else {
+            //             return of(customers); 
+            //         }
+            //     })
             );
 
             

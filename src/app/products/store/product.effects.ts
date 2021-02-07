@@ -17,25 +17,6 @@ export class ProductEffects {
     products:Product[];
     updated_products:Product[] = [];
 
-    // @Effect()
-    // fetchProducts = this.actions$.pipe(
-    //     ofType(ProductsActions.FETCH_PRODUCTS),
-    //     switchMap(() => {
-    //         return this.http.get<Product[]>(environment.webAppEndPoint + '/products/list')
-    //     }),
-    //     map(products => {
-    //         return products.map( product => {
-    //              return {...product};
-    //         });
-    //     }),
-    //     tap(products => {
-    //         localStorage.setItem('products', JSON.stringify(products));
-    //     }),
-    //     map(products => {
-    //         return new ProductsActions.SetProducts(products);
-    //     })
-    // ); 
-
     @Effect({dispatch: true})
     fetchProductsCount = this.actions$.pipe(
         ofType(ProductsActions.FETCH_PRODUCTS_COUNT),
@@ -62,50 +43,18 @@ export class ProductEffects {
                 + '/'
                 + paylod_data.payload.item_count                
             ).pipe(
+                map((products: Product[]) => {
+                    return new ProductsActions.SetProducts(products);
+                }),
                 catchError((errorRes: HttpErrorResponse | any) => {
                     return handleError(errorRes);
                 })
             );
-        }),   
-        map((products: Product[]) => {
-            return new ProductsActions.SetProducts(products);
         })
-        // tap(products => {
-        //     new ProductsActions.SetProducts(products);
-        // }),
-        // map(products => {
-        //     return new ProductsActions.SetProducts(products);
-        //     // return products.map( product => {
-        //     //      return {...product};
-        //     // });
-        // }),
-        // catchError(errorRes => {
-        //     console.log(errorRes);
-        //     return handleError(errorRes);
-        // })
-        // tap(products => {
-        //     localStorage.setItem('products', JSON.stringify(products));
-        // }),
-        
     );
 
-    // @Effect({dispatch: false})
-    // storeProducts = this.actions$.pipe(
-    //     ofType(ProductsActions.STORE_PRODUCT),
-    //     withLatestFrom(
-    //         this.store.select('products')
-    //     ), // Add value from one Observable to another
-    //     // actionData : is action from ofType()
-    //     // productsState : is data from withLatestFrom
-    //     switchMap(([actionData, productsState]) => {
-    //         return this.http.put(
-    //             environment.webAppEndPoint + '/products/add',
-    //             productsState.products
-    //             );
-    //     })
-    // );
 
-    @Effect({dispatch: false})
+    @Effect({dispatch: true})
     addProduct = this.actions$.pipe(
         ofType(ProductsActions.ADD_PRODUCT),
        
@@ -129,35 +78,38 @@ export class ProductEffects {
                     productData.payload.price
                 ), 
                 
-                requestOptions);
+                requestOptions).pipe(
+                    catchError((errorRes: HttpErrorResponse | any) => {
+                        return handleError(errorRes);
+                    })
+                );
         }),
         switchMap(()=>{
             return this.http.get(environment.webAppEndPoint + '/products/list').pipe(
-                tap((res: Product[]) =>{
-                    // add product to cache
-                    //localStorage.setItem('products', JSON.stringify(res));
-                    this.store.dispatch(new ProductsActions.SetProducts(res));
-                } )
+                map((products: Product[]) =>{
+                    return new ProductsActions.SetProducts(products);
+                } ),
+                catchError((errorRes: HttpErrorResponse | any) => {
+                    return handleError(errorRes);
+                })
             );
         })
     );
 
-    @Effect({dispatch: false})
+    @Effect({dispatch: true})
     updateProduct = this.actions$.pipe(
         ofType(ProductsActions.UPDATE_PRODUCT),
         switchMap((productData: ProductsActions.UpdateProduct) => {
-            //console.log(productData.payload.newProduct);
 
-            this.products = JSON.parse(localStorage.getItem('products'));
-            this.products.filter((product, index)=> {
-                //return product.id !== productData.payload.index;
-                
-                if(product.id === productData.payload.newProduct.id)
-                    this.updated_products.push(productData.payload.newProduct);
-                else 
-                    this.updated_products.push(product);
-            })
-            //localStorage.setItem('products', JSON.stringify(this.updated_products));
+            this.store.select('products').subscribe(prodState => {
+                this.products = prodState.products;
+                prodState.products.filter((product, index)=> {
+                    if(product.id === productData.payload.newProduct.id)
+                        this.updated_products.push(productData.payload.newProduct);
+                    else 
+                        this.updated_products.push(product);
+                })
+            });
 
             const headerDict = {
                 'Content-Type': 'application/json',
@@ -173,36 +125,36 @@ export class ProductEffects {
                 productData.payload.newProduct , 
                 requestOptions)
                 .pipe(
-                    tap(response => {
-                        //console.log("http tap in update");
-                        //console.log(response);
+                    map(() => {
+                        return new ProductsActions.SetProducts(this.updated_products);
                     }),
-                    map(()=>{
-                        //console.log("http map");
-                        //return new ProductsActions.AddProduct(productData.payload);
+                    catchError((errorRes: HttpErrorResponse | any) => {
+                        return handleError(errorRes);
                     })
-            );
-        })
+                );
+            })
     );
 
-    @Effect({dispatch: false})
+    @Effect({dispatch: true})
     deleteProduct = this.actions$.pipe(
         ofType(ProductsActions.DELETE_PRODUCT),
-        //map( action => action.payload ),
         switchMap((payload: ProductsActions.DeleteProduct) => {
 
-            this.products = JSON.parse(localStorage.getItem('products'));
-            this.products = this.products.filter((product, index)=> {
-                return product.id !== payload.payload;
-            })
-            //localStorage.setItem('products', JSON.stringify(this.products));
+            this.store.select('products').subscribe(prodState => {
+                this.products = prodState.products;
+                prodState.products.filter((product, index)=> {
+                    return product.id !== payload.payload;
+                })
+            });
 
             return this.http.delete(environment.webAppEndPoint + '/products/delete/' + payload.payload.toString() )
             .pipe(
                 map(() => {
-                            // return new ProductsActions.SetProducts(this.products);      
-                        }
-                    )
+                    return new ProductsActions.SetProducts(this.products);
+                }),
+                catchError((errorRes: HttpErrorResponse | any) => {
+                    return handleError(errorRes);
+                })
             );
         })
     );

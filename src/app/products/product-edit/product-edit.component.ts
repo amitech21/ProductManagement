@@ -17,6 +17,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   id: number;
   editMode: boolean = false;
   productForm: FormGroup;
+  // error: string = null;   // Managed by NgRX
 
   private storeSub: Subscription;
 
@@ -43,12 +44,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    // const newProduct = new Product(
-    //   this.productForm.value['name'],
-    //   this.productForm.value['description'],
-    //   this.productForm.value['imagePath'],
-    //   this.productForm.value['ingredients'],
-    //   );
 
     if(this.editMode)
     {
@@ -60,31 +55,16 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     else{
       this.store.dispatch(new ProductActions.AddProduct(this.productForm.value));
     }
+    // this.store.select('products').subscribe(prodState => {
+    //   this.error = prodState.prodError;
+    // });
     this.router.navigate(['../'], {relativeTo: this.route });
   }
 
-  // onAddIngredient() {
-  //   (<FormArray>this.productForm.get('ingredients')).push(
-  //     new FormGroup({
-  //       'name' : new FormControl(null, Validators.required),
-  //       'amount' : new FormControl(null, [
-  //         Validators.required,
-  //         Validators.pattern(/^[1-9]+[0-9]*$/)
-  //       ])
-  //     })
-  //   );
-  // }
-
-  // OnDeleteIngrdient(index: number) {
-  //   (<FormArray>this.productForm.get('ingredients')).removeAt(index);
-  // }
   onCancel() {   
     this.router.navigate(['../'], {relativeTo: this.route });
   }
 
-  // get controls() { // a getter!
-  //   return (<FormArray>this.productForm.get('ingredients')).controls;
-  // }
 
   private initForm(){
     let productId = 0;
@@ -109,19 +89,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
           productImagePath = product.imagePath;
           productDescription = product.description;
           productPrice = product.price;
-          // if(product['ingredients']) {
-          //   for (let ingredient of product.ingredients) {
-          //     productIngredients.push(
-          //       new FormGroup({
-          //         'name' : new FormControl(ingredient.name, Validators.required),
-          //         'amount' : new FormControl(ingredient.amount, [
-          //           Validators.required,
-          //           Validators.pattern(/^[1-9]+[0-9]*$/)
-          //         ])
-          //       })
-          //     )
-          //   }
-          // }
       });
 
       

@@ -14,6 +14,9 @@ import { map } from 'rxjs/operators';
 })
 export class CustomersComponent implements OnInit {
   selectedCustomer: Customer;
+  isLoading = false;      // Managed by NgRX
+  error: string = null;   // Managed by NgRX
+
   constructor(
     private store: Store<fromApp.AppState>
   ) {}
@@ -21,18 +24,15 @@ export class CustomersComponent implements OnInit {
   flag: boolean;
 
   ngOnInit(): void {
-    this.flag = (localStorage.getItem('customers_visibility') === "false" ) ? false : true; 
-
-    if(!localStorage.getItem('customers')){
-      this.store.dispatch(new CustomerActions.FetchCustomersByPg({
-        pgNo: 0,
-        item_count: 4
-      }));
-    }
-//      this.store.dispatch(new CustomerActions.FetchCustomers());
-
-
+    this.store.select('customers').subscribe(custState => {
+      this.flag = (!!custState.customers) ? true : false; 
+      this.error = custState.custError;
+    });
     this.store.dispatch(new CustomerActions.SetVisibility(this.flag) );
+  }
+
+  onHandleError() {
+    this.store.dispatch(new CustomerActions.ClearError());
   }
 
 }
