@@ -12,7 +12,7 @@ export interface AppState {
     auth: fromAuth.State;
     products: fromProducts.State;
     customers: fromCustomers.State;
-    invoices: fromInvoices.State;
+    invoices: fromInvoices.State;    
 }
 
 export const appReducer: ActionReducerMap<AppState> = {

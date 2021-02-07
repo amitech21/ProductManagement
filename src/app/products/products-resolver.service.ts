@@ -9,19 +9,20 @@ import { take, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
-export class ProductsResolverService implements Resolve<Product[]> {
+export class ProductsResolverService /*implements Resolve<Product[]>*/ {
 
     constructor(
         private store: Store<fromApp.AppState>,
         private actions$: Actions,
     ) {}
     
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Product[] | import("rxjs").Observable<Product[]> | Promise<Product[]> {
+/*    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Product[] | import("rxjs").Observable<Product[]> | Promise<Product[]> {
         //const products_c: Product[] = JSON.parse(localStorage.getItem("products"));
         
         // if (products.length === 0) {
             //return this.dataStorageService.fetchProducts();
 
+        
             return this.store.select('products').pipe(
                 take(1),
                 map(productsState => {
@@ -29,8 +30,9 @@ export class ProductsResolverService implements Resolve<Product[]> {
                 }),
                 switchMap(products => {
                     if(products.length == 0){
-                        localStorage.removeItem("products");
+                        //localStorage.removeItem("products");
                         // this.store.dispatch(new ProductActions.FetchProducts() );
+                        this.store.dispatch(new ProductActions.FetchProductsCount() );
                         this.store.dispatch(new ProductActions.FetchProductsByPg({
                             pgNo: 0,
                             item_count: 4
@@ -46,11 +48,11 @@ export class ProductsResolverService implements Resolve<Product[]> {
                 })
             );
 
-            
+           
 
         // } else {
         //     return products;
         // }
-    }
+    } */ 
 
 }

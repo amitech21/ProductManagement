@@ -1,13 +1,14 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import * as ProductsActions from '../store/product.actions';
 import { switchMap, map, withLatestFrom, tap, catchError, mapTo } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Product } from '../product.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import { environment } from '../../../environments/environment'
 import { Product_add } from '../product_add.model';
+import { of } from 'rxjs';
 
 
 @Injectable()
@@ -16,38 +17,42 @@ export class ProductEffects {
     products:Product[];
     updated_products:Product[] = [];
 
-    @Effect()
-    fetchProducts = this.actions$.pipe(
-        ofType(ProductsActions.FETCH_PRODUCTS),
-        switchMap(() => {
-            return this.http.get<Product[]>(environment.webAppEndPoint + '/products/list')
-        }),
-        map(products => {
-            return products.map( product => {
-                 return {...product};
-            });
-        }),
-        tap(products => {
-            localStorage.setItem('products', JSON.stringify(products));
-        }),
-        map(products => {
-            return new ProductsActions.SetProducts(products);
-        })
-    ); 
+    // @Effect()
+    // fetchProducts = this.actions$.pipe(
+    //     ofType(ProductsActions.FETCH_PRODUCTS),
+    //     switchMap(() => {
+    //         return this.http.get<Product[]>(environment.webAppEndPoint + '/products/list')
+    //     }),
+    //     map(products => {
+    //         return products.map( product => {
+    //              return {...product};
+    //         });
+    //     }),
+    //     tap(products => {
+    //         localStorage.setItem('products', JSON.stringify(products));
+    //     }),
+    //     map(products => {
+    //         return new ProductsActions.SetProducts(products);
+    //     })
+    // ); 
 
-    @Effect({dispatch: false})
-    @Effect()
+    @Effect({dispatch: true})
     fetchProductsCount = this.actions$.pipe(
         ofType(ProductsActions.FETCH_PRODUCTS_COUNT),
         switchMap(() => {
             return this.http.get<number>(environment.webAppEndPoint + '/products/listCount')
+            .pipe(
+                map((count: number) => {
+                    return new ProductsActions.SetProductsCount(count);
+                }),
+                catchError((errorRes: HttpErrorResponse | any) => {
+                    return handleError(errorRes);
+                })
+            );
         }),
-        map((count: number) => {
-            return new ProductsActions.SetProductsCount(count);
-        })
     );
 
-    @Effect()
+    @Effect({dispatch: true})
     fetchProductsByPg = this.actions$.pipe(
         ofType(ProductsActions.FETCH_PRODUCTS_BY_PAGE),
         switchMap((paylod_data: ProductsActions.FetchProductsByPg) => {
@@ -56,36 +61,49 @@ export class ProductEffects {
                 + paylod_data.payload.pgNo
                 + '/'
                 + paylod_data.payload.item_count                
-            )
-        }),
-        map(products => {
-            return products.map( product => {
-                 return {...product};
-            });
-        }),
-        tap(products => {
-            localStorage.setItem('products', JSON.stringify(products));
-        }),
-        map(products => {
+            ).pipe(
+                catchError((errorRes: HttpErrorResponse | any) => {
+                    return handleError(errorRes);
+                })
+            );
+        }),   
+        map((products: Product[]) => {
             return new ProductsActions.SetProducts(products);
         })
+        // tap(products => {
+        //     new ProductsActions.SetProducts(products);
+        // }),
+        // map(products => {
+        //     return new ProductsActions.SetProducts(products);
+        //     // return products.map( product => {
+        //     //      return {...product};
+        //     // });
+        // }),
+        // catchError(errorRes => {
+        //     console.log(errorRes);
+        //     return handleError(errorRes);
+        // })
+        // tap(products => {
+        //     localStorage.setItem('products', JSON.stringify(products));
+        // }),
+        
     );
 
-    @Effect({dispatch: false})
-    storeProducts = this.actions$.pipe(
-        ofType(ProductsActions.STORE_PRODUCT),
-        withLatestFrom(
-            this.store.select('products')
-        ), // Add value from one Observable to another
-        // actionData : is action from ofType()
-        // productsState : is data from withLatestFrom
-        switchMap(([actionData, productsState]) => {
-            return this.http.put(
-                environment.webAppEndPoint + '/products/add',
-                productsState.products
-                );
-        })
-    );
+    // @Effect({dispatch: false})
+    // storeProducts = this.actions$.pipe(
+    //     ofType(ProductsActions.STORE_PRODUCT),
+    //     withLatestFrom(
+    //         this.store.select('products')
+    //     ), // Add value from one Observable to another
+    //     // actionData : is action from ofType()
+    //     // productsState : is data from withLatestFrom
+    //     switchMap(([actionData, productsState]) => {
+    //         return this.http.put(
+    //             environment.webAppEndPoint + '/products/add',
+    //             productsState.products
+    //             );
+    //     })
+    // );
 
     @Effect({dispatch: false})
     addProduct = this.actions$.pipe(
@@ -117,7 +135,7 @@ export class ProductEffects {
             return this.http.get(environment.webAppEndPoint + '/products/list').pipe(
                 tap((res: Product[]) =>{
                     // add product to cache
-                    localStorage.setItem('products', JSON.stringify(res));
+                    //localStorage.setItem('products', JSON.stringify(res));
                     this.store.dispatch(new ProductsActions.SetProducts(res));
                 } )
             );
@@ -139,7 +157,7 @@ export class ProductEffects {
                 else 
                     this.updated_products.push(product);
             })
-            localStorage.setItem('products', JSON.stringify(this.updated_products));
+            //localStorage.setItem('products', JSON.stringify(this.updated_products));
 
             const headerDict = {
                 'Content-Type': 'application/json',
@@ -177,7 +195,7 @@ export class ProductEffects {
             this.products = this.products.filter((product, index)=> {
                 return product.id !== payload.payload;
             })
-            localStorage.setItem('products', JSON.stringify(this.products));
+            //localStorage.setItem('products', JSON.stringify(this.products));
 
             return this.http.delete(environment.webAppEndPoint + '/products/delete/' + payload.payload.toString() )
             .pipe(
@@ -189,10 +207,29 @@ export class ProductEffects {
         })
     );
 
-
+    
     constructor(
         private actions$: Actions,
         private http: HttpClient,
         private store: Store<fromApp.AppState>
         ) {} 
 }
+
+const handleError = (errorRes: HttpErrorResponse | any) => {
+
+    let errorMessage = "Unknown error occured !!!!";
+
+                if(errorRes.status == 0)
+                    return of(new ProductsActions.ProductFail("Connection refused from API server"));
+                else if(!errorRes)
+                    return of(new ProductsActions.ProductFail(errorMessage));
+                else if(!errorRes.error)
+                    return of(new ProductsActions.ProductFail(errorRes));
+                else if(!errorRes.error.error)
+                    return of(new ProductsActions.ProductFail(errorRes.error));
+                else if(!errorRes.error.error.message)
+                    return of(new ProductsActions.ProductFail(errorRes.error.error));
+
+                    // of() to create new Observable
+                    return of(new ProductsActions.ProductFail(errorRes.error.error.message));
+};

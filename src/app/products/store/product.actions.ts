@@ -12,6 +12,8 @@ export const UPDATE_PRODUCT = '[Products] Update Product';
 export const DELETE_PRODUCT = '[Products] Delete Product';
 export const STORE_PRODUCT = '[Products] Store Product';
 
+export const FAIL_PRODUCT = '[Products] Fail Product';
+export const CLEAR_ERROR = '[Products] Clear Error';
 export const SET_VISIBILITY = '[Products] Set Visibility';
 
 
@@ -63,14 +65,25 @@ export class SetVisibility implements Action {
     constructor(public payload: boolean) {}
 }
 
+export class ProductFail implements Action {
+    readonly type = FAIL_PRODUCT;
+    constructor(public payload: string ) {}
+}
+
+export class ClearError implements Action{
+    readonly type = CLEAR_ERROR;
+}
+
 export type ProductsActions =
 | SetProducts
 | FetchProducts
 | FetchProductsCount
 | SetProductsCount
-| FetchCustomersByPg
+| FetchProductsByPg
 | AddProduct
 | UpdateProduct
 | DeleteProduct
 | StoreProducts
-| SetVisibility;
+| SetVisibility
+| ProductFail
+| ClearError;

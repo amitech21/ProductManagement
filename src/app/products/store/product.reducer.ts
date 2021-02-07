@@ -5,27 +5,55 @@ export interface State {
     products: Product[] ; 
     visibility: boolean;
     prod_total_count: number;
+    prodError: string;
+    prodLoading: boolean;
 
 }
 
-const initialState: State = { products: [] , visibility: true , prod_total_count: 0};
+const initialState: State = { 
+    products: [] , 
+    visibility: true , 
+    prod_total_count: 0 , 
+    prodError: null , 
+    prodLoading: false
+};
 
 
-export function productReducer(state = initialState , action: ProductsActions.ProductsActions){
+export function productReducer(
+    state = initialState , 
+    action: ProductsActions.ProductsActions
+    ){
 
     //let updatedProducts: Product[] = [];
 
     switch(action.type) {
+
+        case ProductsActions.FETCH_PRODUCTS_BY_PAGE:
+            return {
+                ...state,
+                prodLoading: true
+            };
+
         case ProductsActions.SET_PRODUCTS:
             return {
                 ...state,
-                products: [...action.payload]
+                products: [...action.payload],
+                visibility: true,
+                prodLoading: false
+
+            };
+
+        case ProductsActions.FETCH_PRODUCTS_COUNT:
+            return {
+                ...state,
+                prodLoading: true
             };
 
         case ProductsActions.SET_PRODUCTS_COUNT:
             return {
                 ...state,
-                prod_total_count: action.payload
+                prod_total_count: action.payload,
+                prodLoading: false
             };
 
         case ProductsActions.ADD_PRODUCT:
@@ -74,6 +102,20 @@ export function productReducer(state = initialState , action: ProductsActions.Pr
             return {
                 ...state,
                 visibility: action.payload
+            };
+        
+        case ProductsActions.FAIL_PRODUCT:
+            return {
+                ...state,
+                products: null,
+                prodError: action.payload , 
+                prodLoading: false
+            };
+
+        case ProductsActions.CLEAR_ERROR:
+            return {
+                ...state,
+                prodError: null
             };
         
         default:

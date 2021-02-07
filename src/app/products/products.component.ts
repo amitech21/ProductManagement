@@ -3,7 +3,6 @@ import { Product } from './product.model';
 import { Store } from '@ngrx/store';
 import * as ProductActions from './store/product.actions'; 
 import * as fromApp from '../store/app.reducer'
-import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -21,13 +20,14 @@ export class ProductsComponent implements OnInit {
   flag: boolean;
 
   ngOnInit(): void {
-    this.flag = (localStorage.getItem('products_visibility') === "false" ) ? false : true; 
+    console.log("/products on init");
 
-    if(!localStorage.getItem('products'))
-      this.store.dispatch(new ProductActions.FetchProductsByPg({
-        pgNo: 0,
-        item_count: 4
-      }) );
+    // this.flag = (localStorage.getItem('products_visibility') === "false" ) ? false : true; 
+
+    this.store.select('products').subscribe(prodState => {
+      //if(prodState.products.length == 0)
+      this.flag = (!!prodState.products) ? true : false; 
+    });
 
     this.store.dispatch(new ProductActions.SetVisibility(this.flag) );
   }
