@@ -15,7 +15,7 @@ import { of } from 'rxjs';
 export class CustomerEffects {
     customer:Customer;
     customers:Customer[];
-    updated_customers:Customer[] = [];
+    //updated_customers:Customer[] = [];
 
     @Effect({dispatch: true})
     fetchCustomersCount = this.actions$.pipe(
@@ -97,12 +97,12 @@ export class CustomerEffects {
 
             this.store.select('customers').subscribe(custState => {
                 this.customers = custState.customers;
-                custState.customers.filter((customer, index)=> {
-                    if(customer.id === customerData.payload.newCustomer.id)
-                        this.updated_customers.push(customerData.payload.newCustomer);
-                    else 
-                        this.updated_customers.push(customer);
-                })
+                // custState.customers.filter((customer, index)=> {
+                //     if(customer.id === customerData.payload.newCustomer.id)
+                //         this.updated_customers.push(customerData.payload.newCustomer);
+                //     else 
+                //         this.updated_customers.push(customer);
+                // })
             });
 
             const headerDict = {
@@ -120,7 +120,7 @@ export class CustomerEffects {
                 requestOptions)
                 .pipe(
                     map(() => {
-                        return new CustomersActions.SetCustomers(this.updated_customers);
+                        return new CustomersActions.SetCustomers(this.customers);
                     }),
                     catchError((errorRes: HttpErrorResponse | any) => {
                         return handleError(errorRes);

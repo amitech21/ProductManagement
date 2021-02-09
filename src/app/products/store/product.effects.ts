@@ -15,7 +15,7 @@ import { of } from 'rxjs';
 export class ProductEffects {
     product:Product;
     products:Product[];
-    updated_products:Product[] = [];
+    //updated_products:Product[] = [];
 
     @Effect({dispatch: true})
     fetchProductsCount = this.actions$.pipe(
@@ -96,12 +96,12 @@ export class ProductEffects {
 
             this.store.select('products').subscribe(prodState => {
                 this.products = prodState.products;
-                prodState.products.filter((product, index)=> {
-                    if(product.id === productData.payload.newProduct.id)
-                        this.updated_products.push(productData.payload.newProduct);
-                    else 
-                        this.updated_products.push(product);
-                })
+                // prodState.products.filter((product, index)=> {
+                //     if(product.id === productData.payload.newProduct.id)
+                //         this.updated_products.push(productData.payload.newProduct);
+                //     else 
+                //         this.updated_products.push(product);
+                // })
             });
 
             const headerDict = {
@@ -119,7 +119,7 @@ export class ProductEffects {
                 requestOptions)
                 .pipe(
                     map(() => {
-                        return new ProductsActions.SetProducts(this.updated_products);
+                        return new ProductsActions.SetProducts(this.products);
                     }),
                     catchError((errorRes: HttpErrorResponse | any) => {
                         return handleError(errorRes);
