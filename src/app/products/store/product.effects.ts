@@ -79,20 +79,13 @@ export class ProductEffects {
                 ), 
                 
                 requestOptions).pipe(
+                    map(() => {
+                        return new ProductsActions.SetProducts(this.products);
+                    }),
                     catchError((errorRes: HttpErrorResponse | any) => {
                         return handleError(errorRes);
                     })
                 );
-        }),
-        switchMap(()=>{
-            return this.http.get(environment.webAppEndPoint + '/products/list').pipe(
-                map((products: Product[]) =>{
-                    return new ProductsActions.SetProducts(products);
-                } ),
-                catchError((errorRes: HttpErrorResponse | any) => {
-                    return handleError(errorRes);
-                })
-            );
         })
     );
 

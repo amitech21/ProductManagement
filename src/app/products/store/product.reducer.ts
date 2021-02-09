@@ -31,7 +31,7 @@ export function productReducer(
         case ProductsActions.SET_PRODUCTS:
             return {
                 ...state,
-                products: [...action.payload],
+                products: action.payload, ...state.products,
                 visibility: true,
                 prodLoading: false
 
@@ -64,7 +64,7 @@ export function productReducer(
             };
         
         case ProductsActions.UPDATE_PRODUCT:
-            const updatedProducts = [...state.products];
+            let updatedProducts = [...state.products];
             state.products.filter((product, index)=> {  
                 if(product.id === action.payload.newProduct.id)
                 {

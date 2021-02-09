@@ -80,20 +80,13 @@ export class CustomerEffects {
                 ), 
                 
                 requestOptions).pipe(
+                    map(() =>{
+                        return new CustomersActions.SetCustomers(this.customers);
+                    } ),
                     catchError((errorRes: HttpErrorResponse | any) => {
                         return handleError(errorRes);
                     })
                 );
-        }),
-        switchMap(()=>{
-            return this.http.get(environment.webAppEndPoint + '/customers/list').pipe(
-                map((products: Customer[]) =>{
-                    return new CustomersActions.SetCustomers(products);
-                } ),
-                catchError((errorRes: HttpErrorResponse | any) => {
-                    return handleError(errorRes);
-                })
-            );
         })
     );
 
