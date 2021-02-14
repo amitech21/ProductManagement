@@ -26,6 +26,7 @@ import { FilterPipe } from './filter.pipe';
 import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
 import { Ng2CompleterModule } from '@akveo/ng2-completer';
 import { CheckboxComponent } from './invoice-edit/checkbox.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
     declarations: [
@@ -55,7 +56,8 @@ import { CheckboxComponent } from './invoice-edit/checkbox.component';
     NbListModule,
     NbAutocompleteModule,
     Ng2SmartTableModule,
-    Ng2CompleterModule
+    Ng2CompleterModule,
+    NgxPaginationModule
     //LocalDataSource
 ]
 

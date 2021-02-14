@@ -101,7 +101,14 @@ tableSize = 4;
       this.error = productsState.prodError;
       this.isLoading = productsState.prodLoading;
     });
+    this.reloadCurrentRoute();
+  }
 
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate([currentUrl]);
+    });
   }
 
   onHide(){

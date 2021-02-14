@@ -99,6 +99,14 @@ tableSize = 4;
       this.error = custState.custError;
       this.isLoading = custState.custLoading;
     });
+    this.reloadCurrentRoute();
+  }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate([currentUrl]);
+    });
   }
 
   onHide(){

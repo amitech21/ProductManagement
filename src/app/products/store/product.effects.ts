@@ -18,6 +18,23 @@ export class ProductEffects {
     //updated_products:Product[] = [];
 
     @Effect({dispatch: true})
+    fetchProducts = this.actions$.pipe(
+        ofType(ProductsActions.FETCH_PRODUCTS),
+        switchMap((paylod_data: ProductsActions.FetchProducts) => {
+            return this.http.get<Product[]>(
+                environment.webAppEndPoint + '/products/list'              
+            ).pipe(
+                map((products: Product[]) => {
+                    return new ProductsActions.SetProducts(products);
+                }),
+                catchError((errorRes: HttpErrorResponse | any) => {
+                    return handleError(errorRes);
+                })
+            );
+        })
+    );
+
+    @Effect({dispatch: true})
     fetchProductsCount = this.actions$.pipe(
         ofType(ProductsActions.FETCH_PRODUCTS_COUNT),
         switchMap(() => {

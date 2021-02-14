@@ -1,3 +1,8 @@
+<app-alert [message]="error" *ngIf="error" (close)="onHandleError()"></app-alert>
+<div *ngIf="isLoading" style="text-align: center;">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+
 <div class="row">
     <div class="col-xs-3">
         <button class="btn btn-success"
@@ -16,10 +21,24 @@
 <hr>
 
 <div class="row" *ngIf="invoicesVisibility">
+    <div class="d-flex justify-content-center">
+        <pagination-controls 
+          id="basicPaginate"
+          responsive="true" 
+          directionLinks="true"
+          autoHide="true"
+          previousLabel="Prev" 
+          nextLabel="Next" 
+          screenReaderPaginationLabel="Pagination"
+          (pageChange)="onTableDataChange($event)"
+          >
+        </pagination-controls>
+    </div>
+    
     <div class="col-xs-12">
         
         <app-invoice-item
-        *ngFor="let invoiceEl of invoices; let i = index"
+        *ngFor="let invoiceEl of invoices | paginate : table_config; let i = index"
         [invoice]="invoiceEl"
         ></app-invoice-item>
     </div>

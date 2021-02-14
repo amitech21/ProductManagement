@@ -24,6 +24,12 @@ export function customerReducer(state = initialState , action: CustomersActions.
 
     switch(action.type) {
 
+        case CustomersActions.FETCH_CUSTOMERS:
+            return {
+                ...state,
+                custLoading: true
+            };
+
         case CustomersActions.SET_CUSTOMERS:
             return {
                 ...state,

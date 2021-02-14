@@ -11,9 +11,11 @@ import { Subscription } from 'rxjs';
 import { Customer } from 'src/app/customers/customer.model';
 import { Product } from 'src/app/products/product.model';
 import { InvoiceService } from '../invoice.service'
-import { LocalDataSource } from 'ng2-smart-table';
+import { LocalDataSource, ServerDataSource } from 'ng2-smart-table';
 import { ProductInvoice } from 'src/app/products/products_invoice.model';
 import { Invoice } from '../invoice.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({ 
   selector: 'app-invoice-edit',
@@ -86,7 +88,8 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private store: Store<fromApp.AppState>,
     private invoiceService: InvoiceService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private _http: HttpClient
     ) { 
 
       // this.invoiceForm.get('total_gst').valueChanges.subscribe(data => {
@@ -109,6 +112,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     // this.store.select('customers').subscribe(custState => {
     //   this.total_cust_count = custState.cust_total_count;
     // });
+    // console.log('init called !!');
     this.route.params
       .subscribe(
         (params: Params) => {
@@ -146,7 +150,32 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           this.discount_
         );
         this.invoiceForm.get('total_price').setValue(this.total_price);
-      });  
+      });
+      
+      this.cust_source.onChanged().subscribe((change) => {
+        if (change.action === 'page') {
+          console.log('page clicked !!');
+          console.log(change.paging.page);
+          // this.cust_source.count = 100;
+          //this.pageChange(change.paging.page);
+          // this.store.dispatch(new CustomerActions.FetchCustomersByPg({
+          //   pgNo: change.paging.page,
+          //   item_count: 8
+          // }));
+        }
+      });
+
+      // this.cust_source = new ServerDataSource(this._http, 
+      //   {
+      //   // dataKey: 'data.data',
+      //   // endPoint: environment.webAppEndPoint + '/customers/listByPage/'
+      //   // + '0'
+      //   // + '/'
+      //   // + '8',
+      //   pagerPageKey: 0, // this should be page number param name in endpoint (request not response) for example 'page'
+      //   pagerLimitKey: 4, // this should page size param name in endpoint (request not response)
+      //   totalKey: 50, // this is total records count in response, this will handle pager
+      //   });
   }
 
   calculateTotalPrice(products: number, gst:number, discount: number) {
@@ -278,7 +307,9 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
       this.selectedCustId_flag = false;
 
+      //this.store.dispatch(new CustomerActions.FetchCustomersCount());
       this.store.dispatch(new CustomerActions.FetchCustomers());
+      // this.store.dispatch(new CustomerActions.FetchCustomers());
       this.store.select('customers').subscribe(custState=>{
           this.customers = custState.customers;
           this.cust_source.load(this.customers);

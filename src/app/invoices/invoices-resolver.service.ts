@@ -27,19 +27,19 @@ export class InvoicesResolverService implements Resolve<Invoice[]> {
                 map(invoicesState => {
                     return invoicesState.invoices;
                 }),
-                switchMap(invoices => {
-                    if(invoices.length == 0){
-                        localStorage.removeItem("invoices");
-                        this.store.dispatch(new InvoiceActions.FetchInvoices() );
-                        return this.actions$.pipe(
-                            ofType(InvoiceActions.SET_INVOICES),  
-                            take(1)
-                        );
+                // switchMap(invoices => {
+                //     if(invoices.length == 0){
+                //         localStorage.removeItem("invoices");
+                //         this.store.dispatch(new InvoiceActions.FetchInvoices() );
+                //         return this.actions$.pipe(
+                //             ofType(InvoiceActions.SET_INVOICES),  
+                //             take(1)
+                //         );
                         
-                    }else {
-                        return of(invoices); 
-                    }
-                })
+                //     }else {
+                //         return of(invoices); 
+                //     }
+                // })
             );
 
             

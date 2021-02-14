@@ -18,6 +18,23 @@ export class CustomerEffects {
     //updated_customers:Customer[] = [];
 
     @Effect({dispatch: true})
+    fetchCustomers = this.actions$.pipe(
+        ofType(CustomersActions.FETCH_CUSTOMERS),
+        switchMap((paylod_data: CustomersActions.FetchCustomers) => {
+            return this.http.get<Customer[]>(
+                environment.webAppEndPoint + '/customers/list'               
+            ).pipe(
+                map((customers: Customer[]) => {                    
+                    return new CustomersActions.SetCustomers(customers);
+                }),
+                catchError((errorRes: HttpErrorResponse | any) => {
+                    return handleError(errorRes);
+                })
+            );
+        })
+    );
+
+    @Effect({dispatch: true})
     fetchCustomersCount = this.actions$.pipe(
         ofType(CustomersActions.FETCH_CUSTOMERS_COUNT),
         switchMap(() => {

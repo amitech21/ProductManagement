@@ -14,6 +14,7 @@ import * as InvoiceActions from '../store/invoice.actions';
 export class InvoiceDetailComponent implements OnInit {
   invoice: Invoice;
   id: number;
+  error: string = null;   // Managed by NgRX
 
   constructor(
     private router: Router,
@@ -22,17 +23,6 @@ export class InvoiceDetailComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-    // this.route.params
-    //   .subscribe(
-    //     (params: Params) => {
-    //       this.id = +params['id'];
-    //       this.recipe = this.recipeService.getInvoice(this.id);
-    //     }
-    //   );
-
-    //this.store.dispatch(new InvoiceActions.SetVisibility(false));
-    //localStorage.setItem('invoices_visibility', "false");
-    //this.invoiceListComponent.invoicesVisibility = false;
 
     this.route.params
       .pipe(
@@ -44,15 +34,13 @@ export class InvoiceDetailComponent implements OnInit {
           return this.store.select('invoices');
         }),
         map(invoicesState => {
-          // return invoicesState.invoices.find((invoice, index) => {
-          //   return index === this.id;
-          // });
+
           return invoicesState.invoices.filter((invoice, index)=> {
             if(this.id === invoice.id)
               {
                 return invoice; 
               }           
-        });
+          });
         })
       )
       .subscribe(invoice =>{
@@ -60,7 +48,9 @@ export class InvoiceDetailComponent implements OnInit {
         window.scroll(0,0);
       });
 
-      
+      this.store.select('invoices').subscribe(incState => {
+        this.error = incState.incError;
+      });
   }
 
   onAddToShoppingList() {
@@ -77,15 +67,19 @@ export class InvoiceDetailComponent implements OnInit {
   }
 
   onDeleteInvoice(){
-    //this.invoiceService.deleteInvoice(this.id);
     this.store.dispatch(new InvoiceActions.DeleteInvoice(this.invoice.id));
-    //this.store.dispatch(new InvoiceActions.SetInvoices(JSON.parse(localStorage.getItem('invoices'))));
+    this.store.select('invoices').subscribe(incState => {
+      this.error = incState.incError;
+    });    
     this.router.navigate(['../'], {relativeTo: this.route });
-
   }
 
   onCancelEditing(){
     this.router.navigate(['../'], {relativeTo: this.route });
+  }
+
+  onHandleError() {
+    this.store.dispatch(new InvoiceActions.ClearError());
   }
 
 }

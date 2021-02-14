@@ -28,6 +28,12 @@ export function productReducer(
 
     switch(action.type) {
 
+        case ProductsActions.FETCH_PRODUCTS:
+            return {
+                ...state,
+                prodLoading: true
+            };
+
         case ProductsActions.SET_PRODUCTS:
             return {
                 ...state,

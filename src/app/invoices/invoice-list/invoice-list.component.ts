@@ -18,14 +18,25 @@ import * as InvoiceActions from '../../invoices/store/invoice.actions';
 export class InvoiceListComponent implements OnInit, OnDestroy {
 subscription: Subscription;
 pre_subscription: Subscription;
+sub_fetchCount: Subscription;
+
+isLoading = false;      // Managed by NgRX
+error: string = null;   // Managed by NgRX
 
 public invoicesVisibility: boolean = true;
+
+page = 1;
+count = 0;
+tableSize = 4;
 
   invoices: Invoice[];
   // invoices: Invoice[] = [
   //   new Invoice('test1 resipe' , 'test 1 desc' , 'https://www.bbcgoodfood.com/sites/default/files/invoice-collections/collection-image/2013/05/epic-summer-salad.jpg'),
   //   new Invoice('test1 resipe' , 'test 1 desc' , 'https://www.bbcgoodfood.com/sites/default/files/invoice-collections/collection-image/2013/05/epic-summer-salad.jpg')
   // ];
+
+  table_config: any;
+
 
   constructor(
     private router: Router,
@@ -34,47 +45,73 @@ public invoicesVisibility: boolean = true;
   ) { }
 
   ngOnInit(): void {
+    this.store.dispatch(new InvoiceActions.FetchInvoicesCount());    
 
-    this.invoices = JSON.parse(localStorage.getItem('invoices'));
-    //console.log(JSON.parse(localStorage.getItem('invoices')));
-    //this.store.dispatch(new InvoiceActions.SetInvoices(this.invoices));
-    this.invoicesVisibility = JSON.parse(localStorage.getItem('invoices_visibility'));
-    
+    if(!!this.invoices)
+    {
+      this.sub_fetchCount = this.store.select('invoices').subscribe(incState => {
+        this.count = incState.inc_total_count;
+        this.invoices = incState.invoices;
+        this.invoicesVisibility = incState.visibility;
 
-    // this.subscription = this.invoiceService.invoicesChanged.subscribe(
-    this.subscription = this.store
-    .select('invoices')
-    .pipe
-    (map(invoicesState => {
-      //this.invoicesVisibility = invoicesState.visibility;
-      return invoicesState;
-    }),
-    map(invoicesState => invoicesState.invoices))
-    .subscribe(
-      (invoices: Invoice[]) => {
-        this.invoices = invoices;
-        // console.log(this.invoices);
-      }
-    );
+        this.table_config = {
+          id: 'basicPaginate',
+          itemsPerPage: this.tableSize,
+          currentPage: this.page,
+          totalItems: this.count
+        }
 
-    //this.invoices = this.invoiceService.getInvoices();
+      });
+    } else {
+      this.store.dispatch(new InvoiceActions.FetchInvoicesByPg({
+        pgNo: 0,
+        item_count: 4
+      }) );
+
+      this.sub_fetchCount = this.store.select('invoices').subscribe(incState => {
+        this.count = incState.inc_total_count;
+        this.invoices = incState.invoices;
+        this.invoicesVisibility = incState.visibility;
+
+        this.table_config = {
+          id: 'basicPaginate',
+          itemsPerPage: this.tableSize,
+          currentPage: this.page,
+          totalItems: this.count
+        }
+
+      });
+    }
     
   }
 
   onShow(){
-    
-    // this.store.dispatch(new InvoiceActions.FetchInvoices() );
-    // this.store.dispatch(new InvoiceActions.SetVisibility(true) );
-    // console.log('test 1');
     this.invoicesVisibility = true;
-    localStorage.setItem('invoices_visibility', "true");
-    this.invoices = JSON.parse(localStorage.getItem('invoices'));
-    // console.log(this.invoices[3].customer.name);
-    //this.router.navigate(['new'] , {relativeTo: this.route} );
+
+    this.store.dispatch(new InvoiceActions.FetchInvoicesCount());
+    this.store.dispatch(new InvoiceActions.FetchInvoicesByPg({
+      pgNo: 0, item_count: this.tableSize
+    }));
+
+    this.sub_fetchCount = this.store.select('invoices').subscribe(invoicesState => {
+      this.count = invoicesState.inc_total_count;
+      this.invoices = invoicesState.invoices;
+      this.invoicesVisibility = invoicesState.visibility;
+      this.error = invoicesState.incError;
+      this.isLoading = invoicesState.incLoading;
+    });
+    this.reloadCurrentRoute();
+
+  }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate([currentUrl]);
+    });
   }
 
   onHide(){
-    localStorage.setItem('invoices_visibility', "false");
     this.invoicesVisibility = false;
     this.store.dispatch(new InvoiceActions.SetVisibility(false) );
   }
@@ -86,7 +123,40 @@ public invoicesVisibility: boolean = true;
   }
 
   ngOnDestroy() {
-    //this.subscription.unsubscribe();
+    if(!!this.subscription)
+      this.subscription.unsubscribe();
+
+    if(!!this.pre_subscription)
+      this.pre_subscription.unsubscribe();
+
+    if(!!this.sub_fetchCount)
+      this.sub_fetchCount.unsubscribe();  
+  }
+
+  onTableDataChange(event){
+    console.log(event);
+    this.store.dispatch(
+      new InvoiceActions.FetchInvoicesByPg({
+      pgNo: event-1,
+      item_count: this.tableSize
+      })
+    );
+
+    this.store.select('invoices').subscribe(
+      incState => {
+        this.invoices = incState.invoices;
+        this.table_config = {
+          id: 'basicPaginate',
+          itemsPerPage: this.tableSize,
+          currentPage: event,
+          totalItems: this.count
+        }
+      }
+    );
+  } 
+
+  onHandleError() {
+    this.store.dispatch(new InvoiceActions.ClearError());
   }
 
 }
