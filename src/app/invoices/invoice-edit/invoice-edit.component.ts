@@ -165,6 +165,13 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         }
       });
 
+      this.prod_source.onChanged().subscribe((change) => {
+        if (change.action === 'page') {
+          console.log('page clicked !!');
+          console.log(change.paging.page);
+        }
+      });
+
       // this.cust_source = new ServerDataSource(this._http, 
       //   {
       //   // dataKey: 'data.data',
@@ -188,9 +195,24 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     if(this.editMode)
     {
       this.store.dispatch(new InvoiceActions.UpdateInvoice({
-        index: this.id,
-        newInvoice: this.invoiceForm.value
+        //index: this.id,
+        index: this.invoiceForm.get('id').value,
+        newInvoice:
+        new Invoice(
+          this.invoiceForm.get('id').value,
+          this.invoiceForm.get('cDate').value,
+          this.invoiceForm.get('uDate').value,
+          this.selectedCustomer,
+          this.sold_products, 
+          this.invoiceForm.get('total_gst').value,
+          this.invoiceForm.get('total_discount').value,
+          this.invoiceForm.get('total_price').value
+          )
       }));
+
+      // console.log(this.invoiceForm.value);
+      // console.log(this.selectedCustomer);
+      // console.log(this.sold_products);
     }
     else{
       this.store.dispatch(new InvoiceActions.AddInvoice(
@@ -459,11 +481,12 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     this.selectedProdId_flag = true;
     let flag:Boolean;
     flag = false;
+    let sold_products_local:ProductInvoice[] = [];
 
     if(this.sold_products.length === 0)
     {
       this.selected_products.forEach(selected_product => {
-        this.sold_products.push(
+        sold_products_local.push(
           new ProductInvoice(
             selected_product,
             0
@@ -486,7 +509,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         alert('At least one of the product is already added');
       else{
         this.selected_products.forEach(selected_product => {
-          this.sold_products.push(
+          sold_products_local.push(
             new ProductInvoice(
               selected_product,
               0
@@ -495,7 +518,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         });
       }
     }
-
+    this.sold_products = sold_products_local;
     this.selected_prod_source.load(this.sold_products);
     setTimeout(() => {
       this.prod_divClick.nativeElement.click();

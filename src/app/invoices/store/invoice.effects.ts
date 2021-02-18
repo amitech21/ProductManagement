@@ -155,7 +155,7 @@ export class InvoiceEffects {
               };
 
             return this.http.put(
-                environment.webAppEndPoint + '/invoices/update/' +  invoiceData.payload.newInvoice.id.toString(), 
+                environment.webAppEndPoint + '/invoices/update/' +  invoiceData.payload.newInvoice.id, 
                 invoiceData.payload.newInvoice , 
                 requestOptions)
                 .pipe(
