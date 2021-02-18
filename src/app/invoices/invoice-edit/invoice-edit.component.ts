@@ -197,6 +197,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         new Invoice(
         0,
         '',
+        '',
         this.selectedCustomer,
         this.sold_products, 
         this.invoiceForm.get('total_gst').value,
@@ -223,6 +224,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     // let invoiceDiscount = 0;
 
     let invoiceCDate = "";
+    let invoiceUDate = "";
     let invoiceProducts_price = 0;
     let invoiceTotal_gst = 0;
     let invoiceTotal_discount = 0;
@@ -238,9 +240,10 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           //return invoice.id === this.id;
         });
       }))
-      .subscribe(invoice => {
+      .subscribe((invoice: Invoice) => {
           invoiceId = invoice.id;
-          invoiceCDate = invoice.created_date_time + "test";
+          invoiceCDate = invoice.created_date_time;
+          invoiceUDate = invoice.updated_date_time;
           invoiceTotal_gst = invoice.gst;
           invoiceTotal_discount = invoice.discount;
           invoiceTotal_price = invoice.total_price;
@@ -278,6 +281,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     this.invoiceForm = new FormGroup({
       'id' : new FormControl(invoiceId),
       'cDate' : new FormControl(invoiceCDate),
+      'uDate' : new FormControl(invoiceUDate),
       'products_price' : new FormControl(invoiceProducts_price),
       'total_gst' : new FormControl(invoiceTotal_gst),
       'total_discount' : new FormControl(invoiceTotal_discount),

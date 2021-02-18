@@ -110,6 +110,7 @@ export class InvoiceEffects {
                 new Invoice(
                     0,
                     "",
+                    "",
                     invoiceData.payload.customer,
                     invoiceData.payload.products,
                     invoiceData.payload.gst,
