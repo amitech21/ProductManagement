@@ -193,10 +193,19 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
   onSubmit() {
 
     if(this.editMode)
-    {
+    { 
+      console.log(this.invoiceForm.value);
+      console.log(this.selectedCustomer);
+      console.log(this.sold_products);
+
+
+
+      this.id = this.invoiceForm.get('id').value;
+
+
+
       this.store.dispatch(new InvoiceActions.UpdateInvoice({
-        //index: this.id,
-        index: this.invoiceForm.get('id').value,
+        index: this.id,
         newInvoice:
         new Invoice(
           this.invoiceForm.get('id').value,
@@ -210,9 +219,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           )
       }));
 
-      // console.log(this.invoiceForm.value);
-      // console.log(this.selectedCustomer);
-      // console.log(this.sold_products);
+
     }
     else{
       this.store.dispatch(new InvoiceActions.AddInvoice(
@@ -228,7 +235,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         )
       ));
     }
-    this.router.navigate(['../'], {relativeTo: this.route });
+    //this.router.navigate(['../'], {relativeTo: this.route });
   }
 
  
@@ -286,6 +293,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           selectedCustomers[0] = invoice.customer;
           this.cust_source.load(selectedCustomers);
 
+          this.selectedCustomer = invoice.customer;
           this.sold_products = invoice.products;
           this.selected_prod_source.load(invoice.products);
 
