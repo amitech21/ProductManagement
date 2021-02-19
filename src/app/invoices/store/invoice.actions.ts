@@ -3,6 +3,7 @@ import { Invoice } from '../invoice.model';
 import { Customer } from 'src/app/customers/customer.model';
 import { Product } from 'src/app/products/product.model';
 import { SetCustomersCount } from 'src/app/customers/store/customer.actions';
+import { ProductInvoice } from 'src/app/products/products_invoice.model';
 
 export const SET_INVOICES = '[Invoices] Set Invoices';
 export const FETCH_INVOICES = '[Invoices] Fetch Invoices';
@@ -92,7 +93,7 @@ export class SetCustCount implements Action {
 
 export class SetProducts implements Action {
     readonly type = SET_PRODUCTS;
-    constructor(public payload: Product[]) {}
+    //constructor(public payload: ProductInvoice[]) {}
 }
 
 export class SetProdCount implements Action {

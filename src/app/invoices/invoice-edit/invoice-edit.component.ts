@@ -304,6 +304,8 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           this.selectedCustId_flag = true;
           this.selectedProdId_flag = true;
       });
+    
+      
 
       
     }
@@ -472,12 +474,41 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
     onClickProdSearchBtn(){
       this.show_prod_search_flag = !this.show_prod_search_flag;
+      this.selected_products = [];
       this.store.dispatch(new ProductActions.FetchProducts());
-      this.store.select('products').subscribe(prodState=>{
-          this.products = prodState.products;
-          this.prod_source.load(this.products);
-          setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
-      });       
+      if(this.editMode){
+        // this.show_prod_search_flag = !this.show_prod_search_flag;
+        // this.store.dispatch(new ProductActions.FetchProducts());
+        this.store.select('products').subscribe(prodState=>{
+            this.products = prodState.products;
+            let compare_flag: boolean = false;
+            let editProducts:Product[] = [];
+            editProducts = [];
+            for (let i = 0; i < prodState.products.length; i++) {
+              // console.log(i);
+              compare_flag = false;
+
+              for (let j = 0; j < this.sold_products.length; j++) {
+                if(prodState.products[i].id === this.sold_products[j].id){
+                  compare_flag = true; break;
+                }
+              }
+              if(!compare_flag)
+              editProducts.push(prodState.products[i]);
+            }
+            this.products = editProducts;
+            this.prod_source.load(this.products);
+            setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
+        }); 
+      } else {
+        // this.show_prod_search_flag = !this.show_prod_search_flag;
+        // this.store.dispatch(new ProductActions.FetchProducts());
+        this.store.select('products').subscribe(prodState=>{
+            this.products = prodState.products;
+            this.prod_source.load(this.products);
+            setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
+        }); 
+      } 
     }
 
     onRowSelect(event) {
@@ -505,26 +536,43 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       //this.sold_products = this.selected_products;
     }else {
       this.sold_products.forEach((item_sold, index_sold) => {
-        this.selected_products.forEach((item_selected, index_selected) => {
-          if(item_sold.id === item_selected.id)
+        this.selected_products.forEach((selected_product, index_selected) => {
+          if(item_sold.id === selected_product.id)
           {
-            flag = true;
+            alert('At least one of the product is already added'); //flag = true;
           }
         });
       });
+
+      this.selected_products.forEach((selected_product) => {
+        sold_products_local.push(
+          new ProductInvoice(
+            selected_product,
+            0
+          )
+        );
+      });
+      this.sold_products.forEach((sold_product) => {
+        sold_products_local.push(
+          new ProductInvoice(
+            sold_product,
+            0
+          )
+        );
+      });
       
-      if(flag)
-        alert('At least one of the product is already added');
-      else{
-        this.selected_products.forEach(selected_product => {
-          sold_products_local.push(
-            new ProductInvoice(
-              selected_product,
-              0
-            )
-          );
-        });
-      }
+      // if(flag)
+      //   alert('At least one of the product is already added');
+      // else{
+      //   this.selected_products.forEach(selected_product => {
+      //     sold_products_local.push(
+      //       new ProductInvoice(
+      //         selected_product,
+      //         0
+      //       )
+      //     );
+      //   });
+      // }
     }
     this.sold_products = sold_products_local;
     this.selected_prod_source.load(this.sold_products);
@@ -565,14 +613,14 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
                 product.price
               ),product.quantity+1);
               
-        products.splice(index,1,product);
+        products.splice(index,1,product);     // replace row with updated one
         this.sold_products = JSON.parse(JSON.stringify(products)); 
-        this.products_price = this.products_price + product.price;
+        this.products_price = this.products_price + product.price; // modify Product's price
       }
         
     });
        this.selected_prod_source.load(this.sold_products);
-       this.invoiceForm.get('products_price').setValue(this.products_price);
+       this.invoiceForm.get('products_price').setValue(this.products_price); // Set Product's price
        this.total_price = this.products_price;
 
         this.calculateTotalPrice(
@@ -580,32 +628,48 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           this.gst_,
           this.discount_
         );
-        this.invoiceForm.get('total_price').setValue(this.total_price);
+        this.invoiceForm.get('total_price').setValue(this.total_price);   // Set Total price
 
        setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
   }
 
   public removeQuantity_prod(formData: any) {
     let product:ProductInvoice = formData;
+    if(product.quantity === 0)
+      return;
+
+    let products:ProductInvoice[] = JSON.parse(JSON.stringify(this.sold_products)); 
     this.sold_products.forEach((sold_product, index) => {
+      
       if(sold_product.id === product.id){
-        if(sold_product.quantity > 0)
-          product.quantity = product.quantity - 1;
-          this.sold_products[index] = product;
-          this.products_price = this.products_price - product.price;
+        
+        product = new ProductInvoice(
+              new Product(
+                product.id,
+                product.name,
+                product.description,
+                product.imagePath,
+                product.price
+              ),product.quantity-1);
+              
+        products.splice(index,1,product);     // replace row with updated one
+        this.sold_products = JSON.parse(JSON.stringify(products)); 
+        this.products_price = this.products_price - product.price; // modify Product's price
       }
         
     });
-    this.selected_prod_source.load(this.sold_products);
-    this.invoiceForm.get('products_price').setValue(this.products_price);
-    this.total_price = this.products_price;
-    this.calculateTotalPrice(
-      this.products_price,
-      this.gst_,
-      this.discount_
-    );
-    this.invoiceForm.get('total_price').setValue(this.total_price);
-    setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
+       this.selected_prod_source.load(this.sold_products);
+       this.invoiceForm.get('products_price').setValue(this.products_price); // Set Product's price
+       this.total_price = this.products_price;
+
+        this.calculateTotalPrice(
+          this.products_price,
+          this.gst_,
+          this.discount_
+        );
+        this.invoiceForm.get('total_price').setValue(this.total_price);   // Set Total price
+
+       setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
   }
 
   public removeRow_prod(formData: any) {

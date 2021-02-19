@@ -1,7 +1,7 @@
 import { Invoice } from '../invoice.model';
 import * as InvoicesActions from '../store/invoice.actions'
 import { Customer } from 'src/app/customers/customer.model';
-import { Product } from 'src/app/products/product.model';
+import { ProductInvoice } from 'src/app/products/products_invoice.model';
 
 export interface State { 
     invoices: Invoice[] ;
@@ -9,7 +9,7 @@ export interface State {
     inc_total_count: number;
     customers: Customer[];
     cust_count: number; 
-    products: Product[];
+    products: ProductInvoice[];
     prod_count: number;
     incError: string;
     incLoading: boolean;
@@ -109,8 +109,16 @@ export function invoiceReducer(state = initialState , action: InvoicesActions.In
             return {
                 ...state,
                 incError: null
-            };
+            }; 
         
+        case InvoicesActions.SET_PRODUCTS:
+            return {
+                ...state,
+                //products: action.payload, ...state.products,
+                visibility: true,
+                incLoading: false
+            };
+
         default:
             return state;        
     }

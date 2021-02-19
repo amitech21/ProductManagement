@@ -112,7 +112,7 @@
                         class="btn btn-success"
                         (click)="onClickProdSearchBtn2()">Refresh</button>
 
-                        <div *ngIf="show_prod_search_flag">
+                        <div *ngIf="show_prod_search_flag && (this.selected_products.length > 0) ">
                             <br><br>
                             <button 
                             class="btn btn-success" 
