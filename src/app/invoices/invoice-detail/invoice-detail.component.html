@@ -1,19 +1,99 @@
 <app-alert [message]="error" *ngIf="error" (close)="onHandleError()"></app-alert>
 
+<form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+
 <div class="row">
     <div class="col-xs-12">
         <h1>Invoice ID : {{ invoice.id }}</h1>
-        <p>Created Date : {{ invoice.created_date_time }}</p>
-        <p>Customer's Name : {{ invoice.customer.name }}</p>
-        <p>Total Price : {{ invoice.total_price }}</p>
-
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-group">
+            <label for="cDate">Created Date : </label>
+            <input
+                type="text"
+                id="cDate"
+                formControlName="cDate"
+                class="form-control"
+                [readonly]="true">
+        </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-xs-12">
+        <div class="form-group">
+            <label for="uDate">Updated Date : </label>
+            <input
+                type="text"
+                id="uDate"
+                formControlName="uDate"
+                class="form-control"
+                [readonly]="true">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-group">
+            <label>Billed To : (Customer's Name)</label>
+            <ng2-smart-table 
+                [settings]="cust_newSettings" 
+                [source]="cust_source"
+            ></ng2-smart-table>
+        </div>
+    </div>
+</div>  
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-group">
+            <label for="prod_name_filter">Sold Products :</label>
+            <div>
+                <ng2-smart-table
+                    [settings]="prod_newSettings" 
+                    [source]="prod_source" 
+                ></ng2-smart-table>
+            </div>
+        </div>
+    </div>
+</div> 
+<div>
+    <label for="total_gst">Total GST(%): </label>
+    <input
+    type="text"
+    id="total_gst"
+    formControlName="total_gst"
+    class="form-control"
+    [readonly]="true">
+
+    <label for="total_discount">Total Discount: </label>
+    <input
+    type="text"
+    id="total_discount"
+    formControlName="total_discount"
+    class="form-control"
+    [readonly]="true">
+
+    <label 
+    for="total_price"
+    style="color: red;">Total Price: </label>
+    <input
+    type="text"
+    id="total_price"
+    formControlName="total_price"
+    class="form-control"
+    [readonly]="true">
+</div>
+</form>
+<!-- ########################################################################## -->
+<br>
+<div class="row">
+    <div class="col-xs-12">
         <button class="btn btn-danger"
-        (click)="onCancelEditing()">Close Editing</button>
+        (click)="onCancelEditing()">Close</button>
     </div>
 </div>
 <br>
@@ -27,7 +107,7 @@
             </button>
 
             <ul class="dropdown-menu">
-                <li><a (click)="onAddToShoppingList()" style="cursor: pointer;">To shopping list</a></li>
+                <li><a (click)="onPrintInvoice()" style="cursor: pointer;">Print Invoice</a></li>
                 <li><a style="cursor: pointer;" (click)="onEditInvoice()">Edit Invoice</a></li>
                 <li><a style="cursor: pointer;" (click)="onDeleteInvoice()">Delete Invoice</a></li>
             </ul>

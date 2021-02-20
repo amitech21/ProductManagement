@@ -159,7 +159,8 @@ export class InvoiceEffects {
                 invoiceData.payload.newInvoice , 
                 requestOptions)
                 .pipe(
-                    map(() => {
+                    map((updated_invoice: Invoice) => {
+                        console.log(updated_invoice);
                         return new InvoicesActions.SetInvoices(this.invoices);
                     }),
                     catchError((errorRes: HttpErrorResponse | any) => {

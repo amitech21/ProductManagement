@@ -194,16 +194,10 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
     if(this.editMode)
     { 
-      console.log(this.invoiceForm.value);
-      console.log(this.selectedCustomer);
-      console.log(this.sold_products);
-
-
-
+      // console.log(this.invoiceForm.value);
+      // console.log(this.selectedCustomer);
+      // console.log(this.sold_products);
       this.id = this.invoiceForm.get('id').value;
-
-
-
       this.store.dispatch(new InvoiceActions.UpdateInvoice({
         index: this.id,
         newInvoice:
@@ -235,7 +229,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         )
       ));
     }
-    //this.router.navigate(['../'], {relativeTo: this.route });
+    this.router.navigate(['../'], {relativeTo: this.route });
   }
 
  
@@ -553,12 +547,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         );
       });
       this.sold_products.forEach((sold_product) => {
-        sold_products_local.push(
-          new ProductInvoice(
-            sold_product,
-            0
-          )
-        );
+        sold_products_local.push(sold_product);
       });
       
       // if(flag)
