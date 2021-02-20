@@ -14,6 +14,8 @@ export const ADD_INVOICE = '[Invoices] Add Invoice';
 export const UPDATE_INVOICE = '[Invoices] Update Invoice';
 export const DELETE_INVOICE = '[Invoices] Delete Invoice';
 export const STORE_INVOICE = '[Invoices] Store Invoice';
+export const PRINT_INVOICE = '[Invoices] Print Invoice';
+export const LOADING_DONE = '[Invoices] Loading Done';
 
 export const FETCH_CUSTOMERS_BY_NAME = '[Invoices] Fetch Customers By Name';
 
@@ -67,6 +69,15 @@ export class StoreInvoices implements Action {
     readonly type = STORE_INVOICE;
 }
 
+export class PrintInvoice implements Action {
+    constructor(public payload: number) {}
+    readonly type = PRINT_INVOICE;
+}
+
+export class LoadingDone implements Action {
+    readonly type = LOADING_DONE;
+}
+
 export class SetVisibility implements Action {
     readonly type = SET_VISIBILITY;
     constructor(public payload: boolean) {}
@@ -111,6 +122,8 @@ export type InvoicesActions =
 | UpdateInvoice
 | DeleteInvoice
 | StoreInvoices
+| PrintInvoice
+| LoadingDone
 | SetVisibility
 | InvoiceFail
 | ClearError

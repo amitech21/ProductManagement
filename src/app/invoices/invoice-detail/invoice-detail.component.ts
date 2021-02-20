@@ -46,7 +46,6 @@ export class InvoiceDetailComponent implements OnInit {
           return this.store.select('invoices');
         }),
         map(invoicesState => {
-
           return invoicesState.invoices.filter((invoice, index)=> {
             if(this.id === invoice.id)
               {
@@ -77,6 +76,8 @@ export class InvoiceDetailComponent implements OnInit {
 
   onPrintInvoice() {
     console.log('Print Invoice !!');
+    this.store.dispatch(new InvoiceActions.PrintInvoice(this.id));
+    // this.ngOnInit();
     //this.invoiceService.addIngredientsToShoppingList(this.invoice.ingredients);
     // this.store.dispatch(
     //   new ShoppingListActions.AddIngredients(this.invoice.ingredients)

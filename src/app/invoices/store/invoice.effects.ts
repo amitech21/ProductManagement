@@ -208,6 +208,22 @@ export class InvoiceEffects {
         })
     );
 
+    @Effect({dispatch: true})
+    printInvoice = this.actions$.pipe(
+        ofType(InvoicesActions.PRINT_INVOICE),
+        switchMap((payload: InvoicesActions.PrintInvoice) => {
+
+            return this.http.get(environment.webAppEndPoint + '/invoices/print/' + payload.payload.toString() )
+            .pipe(
+                map(() => {
+                    return new InvoicesActions.LoadingDone();
+                }),
+                catchError((errorRes: HttpErrorResponse | any) => {
+                    return handleError(errorRes);
+                })
+            );
+        })
+    );
 
     constructor(
         private actions$: Actions,

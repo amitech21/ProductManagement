@@ -92,6 +92,18 @@ export function invoiceReducer(state = initialState , action: InvoicesActions.In
                 incLoading: true
             };
 
+        case InvoicesActions.PRINT_INVOICE:
+            return {
+                ...state,
+                incLoading: true
+            };
+
+        case InvoicesActions.LOADING_DONE:
+            return {
+                ...state,
+                incLoading: false
+            };
+
         case InvoicesActions.SET_VISIBILITY:
             return {
                 ...state,
