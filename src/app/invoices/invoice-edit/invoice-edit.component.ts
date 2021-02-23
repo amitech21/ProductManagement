@@ -93,7 +93,6 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     ) { 
 
       // this.invoiceForm.get('total_gst').valueChanges.subscribe(data => {
-      //   console.log(data);
       // });
     }
 
@@ -112,7 +111,6 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     // this.store.select('customers').subscribe(custState => {
     //   this.total_cust_count = custState.cust_total_count;
     // });
-    // console.log('init called !!');
     this.route.params
       .subscribe(
         (params: Params) => {
@@ -154,8 +152,6 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       
       this.cust_source.onChanged().subscribe((change) => {
         if (change.action === 'page') {
-          console.log('page clicked !!');
-          console.log(change.paging.page);
           // this.cust_source.count = 100;
           //this.pageChange(change.paging.page);
           // this.store.dispatch(new CustomerActions.FetchCustomersByPg({
@@ -167,8 +163,6 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
       this.prod_source.onChanged().subscribe((change) => {
         if (change.action === 'page') {
-          console.log('page clicked !!');
-          console.log(change.paging.page);
         }
       });
 
@@ -194,9 +188,6 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
     if(this.editMode)
     { 
-      // console.log(this.invoiceForm.value);
-      // console.log(this.selectedCustomer);
-      // console.log(this.sold_products);
       this.id = this.invoiceForm.get('id').value;
       this.store.dispatch(new InvoiceActions.UpdateInvoice({
         index: this.id,
@@ -277,7 +268,6 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
           this.products_price = 0;
           invoice.products.forEach(sold_prod => {
-            //console.log(sold_prod.quantity * sold_prod.price);
             this.products_price = this.products_price + (sold_prod.quantity * sold_prod.price) ;
           });
 
@@ -479,7 +469,6 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
             let editProducts:Product[] = [];
             editProducts = [];
             for (let i = 0; i < prodState.products.length; i++) {
-              // console.log(i);
               compare_flag = false;
 
               for (let j = 0; j < this.sold_products.length; j++) {

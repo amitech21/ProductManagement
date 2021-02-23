@@ -24,6 +24,8 @@ isLoading = false;      // Managed by NgRX
 error: string = null;   // Managed by NgRX
 
 public invoicesVisibility: boolean = true;
+public searchMode: boolean = false;
+public search_name: string = "";
 
 page = 1;
 count = 0;
@@ -44,54 +46,7 @@ tableSize = 4;
     private store: Store<fromApp.AppState>
   ) { }
 
-  ngOnInit(): void {
-    this.store.dispatch(new InvoiceActions.FetchInvoicesCount());    
-
-    if(!!this.invoices)
-    {
-      this.sub_fetchCount = this.store.select('invoices').subscribe(incState => {
-        this.count = incState.inc_total_count;
-        this.invoices = incState.invoices;
-        this.invoicesVisibility = incState.visibility;
-
-        this.table_config = {
-          id: 'basicPaginate',
-          itemsPerPage: this.tableSize,
-          currentPage: this.page,
-          totalItems: this.count
-        }
-
-      });
-    } else {
-      this.store.dispatch(new InvoiceActions.FetchInvoicesByPg({
-        pgNo: 0,
-        item_count: 4
-      }) );
-
-      this.sub_fetchCount = this.store.select('invoices').subscribe(incState => {
-        this.count = incState.inc_total_count;
-        this.invoices = incState.invoices;
-        this.invoicesVisibility = incState.visibility;
-
-        this.table_config = {
-          id: 'basicPaginate',
-          itemsPerPage: this.tableSize,
-          currentPage: this.page,
-          totalItems: this.count
-        }
-
-      });
-    }
-    
-  }
-
-  onShow(){
-    this.invoicesVisibility = true;
-
-    this.store.dispatch(new InvoiceActions.FetchInvoicesCount());
-    this.store.dispatch(new InvoiceActions.FetchInvoicesByPg({
-      pgNo: 0, item_count: this.tableSize
-    }));
+  setInvoices(){
 
     this.sub_fetchCount = this.store.select('invoices').subscribe(invoicesState => {
       this.count = invoicesState.inc_total_count;
@@ -99,9 +54,82 @@ tableSize = 4;
       this.invoicesVisibility = invoicesState.visibility;
       this.error = invoicesState.incError;
       this.isLoading = invoicesState.incLoading;
+
+      this.table_config = {
+        id: 'basicPaginate',
+        itemsPerPage: this.tableSize,
+        currentPage: this.page,
+        totalItems: this.count
+      }
+
     });
+  }
+
+  ngOnInit(): void {
+    // this.store.dispatch(new InvoiceActions.FetchInvoicesByName(this.search_name));
+    if(!!this.invoices)
+    {
+          if(this.searchMode && (this.search_name === "" || this.search_name === null)){
+            this.searchMode = false;
+            this.store.dispatch(new InvoiceActions.FetchInvoicesByPg({
+              pgNo: 0,
+              item_count: this.tableSize
+            }));
+            this.store.dispatch(new InvoiceActions.FetchInvoicesCount(""));    
+          }
+          else{
+            this.store.dispatch(new InvoiceActions.FetchInvoicesByName({        
+              cust_name: this.search_name,
+              pgNo: 0,
+              item_count: this.tableSize
+            }));
+            this.store.dispatch(new InvoiceActions.FetchInvoicesCount(this.search_name));
+          }
+
+          
+    } else {
+
+          if(this.searchMode){
+            this.store.dispatch(new InvoiceActions.FetchInvoicesByName({        
+              cust_name: this.search_name,
+              pgNo: 0,
+              item_count: this.tableSize
+            }));
+            this.store.dispatch(new InvoiceActions.FetchInvoicesCount(this.search_name));    
+          }else{
+            this.store.dispatch(new InvoiceActions.FetchInvoicesByPg({
+              pgNo: 0,
+              item_count: this.tableSize
+            }));
+            this.store.dispatch(new InvoiceActions.FetchInvoicesCount(""));    
+          }
+      
+    }
+
+    this.setInvoices();
+    
+  }
+
+  onShow(){
+    this.invoicesVisibility = true;
+
+    this.store.dispatch(new InvoiceActions.FetchInvoicesCount(""));
+    this.store.dispatch(new InvoiceActions.FetchInvoicesByPg({
+      pgNo: 0, item_count: this.tableSize
+    }));
+
+    this.setInvoices();
+
     this.reloadCurrentRoute();
 
+  }
+
+  searchByName(value: string){
+    this.searchMode = true;
+    this.search_name = value;
+    // this.store.dispatch(new InvoiceActions.FetchInvoicesByName(value));
+    // this.setInvoices();
+    this.ngOnInit();
   }
 
   reloadCurrentRoute() {
@@ -134,12 +162,21 @@ tableSize = 4;
   }
 
   onTableDataChange(event){
-    this.store.dispatch(
-      new InvoiceActions.FetchInvoicesByPg({
-      pgNo: event-1,
-      item_count: this.tableSize
-      })
-    );
+
+    if(this.searchMode){
+      this.store.dispatch(new InvoiceActions.FetchInvoicesByName({        
+        cust_name: this.search_name,
+        pgNo: event-1,
+        item_count: this.tableSize
+      }));
+    } else {
+      this.store.dispatch(
+        new InvoiceActions.FetchInvoicesByPg({
+        pgNo: event-1,
+        item_count: this.tableSize
+        })
+      );
+    }
 
     this.store.select('invoices').subscribe(
       incState => {

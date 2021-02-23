@@ -17,6 +17,13 @@
         (click)="onNew()">New Invoice</button>
     </div>
 </div>
+<br>
+<div class="row">
+    <div class="col-xs-3">
+        <label style="color: snow;">Search By Name</label>
+        <input #box (keyup.enter)="searchByName(box.value)">
+    </div>
+</div>
 
 <hr>
 

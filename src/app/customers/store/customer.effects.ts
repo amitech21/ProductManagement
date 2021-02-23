@@ -76,8 +76,6 @@ export class CustomerEffects {
        
         switchMap((customerData: CustomersActions.AddCustomer) => {
 
-            console.log('add customer');
-
             const headerDict = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',

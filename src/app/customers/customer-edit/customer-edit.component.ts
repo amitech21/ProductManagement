@@ -58,7 +58,6 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
       }));
     }
     else{
-        console.log('in cus edit');
       this.store.dispatch(new CustomerActions.AddCustomer(this.customerForm.value));
     }
     this.router.navigate(['../'], {relativeTo: this.route });

@@ -51,26 +51,22 @@ export class AppComponent implements OnInit {
 
     idle.onIdleEnd.subscribe(() => { 
       this.idleState = 'No longer idle.'
-      console.log(this.idleState);
       this.reset();
     });
     
     idle.onTimeout.subscribe(() => {
       this.idleState = 'Timed out!';
       this.timedOut = true;
-      console.log(this.idleState);
       this.logout();
     });
     
     idle.onIdleStart.subscribe(() => {
         this.idleState = 'You\'ve gone idle!'
-        console.log(this.idleState);
         this.childModal.show();
     });
     
     idle.onTimeoutWarning.subscribe((countdown) => {
       this.idleState = 'You will time out in ' + countdown + ' seconds!'
-      console.log(this.idleState);
     });
 
     // sets the ping interval to 15 seconds

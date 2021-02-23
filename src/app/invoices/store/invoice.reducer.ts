@@ -46,6 +46,12 @@ export function invoiceReducer(state = initialState , action: InvoicesActions.In
                     ...state,
                     incLoading: true
                 };
+
+            case InvoicesActions.FETCH_INVOICES_BY_NAME:
+                return {
+                    ...state,
+                    incLoading: true
+                };
     
             case InvoicesActions.FETCH_INVOICES_COUNT:
                 return {

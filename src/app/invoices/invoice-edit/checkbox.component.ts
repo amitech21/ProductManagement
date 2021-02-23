@@ -29,7 +29,6 @@ export class CheckboxComponent implements ViewCell, OnInit {
     this.value === 'N' ? this.value = 'Y' : this.value = 'N';
     this.rowData.eList = this.value;
 
-    console.log(this.rowData);
-    console.log(this.value);  }
+  }
 
 }

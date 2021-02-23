@@ -201,7 +201,6 @@ export class AuthEffects {
         .pipe(
             ofType(AuthActions.AUTHENTICATE_SUCCESS),
             tap( (authSuccessAction: AuthActions.AuthenticateSuccess) => {
-                console.log("AuthenticateSuccess called !!");
                 if(authSuccessAction.payload.redirect){
                     this.appService.setUserLoggedIn(true);
                     this.router.navigate(['/products']);

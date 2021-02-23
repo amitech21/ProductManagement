@@ -20,16 +20,28 @@ export class InvoiceEffects {
     @Effect({dispatch: true})
     fetchInvoicesCount = this.actions$.pipe(
         ofType(InvoicesActions.FETCH_INVOICES_COUNT),
-        switchMap(() => {
-            return this.http.get<number>(environment.webAppEndPoint + '/invoices/listCount')
-            .pipe(
-                map((count: number) => {
-                    return new InvoicesActions.SetInvoicesCount(count);
-                }),
-                catchError((errorRes: HttpErrorResponse | any) => {
-                    return handleError(errorRes);
-                })
-            );
+        switchMap((paylod_data: InvoicesActions.FetchInvoicesCount) => {
+            if(paylod_data.payload === "" || paylod_data.payload === null){
+                return this.http.get<number>(environment.webAppEndPoint + '/invoices/listCount')
+                .pipe(
+                    map((count: number) => {
+                        return new InvoicesActions.SetInvoicesCount(count);
+                    }),
+                    catchError((errorRes: HttpErrorResponse | any) => {
+                        return handleError(errorRes);
+                    })
+                );
+            }else{
+                return this.http.get<number>(environment.webAppEndPoint + '/invoices/listByCustNameCount/'+paylod_data.payload)
+                .pipe(
+                    map((count: number) => {
+                        return new InvoicesActions.SetInvoicesCount(count);
+                    }),
+                    catchError((errorRes: HttpErrorResponse | any) => {
+                        return handleError(errorRes);
+                    })
+                );
+            }
         }),
     );
 
@@ -42,6 +54,28 @@ export class InvoiceEffects {
                 + paylod_data.payload.pgNo
                 + '/'
                 + paylod_data.payload.item_count                
+            ).pipe(
+                map((invoices: Invoice[]) => {
+                    return new InvoicesActions.SetInvoices(invoices);
+                }),
+                catchError((errorRes: HttpErrorResponse | any) => {
+                    return handleError(errorRes);
+                })
+            );
+        })
+    );
+
+    @Effect({dispatch: true})
+    fetchInvoicesByName = this.actions$.pipe(
+        ofType(InvoicesActions.FETCH_INVOICES_BY_NAME),
+        switchMap((paylod_data: InvoicesActions.FetchInvoicesByName) => {
+            return this.http.get<Invoice[]>(
+                environment.webAppEndPoint + '/invoices/listByCustName/'
+                + paylod_data.payload.cust_name
+                + '/'
+                + paylod_data.payload.pgNo
+                + '/'
+                + paylod_data.payload.item_count           
             ).pipe(
                 map((invoices: Invoice[]) => {
                     return new InvoicesActions.SetInvoices(invoices);
@@ -103,8 +137,6 @@ export class InvoiceEffects {
                 headers: new HttpHeaders(headerDict), 
               };
 
-              console.log(invoiceData.payload);
-
             return this.http.post(
                 environment.webAppEndPoint + '/invoices/add' ,
                 new Invoice(
@@ -160,7 +192,6 @@ export class InvoiceEffects {
                 requestOptions)
                 .pipe(
                     map((updated_invoice: Invoice) => {
-                        console.log(updated_invoice);
                         return new InvoicesActions.SetInvoices(this.invoices);
                     }),
                     catchError((errorRes: HttpErrorResponse | any) => {
@@ -199,8 +230,6 @@ export class InvoiceEffects {
     fetchCustomersByName = this.actions$.pipe(
         ofType(InvoicesActions.FETCH_CUSTOMERS_BY_NAME),
         switchMap((cust_name_data: string) => {
-            console.log('fetchCustomersByName effect called');
-            console.log(cust_name_data);
             return this.http.get<Customer[]>(environment.webAppEndPoint + '/customers/listByName/' + cust_name_data.toString);
         }),
         map(customers => {

@@ -10,6 +10,7 @@ export const FETCH_INVOICES = '[Invoices] Fetch Invoices';
 export const SET_INVOICES_COUNT = '[Invoices] Set Invoices Count';
 export const FETCH_INVOICES_COUNT = '[Invoices] Fetch Invoices Count';
 export const FETCH_INVOICES_BY_PAGE = '[Invoices] Fetch Invoices by page';
+export const FETCH_INVOICES_BY_NAME = '[Invoices] Fetch Invoices by name';
 export const ADD_INVOICE = '[Invoices] Add Invoice';
 export const UPDATE_INVOICE = '[Invoices] Update Invoice';
 export const DELETE_INVOICE = '[Invoices] Delete Invoice';
@@ -38,6 +39,7 @@ export class FetchInvoices implements Action {
 
 export class FetchInvoicesCount implements Action {
     readonly type = FETCH_INVOICES_COUNT;
+    constructor(public payload: string) {}
 }
 
 export class SetInvoicesCount implements Action {
@@ -48,6 +50,11 @@ export class SetInvoicesCount implements Action {
 export class FetchInvoicesByPg implements Action {
     readonly type = FETCH_INVOICES_BY_PAGE;
     constructor(public payload: {pgNo: number; item_count: number}) {}
+}
+
+export class FetchInvoicesByName implements Action {
+    readonly type = FETCH_INVOICES_BY_NAME;
+    constructor(public payload: {cust_name: string; pgNo: number; item_count: number}) {}
 }
 
 export class AddInvoice implements Action {
@@ -118,6 +125,7 @@ export type InvoicesActions =
 | FetchInvoicesCount
 | SetInvoicesCount
 | FetchInvoicesByPg
+| FetchInvoicesByName
 | AddInvoice
 | UpdateInvoice
 | DeleteInvoice

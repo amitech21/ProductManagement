@@ -134,7 +134,6 @@ tableSize = 4;
   }
 
   onTableDataChange(event){
-    console.log(event);
     this.store.dispatch(
       new ProductActions.FetchProductsByPg({
       pgNo: event-1,

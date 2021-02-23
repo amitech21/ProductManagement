@@ -75,7 +75,6 @@ export class InvoiceDetailComponent implements OnInit {
   }
 
   onPrintInvoice() {
-    console.log('Print Invoice !!');
     this.store.dispatch(new InvoiceActions.PrintInvoice(this.id));
     // this.ngOnInit();
     //this.invoiceService.addIngredientsToShoppingList(this.invoice.ingredients);
