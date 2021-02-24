@@ -3,29 +3,30 @@
     <app-loading-spinner></app-loading-spinner>
 </div>
 
-<div class="row">
-    <div class="col-xs-3">
+<div class="row-xs-12">
+    <div class="col-xs-4 btn_c">
         <button class="btn btn-success"
         (click)="onShow()">Show Invoices</button>
     </div>
-    <div class="col-xs-3 col-xs-offset-1">
+    <div class="col-xs-4 btn_c">
         <button class="btn btn-danger"
         (click)="onHide()">Hide Invoices</button>
     </div>
-    <div class="col-xs-3 col-xs-offset-1">
+    <div class="col-xs-4 btn_c">
         <button class="btn btn-success"
         (click)="onNew()">New Invoice</button>
     </div>
 </div>
-<br>
-<div class="row">
+<br><br>
+<div class="row" *ngIf="invoicesVisibility">
     <div class="col-xs-3">
         <label style="color: snow;">Search By Name</label>
         <input #box (keyup.enter)="searchByName(box.value)">
     </div>
 </div>
 
-<hr>
+<br>
+<!-- <hr> -->
 
 <div class="row" *ngIf="invoicesVisibility">
     <div class="d-flex justify-content-center">
@@ -42,11 +43,21 @@
         </pagination-controls>
     </div>
     
-    <div class="col-xs-12">
+    <!-- <div class="col-xs-12">
         
         <app-invoice-item
         *ngFor="let invoiceEl of invoices | paginate : table_config; let i = index"
         [invoice]="invoiceEl"
         ></app-invoice-item>
+    </div> -->
+
+    <div class="grid">
+        <ng-container 
+        *ngFor="let invoiceEl of invoices | paginate : table_config; let i = index">
+                <app-invoice-item
+                [invoice]="invoiceEl"
+                ></app-invoice-item>
+        </ng-container>
     </div>
+
 </div>

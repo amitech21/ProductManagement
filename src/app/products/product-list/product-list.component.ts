@@ -158,4 +158,10 @@ tableSize = 4;
     this.store.dispatch(new ProductActions.ClearError());
   }
 
+  // trackByMethod(index:number, el:any): number {
+  //   console.log(index);
+  //   if(index % 2 === 0)
+  //     return el.id;
+  // }
+
 }

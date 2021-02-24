@@ -3,20 +3,18 @@
     <app-loading-spinner></app-loading-spinner>
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-7">
-        <!-- <app-customer-detail
-        *ngIf="selectedCustomer; else infoText"
-        [customer]="selectedCustomer"></app-customer-detail>
-        <ng-template #infoText>
-            <p>Please select customer !</p>
-        </ng-template> -->
+        
         <router-outlet></router-outlet>
     </div>
-</div>
+</div> -->
+<router-outlet></router-outlet>
 <br>
-<div class="row">
+<app-customer-list></app-customer-list>
+
+<!-- <div class="row">
     <div class="col-md-5">
         <app-customer-list></app-customer-list>
     </div>
-</div>
+</div> -->

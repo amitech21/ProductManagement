@@ -1,0 +1,11 @@
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Create 2 columns and auto-place rows */
+    grid-gap: 10px;
+}
+
+.btn_c {
+    display: flex;
+    justify-content: center;
+}
+
