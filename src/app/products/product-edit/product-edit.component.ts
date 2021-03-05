@@ -78,6 +78,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
       this.storeSub = this.store.select('products')
       .pipe(map(productsState => {
+            // Store
+        localStorage.setItem("productsState", JSON.stringify(productsState));
+        
         return productsState.products.find((product, index) => {
           return product.id === this.id;
           //return product.id === this.id;
@@ -91,7 +94,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
           productPrice = product.price;
       });
 
-      
     }
 
     this.productForm = new FormGroup({

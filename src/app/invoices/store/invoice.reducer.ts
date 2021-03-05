@@ -138,7 +138,13 @@ export function invoiceReducer(state = initialState , action: InvoicesActions.In
             };
 
         default:
-            return state;        
+            if (localStorage.getItem('invoicesState')) {
+                var newState = JSON.parse(localStorage.getItem('invoicesState'))          
+                return newState
+            }
+            else {
+                return {...state};
+            }        
     }
         
 }

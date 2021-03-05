@@ -113,8 +113,14 @@ export function productReducer(
                 prodError: null
             };
         
-        default:
-            return state;        
+            default:
+                if (localStorage.getItem('productsState')) {
+                    var newState = JSON.parse(localStorage.getItem('productsState'))          
+                    return newState
+                }
+                else {
+                    return {...state};
+                }      
     }
         
 }

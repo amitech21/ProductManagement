@@ -98,6 +98,9 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
 
       this.storeSub = this.store.select('customers')
       .pipe(map(customersState => {
+        // Store
+        localStorage.setItem("customersState", JSON.stringify(customersState));
+        
         return customersState.customers.find((customer, index) => {
           return customer.id === this.id;
           //return customer.id === this.id;

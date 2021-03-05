@@ -39,6 +39,7 @@
     "eva-icons": "^1.1.2",
     "ng-bootstrap-pagination": "^0.2.3",
     "ng2-smart-table": "^1.6.0",
+    "ngrx-store-localstorage": "^11.0.0",
     "ngx-bootstrap": "^6.2.0",
     "ngx-pagination": "^5.0.0",
     "rxjs": "^6.5.3",

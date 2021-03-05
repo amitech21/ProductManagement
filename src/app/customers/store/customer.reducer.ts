@@ -109,7 +109,13 @@ export function customerReducer(state = initialState , action: CustomersActions.
             };
         
         default:
-            return state;        
+            if (localStorage.getItem('customersState')) {
+                var newState = JSON.parse(localStorage.getItem('customersState'))          
+                return newState
+            }
+            else {
+                return {...state};
+            }        
     }
         
 }

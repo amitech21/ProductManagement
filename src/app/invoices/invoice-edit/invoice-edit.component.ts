@@ -249,6 +249,9 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
       this.storeSub = this.store.select('invoices')
       .pipe(map(invoicesState => {
+            // Store
+            localStorage.setItem("invoicesState", JSON.stringify(invoicesState));
+        
         return invoicesState.invoices.find((invoice, index) => {
           return invoice.id === this.id;
           //return invoice.id === this.id;
