@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { Product } from '../product.model';
 import { FetchCustomersByPg } from 'src/app/customers/store/customer.actions';
 
+export const SET_PRODUCT = '[Products] Set Product';
 export const SET_PRODUCTS = '[Products] Set Products';
 export const FETCH_PRODUCTS = '[Products] Fetch Products';
 export const SET_PRODUCTS_COUNT = '[Products] Set Products Count';
@@ -17,6 +18,10 @@ export const CLEAR_ERROR = '[Products] Clear Error';
 export const SET_VISIBILITY = '[Products] Set Visibility';
 
 
+export class SetProduct implements Action {
+    readonly type = SET_PRODUCT;
+    constructor( public payload: Product ) {}
+}
 
 export class SetProducts implements Action {
     readonly type = SET_PRODUCTS;
@@ -75,6 +80,7 @@ export class ClearError implements Action{
 }
 
 export type ProductsActions =
+| SetProduct
 | SetProducts
 | FetchProducts
 | FetchProductsCount

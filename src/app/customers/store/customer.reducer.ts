@@ -2,6 +2,7 @@ import { Customer } from '../customer.model';
 import * as CustomersActions from '../store/customer.actions'
 
 export interface State { 
+    customer: Customer ; 
     customers: Customer[] ; 
     visibility: boolean;
     cust_total_count: number;
@@ -10,6 +11,7 @@ export interface State {
 }
 
 const initialState: State = { 
+    customer: null , 
     customers: [] , 
     visibility: true , 
     cust_total_count: 0 ,
@@ -23,6 +25,12 @@ export function customerReducer(state = initialState , action: CustomersActions.
     //let updatedCustomers: Customer[] = [];
 
     switch(action.type) {
+
+        case CustomersActions.SET_CUSTOMER:
+            return {
+                ...state,
+                customer: action.payload, ...state.customer
+            };
 
         case CustomersActions.FETCH_CUSTOMERS:
             return {

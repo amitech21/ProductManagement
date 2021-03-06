@@ -5,6 +5,7 @@ import { Product } from 'src/app/products/product.model';
 import { SetCustomersCount } from 'src/app/customers/store/customer.actions';
 import { ProductInvoice } from 'src/app/products/products_invoice.model';
 
+export const SET_INVOICE = '[Invoices] Set Invoice';
 export const SET_INVOICES = '[Invoices] Set Invoices';
 export const FETCH_INVOICES = '[Invoices] Fetch Invoices';
 export const SET_INVOICES_COUNT = '[Invoices] Set Invoices Count';
@@ -28,6 +29,10 @@ export const SET_CUST_COUNT = '[Invoices] Set Cust Count';
 export const SET_PRODUCTS = '[Invoices] Set Products';
 export const SET_PROD_COUNT = '[Invoices] Set Prod Count';
 
+export class SetInvoice implements Action {
+    readonly type = SET_INVOICE;
+    constructor( public payload: Invoice ) {}
+}
 export class SetInvoices implements Action {
     readonly type = SET_INVOICES;
     constructor( public payload: Invoice[] ) {}
@@ -120,6 +125,7 @@ export class SetProdCount implements Action {
 }
 
 export type InvoicesActions =
+| SetInvoice
 | SetInvoices
 | FetchInvoices
 | FetchInvoicesCount

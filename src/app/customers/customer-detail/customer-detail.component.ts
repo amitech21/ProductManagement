@@ -48,8 +48,11 @@ export class CustomerDetailComponent implements OnInit {
         window.scroll(0,0);
       });
 
+      this.store.dispatch(new CustomerActions.SetCustomer(this.customer));
+
       this.store.select('customers').subscribe(custState => {
         this.error = custState.custError;
+        localStorage.setItem("customersState", JSON.stringify(custState));
       });
   }
 

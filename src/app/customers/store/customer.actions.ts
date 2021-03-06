@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { Customer } from '../customer.model';
 
+export const SET_CUSTOMER = '[Customers] Set Customer';
 export const SET_CUSTOMERS = '[Customers] Set Customers';
 export const FETCH_CUSTOMERS = '[Customers] Fetch Customers';
 export const SET_CUSTOMERS_COUNT = '[Customers] Set Customers Count';
@@ -14,6 +15,11 @@ export const STORE_CUSTOMER = '[Customers] Store Customer';
 export const FAIL_CUSTOMER = '[Customers] Fail Customers';
 export const CLEAR_ERROR = '[Customers] Clear Error';
 export const SET_VISIBILITY = '[Customers] Set Visibility';
+
+export class SetCustomer implements Action {
+    readonly type = SET_CUSTOMER;
+    constructor( public payload: Customer ) {}
+}
 
 export class SetCustomers implements Action {
     readonly type = SET_CUSTOMERS;
@@ -73,6 +79,7 @@ export class ClearError implements Action{
 }
 
 export type CustomersActions =
+| SetCustomer
 | SetCustomers
 | FetchCustomers
 | FetchCustomersCount

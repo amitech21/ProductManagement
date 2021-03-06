@@ -2,6 +2,7 @@ import { Product } from '../product.model';
 import * as ProductsActions from '../store/product.actions'
 
 export interface State { 
+    product: Product ; 
     products: Product[] ; 
     visibility: boolean;
     prod_total_count: number;
@@ -11,6 +12,7 @@ export interface State {
 }
 
 const initialState: State = { 
+    product: null ,
     products: [] , 
     visibility: true , 
     prod_total_count: 0 , 
@@ -27,6 +29,12 @@ export function productReducer(
     //let updatedProducts: Product[] = [];
 
     switch(action.type) {
+
+        case ProductsActions.SET_PRODUCT:
+            return {
+                ...state,
+                product: action.payload, ...state.product
+            };
 
         case ProductsActions.FETCH_PRODUCTS:
             return {

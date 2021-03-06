@@ -7,18 +7,21 @@ export class DropdownDirective {
 
   @HostBinding('class.open') isOpen = false;
 
-  @HostListener('click') toggleOpen(){
-    this.isOpen = !this.isOpen;
-  }
+  // @HostListener('click') toggleOpen(){
+  //   this.isOpen = !this.isOpen;
+  // }
 
-  constructor() { }
+  // constructor() { }
 
   // below code is for : Closing the Dropdown From Anywhere
 
-  // @HostListener('document:click', ['$event']) toggleOpen(event: Event) {
-  //   this.isOpen = this.elRef.nativeElement.contains(event.target) ? !this.isOpen : false;
-  // }
-  // constructor(private elRef: ElementRef) {}
+  @HostListener('document:click', ['$event']) toggleOpen(event: Event) {
+    // console.log(event);
+    // console.log(event.target);
+
+    this.isOpen = this.elRef.nativeElement.contains(event.target) ? !this.isOpen : false;
+  }
+  constructor(private elRef: ElementRef) {}
 
 
 

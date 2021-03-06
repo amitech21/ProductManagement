@@ -4,6 +4,7 @@ import { Customer } from 'src/app/customers/customer.model';
 import { ProductInvoice } from 'src/app/products/products_invoice.model';
 
 export interface State { 
+    invoice: Invoice ;
     invoices: Invoice[] ;
     visibility: boolean;
     inc_total_count: number;
@@ -16,6 +17,7 @@ export interface State {
 }
 
 const initialState: State = { 
+    invoice: null, 
     invoices: [] , 
     visibility: true,
     inc_total_count: 0,
@@ -33,6 +35,13 @@ export function invoiceReducer(state = initialState , action: InvoicesActions.In
     //let updatedInvoices: Invoice[] = [];
 
     switch(action.type) {
+
+        case InvoicesActions.SET_INVOICE:
+            return {
+                ...state,
+                invoice: action.payload, ...state.invoice
+                };
+
         case InvoicesActions.SET_INVOICES:
             return {
                 ...state,

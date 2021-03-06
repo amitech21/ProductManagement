@@ -48,8 +48,17 @@ export class ProductDetailComponent implements OnInit {
         window.scroll(0,0);
       });
 
+      this.store.dispatch(new ProductActions.SetProduct(this.product));
+
       this.store.select('products').subscribe(prodState => {
         this.error = prodState.prodError;
+        localStorage.setItem("productsState", JSON.stringify(prodState));
+
+        // if(this.product === null || this.id === null)
+        // {
+        //   this.product = prodState.product;
+        // this.id = prodState.product.id;
+        // }
       });
   }
 

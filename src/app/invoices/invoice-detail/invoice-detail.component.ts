@@ -69,8 +69,11 @@ export class InvoiceDetailComponent implements OnInit {
         window.scroll(0,0);
       });
 
+      this.store.dispatch(new InvoiceActions.SetInvoice(this.invoice));
+
       this.store.select('invoices').subscribe(incState => {
         this.error = incState.incError;
+        localStorage.setItem("invoicesState", JSON.stringify(incState));
       });
   }
 

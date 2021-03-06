@@ -261,7 +261,7 @@ export class AuthEffects {
                 this.authService.clearLogoutTimer();
                 this.router.navigate(['/']);
                 localStorage.clear();
-                // localStorage.removeItem('userData');
+                localStorage.removeItem('invoicesState');
                 // localStorage.removeItem('products');
                 // localStorage.removeItem('products_visibility');
             })

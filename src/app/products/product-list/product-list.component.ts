@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Injectable} from '@angular/core';
+import { Component, OnInit, OnDestroy, Injectable, HostListener} from '@angular/core';
 
 import { Product } from '../product.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -143,6 +143,7 @@ tableSize = 4;
 
     this.store.select('products').subscribe(
       prodState => {
+        console.log( JSON.stringify(prodState.product));
         this.products = prodState.products;
         this.table_config = {
           id: 'basicPaginate',
