@@ -143,7 +143,7 @@ tableSize = 4;
 
     this.store.select('products').subscribe(
       prodState => {
-        console.log( JSON.stringify(prodState.product));
+        // console.log( JSON.stringify(prodState.product));
         this.products = prodState.products;
         this.table_config = {
           id: 'basicPaginate',

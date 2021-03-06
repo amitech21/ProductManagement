@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, HostListener, ElementRef } from '@angular/core';
 import { Customer } from '../customer.model';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as fromApp from '../../store/app.reducer'
@@ -15,14 +15,33 @@ export class CustomerDetailComponent implements OnInit {
   customer: Customer;
   id: number;
   error: string = null;   // Managed by NgRX
+  click_flag: boolean = false;
+
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+      if( this.eRef.nativeElement.contains(event.target) ||
+      event.target.classList.contains('list-group-item') ||
+      event.target.classList.contains('list-group-item-heading') ||
+      event.target.classList.contains('list-group-item-text'))
+      {/* console.log("clicked inside");*/}
+      else {/*console.log("clicked outside");*/
+      if(this.click_flag)
+        this.onCancelEditing();
+
+      this.click_flag = true;
+    }
+  }
 
   constructor(
     private router: Router,
     private route:ActivatedRoute,
-    private store: Store<fromApp.AppState>
+    private store: Store<fromApp.AppState>,
+    private eRef: ElementRef
     ) {}
 
   ngOnInit(): void {
+
+    this.click_flag = false;
 
     this.route.params
       .pipe(
