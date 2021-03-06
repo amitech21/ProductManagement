@@ -152,19 +152,31 @@
                             class="form-control"
                             [readonly]="true">
 
-                            <label for="total_gst">Total GST(%): </label>
+                            <label for="total_gst">Total GST in (%): </label>
                             <input
                             type="text"
                             id="total_gst"
                             formControlName="total_gst"
                             class="form-control">
 
-                            <label for="total_discount">Total Discount: </label>
-                            <input
-                            type="text"
-                            id="total_discount"
-                            formControlName="total_discount"
-                            class="form-control">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="total_discount_percentage">Discount in (%): </label>
+                                    <input
+                                    type="text"
+                                    id="total_discount_percentage"
+                                    formControlName="total_discount_percentage"
+                                    class="form-control">
+                                </div>
+                                <div class="col-xs-6">
+                                    <label for="total_discount">Discount in amount: </label>
+                                    <input
+                                    type="text"
+                                    id="total_discount"
+                                    formControlName="total_discount"
+                                    class="form-control">
+                                </div>
+                            </div>
 
                             <label 
                             for="total_price"

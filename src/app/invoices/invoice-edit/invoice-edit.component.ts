@@ -30,8 +30,11 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
   public invoiceForm: FormGroup;
   public products_price: number = 0;
   public gst_: number = 0;
+  public discount_percentage_: number = 0;
   public discount_: number = 0;
   public total_price: number = 0;
+
+  public discount_percentage: number = 0;
 
   //public source: LocalDataSource; // add a property to the component
 
@@ -119,10 +122,45 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           this.initForm();
         }
       );
+
+      this.invoiceForm.get('total_discount_percentage').valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((data_percentage:number) => {
+        let price_with_gst = this.products_price + ((this.products_price*this.gst_)/100);
+        this.discount_ = (data_percentage*price_with_gst)/100;
+        this.calculateTotalPrice(
+          this.products_price,
+          this.gst_,
+          this.discount_
+        );
+        this.invoiceForm.get('total_discount').setValue(this.discount_ , { emitEvent: false });
+        this.invoiceForm.get('total_price').setValue(this.total_price);
+      });
+
+      this.invoiceForm.get('total_discount').valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((data:number) => {
+        let price_with_gst = this.products_price + ((this.products_price*this.gst_)/100);
+        this.discount_percentage_ = (data*100)/price_with_gst;
+        this.discount_ = data;
+        this.calculateTotalPrice(
+          this.products_price,
+          this.gst_,
+          this.discount_
+        );
+        this.invoiceForm.get('total_discount_percentage').setValue(this.discount_percentage_ , { emitEvent: false });
+        this.invoiceForm.get('total_price').setValue(this.total_price);
+      });
       
       this.invoiceForm.get('total_gst').valueChanges
       .pipe(
-        debounceTime(1000),
+        debounceTime(500),
         distinctUntilChanged()
       )
       .subscribe((data:number) => {
@@ -137,7 +175,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
       this.invoiceForm.get('total_discount').valueChanges
       .pipe(
-        debounceTime(1000),
+        debounceTime(500),
         distinctUntilChanged()
       )
       .subscribe((data:number) => {
@@ -241,6 +279,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     let invoiceUDate = "";
     let invoiceProducts_price = 0;
     let invoiceTotal_gst = 0;
+    let invoiceTotal_discount_percentage = 0;
     let invoiceTotal_discount = 0;
     let invoiceTotal_price = 0;
 
@@ -303,6 +342,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       'uDate' : new FormControl(invoiceUDate),
       'products_price' : new FormControl(invoiceProducts_price),
       'total_gst' : new FormControl(invoiceTotal_gst),
+      'total_discount_percentage' : new FormControl(invoiceTotal_discount_percentage),
       'total_discount' : new FormControl(invoiceTotal_discount),
       'total_price' : new FormControl(invoiceTotal_price),
 
