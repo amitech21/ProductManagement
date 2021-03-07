@@ -51,6 +51,20 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="form-group">
+            <label for="iDate">Invoice Date : </label>
+            <input
+                type="text"
+                id="iDate"
+                formControlName="iDate"
+                class="form-control"
+                [readonly]="true">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-group">
             <label>Billed To : (Customer's Name)</label>
             <ng2-smart-table 
                 [settings]="cust_newSettings" 

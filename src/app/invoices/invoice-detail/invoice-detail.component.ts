@@ -78,6 +78,7 @@ export class InvoiceDetailComponent implements OnInit {
         this.invoice = invoice[0];
         this.invoiceForm.get('cDate').setValue(invoice[0].created_date_time);
         this.invoiceForm.get('uDate').setValue(invoice[0].updated_date_time);
+        this.invoiceForm.get('iDate').setValue(invoice[0].invoice_date);
         this.invoiceForm.get('cgst').setValue(invoice[0].cgst);
         this.invoiceForm.get('sgst').setValue(invoice[0].sgst);
         this.invoiceForm.get('igst').setValue(invoice[0].igst);
@@ -138,6 +139,8 @@ export class InvoiceDetailComponent implements OnInit {
     // let invoiceId = 0;
     let invoiceCDate = "";
     let invoiceUDate = "";
+    let invoiceIDate = "";
+
     // let invoiceProducts_price = 0;
     let invoiceTotal_cgst = 0;
     let invoiceTotal_sgst = 0;
@@ -149,6 +152,7 @@ export class InvoiceDetailComponent implements OnInit {
       // 'id' : new FormControl(invoiceId),
       'cDate' : new FormControl(invoiceCDate),
       'uDate' : new FormControl(invoiceUDate),
+      'iDate' : new FormControl(invoiceIDate),
       // 'products_price' : new FormControl(invoiceProducts_price),
       'cgst' : new FormControl(invoiceTotal_cgst),
       'sgst' : new FormControl(invoiceTotal_sgst),

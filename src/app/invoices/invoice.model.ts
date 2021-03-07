@@ -5,6 +5,7 @@ export class Invoice {
     public id: number;
     public created_date_time: string;
     public updated_date_time: string;
+    public invoice_date: string;
     public customer: Customer;
     public products: ProductInvoice[];
     public cgst: number;
@@ -18,6 +19,7 @@ export class Invoice {
         id: number, 
         created_date_time: string,
         updated_date_time: string,
+        invoice_date: string,
         customer: Customer,
         products:ProductInvoice[], 
         cgst: number,
@@ -29,6 +31,7 @@ export class Invoice {
         this.id = id;
         this.created_date_time = created_date_time;
         this.updated_date_time = updated_date_time;
+        this.invoice_date = invoice_date;
         this.customer = customer;
         this.products = products;
         this.cgst = cgst;

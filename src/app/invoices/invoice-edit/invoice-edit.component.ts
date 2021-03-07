@@ -273,6 +273,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
     if(this.editMode)
     { 
+      console.log(this.invoiceForm.get('iDate').value.toString());
       this.id = this.invoiceForm.get('id').value;
       this.store.dispatch(new InvoiceActions.UpdateInvoice({
         index: this.id,
@@ -281,6 +282,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           this.invoiceForm.get('id').value,
           this.invoiceForm.get('cDate').value,
           this.invoiceForm.get('uDate').value,
+          this.invoiceForm.get('iDate').value.toString(),
           this.selectedCustomer,
           this.sold_products, 
           this.invoiceForm.get('cgst').value,
@@ -297,6 +299,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       this.store.dispatch(new InvoiceActions.AddInvoice(
         new Invoice(
         0,
+        '',
         '',
         '',
         this.selectedCustomer,
@@ -317,6 +320,16 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['../'], {relativeTo: this.route });
   }
 
+  private formatDate(date) {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    return [year, month, day].join('-');
+  }
+
   private initForm(){
     let invoiceId = 0;
     // let invoiceCDate = '';
@@ -328,6 +341,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
 
     let invoiceCDate = "";
     let invoiceUDate = "";
+    let invoiceIDate = "";
     let invoiceProducts_price = 0;
     let invoiceTotal_cgst = 0;
     let invoiceTotal_sgst = 0;
@@ -350,9 +364,13 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         });
       }))
       .subscribe((invoice: Invoice) => {
+          console.log(invoice.invoice_date);
+
           invoiceId = invoice.id;
           invoiceCDate = invoice.created_date_time;
           invoiceUDate = invoice.updated_date_time;
+          invoiceIDate = this.formatDate(new Date(invoice.invoice_date));
+          //invoiceIDate = this.formatDate(new Date('03-09-2021'));
           invoiceTotal_cgst = invoice.cgst;
           invoiceTotal_sgst = invoice.sgst;
           invoiceTotal_igst = invoice.igst;
@@ -397,6 +415,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       'id' : new FormControl(invoiceId),
       'cDate' : new FormControl(invoiceCDate),
       'uDate' : new FormControl(invoiceUDate),
+      'iDate' : new FormControl(invoiceIDate),
       'products_price' : new FormControl(invoiceProducts_price),
       'cgst' : new FormControl(invoiceTotal_cgst),
       'sgst' : new FormControl(invoiceTotal_sgst),
