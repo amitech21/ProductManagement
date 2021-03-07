@@ -145,7 +145,9 @@ export class InvoiceEffects {
                     "",
                     invoiceData.payload.customer,
                     invoiceData.payload.products,
-                    invoiceData.payload.gst,
+                    invoiceData.payload.cgst,
+                    invoiceData.payload.sgst,
+                    invoiceData.payload.igst,
                     invoiceData.payload.discount,
                     invoiceData.payload.total_price
 
