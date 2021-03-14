@@ -134,6 +134,8 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         let gst_ = +this.cgst_ + +this.sgst_ + +this.igst_;
         let price_with_gst = this.products_price + ((this.products_price*gst_)/100);
         this.discount_ = (data_percentage*price_with_gst)/100;
+        let str = this.discount_.toString();
+        this.discount_ = Number(str.slice(0, (str.indexOf("."))+3));
         this.calculateTotalPrice(
           this.products_price,
           this.cgst_,
@@ -162,6 +164,8 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           this.igst_,
           this.discount_
         );
+        let str = this.discount_percentage_.toString();
+        this.discount_percentage_ = Number(str.slice(0, (str.indexOf("."))+3));
         this.invoiceForm.get('total_discount_percentage').setValue(this.discount_percentage_ , { emitEvent: false });
         this.invoiceForm.get('total_price').setValue(this.total_price);
       });
@@ -267,13 +271,14 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     let gst: number = +cgst + +sgst + +igst;
     let gst_val: number = (products*gst) / 100 ;
     this.total_price = products + gst_val - discount;
+    let str = this.total_price.toString();
+    this.total_price = Number(str.slice(0, (str.indexOf("."))+3));
   }
 
   onSubmit() {
 
     if(this.editMode)
     { 
-      console.log(this.invoiceForm.get('iDate').value.toString());
       this.id = this.invoiceForm.get('id').value;
       this.store.dispatch(new InvoiceActions.UpdateInvoice({
         index: this.id,
@@ -301,7 +306,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
         0,
         '',
         '',
-        '',
+        this.invoiceForm.get('iDate').value,
         this.selectedCustomer,
         this.sold_products, 
         this.invoiceForm.get('cgst').value,
@@ -357,15 +362,12 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       .pipe(map(invoicesState => {
             // Store
             localStorage.setItem("invoicesState", JSON.stringify(invoicesState));
-        
         return invoicesState.invoices.find((invoice, index) => {
           return invoice.id === this.id;
           //return invoice.id === this.id;
         });
       }))
       .subscribe((invoice: Invoice) => {
-          console.log(invoice.invoice_date);
-
           invoiceId = invoice.id;
           invoiceCDate = invoice.created_date_time;
           invoiceUDate = invoice.updated_date_time;
@@ -374,6 +376,13 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           invoiceTotal_cgst = invoice.cgst;
           invoiceTotal_sgst = invoice.sgst;
           invoiceTotal_igst = invoice.igst;
+          
+          //let gst_ = +invoice.cgst + +invoice.sgst + +invoice.igst;
+          let price_with_gst = invoice.discount + invoice.total_price;
+          let dis_per = (invoice.discount*100)/price_with_gst;
+          let str = dis_per.toString();
+          invoiceTotal_discount_percentage = Number(str.slice(0, (str.indexOf("."))+3)); 
+
           invoiceTotal_discount = invoice.discount;
           invoiceTotal_price = invoice.total_price;
 
@@ -405,10 +414,15 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
           this.selectedCustId_flag = true;
           this.selectedProdId_flag = true;
       });
-    
-      
 
-      
+      // this.invoiceForm.get('total_discount').setValue(this.discount_ , { emitEvent: true });
+      let gst_ = +this.cgst_ + +this.sgst_ + +this.igst_;
+      let price_with_gst = this.products_price + ((this.products_price*gst_)/100);
+      this.discount_percentage_ = (this.discount_*100)/price_with_gst;
+      // this.invoiceForm.get('total_discount_percentage').setValue(this.discount_percentage_, { emitEvent: false });
+    } else {
+      this.onClickProdSearchBtn();
+      this.onClickCustSearchBtn();
     }
 
     this.invoiceForm = new FormGroup({

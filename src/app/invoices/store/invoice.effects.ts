@@ -127,7 +127,6 @@ export class InvoiceEffects {
         ofType(InvoicesActions.ADD_INVOICE),
        
         switchMap((invoiceData: InvoicesActions.AddInvoice) => {
-
             const headerDict = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -143,7 +142,7 @@ export class InvoiceEffects {
                     0,
                     "",
                     "",
-                    "",
+                    invoiceData.payload.invoice_date,
                     invoiceData.payload.customer,
                     invoiceData.payload.products,
                     invoiceData.payload.cgst,
