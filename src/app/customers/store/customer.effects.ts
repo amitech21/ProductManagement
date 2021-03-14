@@ -177,7 +177,7 @@ export class CustomerEffects {
 }
 
 const handleError = (errorRes: HttpErrorResponse | any) => {
-
+    console.log(errorRes);
     let errorMessage = "Unknown error occured !!!!";
 
                 if(errorRes.status == 0)
@@ -188,6 +188,8 @@ const handleError = (errorRes: HttpErrorResponse | any) => {
                     return of(new CustomersActions.CustomerFail(errorRes));
                 else if(!errorRes.error.error)
                     return of(new CustomersActions.CustomerFail(errorRes.error));
+                else if(errorRes.error.message)
+                    return of(new CustomersActions.CustomerFail(errorRes.error.message));
                 else if(!errorRes.error.error.message)
                     return of(new CustomersActions.CustomerFail(errorRes.error.error));
 

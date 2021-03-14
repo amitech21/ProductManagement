@@ -3,7 +3,7 @@ import {  ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import * as fromApp from '../../store/app.reducer'
 import { Store } from '@ngrx/store';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import * as CustomerActions from '../store/customer.actions'; 
 import { Subscription } from 'rxjs';
 import { Customer } from '../customer.model';
@@ -17,6 +17,8 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   id: number;
   editMode: boolean = false;
   customerForm: FormGroup;
+  error_mob_no: string = '';
+  error_gst_no: string = '';
 
   private storeSub: Subscription;
 
@@ -89,9 +91,9 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   private initForm(){
     let customerId = 0;
     let customerName = '';
-    let customerMobileNo = 0;
+    let customerMobileNo:string = '';
     let customerAddress = '';
-    let customerGstNo= 0;
+    let customerGstNo:string = '';
 
     if(this.editMode){
       //const customer = this.customerService.getCustomer(this.id);
@@ -133,9 +135,13 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
     this.customerForm = new FormGroup({
       'id' : new FormControl(customerId),
       'name' : new FormControl(customerName, Validators.required),
-      'mobile_no' : new FormControl(customerMobileNo, Validators.required),
+      'mobile_no' : new FormControl(customerMobileNo, Validators.compose(
+        [Validators.required]
+      )),
       'address' : new FormControl(customerAddress, Validators.required),
-      'gst_no' : new FormControl(customerGstNo, Validators.required),
+      'gst_no' : new FormControl(customerGstNo, Validators.compose(
+        [Validators.required, Validators.pattern('^[0-9]{10}$')]
+      )),
 
     });
 

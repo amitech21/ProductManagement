@@ -1,9 +1,8 @@
-
 <div class="row">
     <div class="col-xs-12">
         <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
             
-            <div class="row">
+            <div class="row" *ngIf="editMode">
                 <div class="col-xs-12">
                     <div class="form-group">
                         <label for="id">ID : </label>
@@ -25,7 +24,8 @@
                             type="text"
                             id="name"
                             formControlName="name"
-                            class="form-control">
+                            class="form-control"
+                            placeholder="Enter Product's Name">
                     </div>
                 </div>
             </div>            
@@ -39,6 +39,7 @@
                             id="description"
                             formControlName="description"
                             class="form-control"
+                            placeholder="Enter Description"
                             rows="6"></textarea>
                     </div>
                 </div>
@@ -53,6 +54,7 @@
                             id="imagePath"
                             formControlName="imagePath"
                             class="form-control"
+                            placeholder="Enter Image Path"
                             #imagePath>
                     </div>
                 </div>
@@ -69,9 +71,12 @@
                         <label for="price">Price</label>
                         <input
                         type="number"
+                        min="0"
+                        step="1"
                         id="price"
                         formControlName="price"
-                        class="form-control">
+                        class="form-control"
+                        placeholder="Enter Price Amount">
                     </div>
                 </div>
             </div>

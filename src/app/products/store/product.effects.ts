@@ -189,6 +189,8 @@ const handleError = (errorRes: HttpErrorResponse | any) => {
                     return of(new ProductsActions.ProductFail(errorRes));
                 else if(!errorRes.error.error)
                     return of(new ProductsActions.ProductFail(errorRes.error));
+                else if(errorRes.error.message)
+                    return of(new ProductsActions.ProductFail(errorRes.error.message));
                 else if(!errorRes.error.error.message)
                     return of(new ProductsActions.ProductFail(errorRes.error.error));
 

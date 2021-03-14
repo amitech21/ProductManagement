@@ -271,8 +271,9 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
     let gst: number = +cgst + +sgst + +igst;
     let gst_val: number = (products*gst) / 100 ;
     this.total_price = products + gst_val - discount;
-    let str = this.total_price.toString();
-    this.total_price = Number(str.slice(0, (str.indexOf("."))+3));
+    this.total_price = Math.round(this.total_price);
+    // let str = this.total_price.toString();
+    // this.total_price = Number(str.slice(0, (str.indexOf("."))+3));
   }
 
   onSubmit() {

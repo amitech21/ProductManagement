@@ -1,11 +1,28 @@
+    <!-- <p *ngIf = "customerForm.controls['name']?.errors.required &&
+                customerForm.controls['name']?.touched"
+                class="alert alert-danger">
+                Customer's Name is required.</p>
+    <p *ngIf = "customerForm.controls['mobile_no']?.errors &&
+                customerForm.controls['mobile_no']?.touched"
+                class="alert alert-danger">
+                Mobile no should be 10 digits.</p>
+    <<p *ngIf = "customerForm.controls['address']?.errors.required &&
+                customerForm.controls['address']?.touched"
+                class="alert alert-danger">
+                Customer's Address is required.</p>
+    <p *ngIf = "customerForm.controls['gst_no']?.errors &&
+                customerForm.controls['gst_no']?.touched"
+                class="alert alert-danger">
+                Customer's GST no is incorrect.</p> -->
+
 <div class="row">
     <div class="col-xs-12">
         <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
             
-            <div class="row">
+            <div class="row" *ngIf="editMode">
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label for="name">ID : </label>
+                        <label for="id">ID : </label>
                         <input
                             type="text"
                             id="id"
@@ -24,7 +41,8 @@
                             type="text"
                             id="name"
                             formControlName="name"
-                            class="form-control">
+                            class="form-control"
+                            placeholder="Enter Customer's Name">
                     </div>
                 </div>
             </div>    
@@ -34,10 +52,11 @@
                     <div class="form-group">
                         <label for="mobile_no">Mobile No</label>
                         <input
-                        type="number"
+                        type="text"
                         id="mobile_no"
                         formControlName="mobile_no"
-                        class="form-control">
+                        class="form-control"
+                        placeholder="Enter Mobile No">
                     </div>
                 </div>
             </div>
@@ -51,7 +70,8 @@
                             id="address"
                             formControlName="address"
                             class="form-control"
-                            rows="6"></textarea>
+                            rows="6"
+                            placeholder="Enter Customer's Address"></textarea>
                     </div>
                 </div>
             </div>
@@ -61,10 +81,11 @@
                     <div class="form-group">
                         <label for="gst_no">GST No</label>
                         <input
-                        type="number"
+                        type="text"
                         id="gst_no"
                         formControlName="gst_no"
-                        class="form-control">
+                        class="form-control"
+                        placeholder="Enter GST No">
                     </div>
                 </div>
             </div>

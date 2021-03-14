@@ -3,10 +3,9 @@ import {  ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import * as fromApp from '../../store/app.reducer'
 import { Store } from '@ngrx/store';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import * as ProductActions from '../store/product.actions'; 
 import { Subscription } from 'rxjs';
-import { Product } from '../product.model';
 
 @Component({
   selector: 'app-product-edit',
@@ -41,6 +40,23 @@ export class ProductEditComponent implements OnInit, OnDestroy {
           this.initForm();
         }
       );
+
+      this.productForm.get('price').valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((price:number) => {
+        if(price < 0)
+        {
+          this.store.dispatch(new ProductActions.ProductFail("Price cannot be Negative Value."));
+          this.productForm.get('price').setErrors({'incorrect': true});
+        }
+        else{
+          this.productForm.get('price').setErrors(null);
+        }
+      });
+
   }
 
   onSubmit() {
@@ -71,7 +87,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     let productName = '';
     let productDescription = '';
     let productImagePath = '';
-    let productPrice= 0;
+    let productPrice:number = null;
 
     if(this.editMode){
       //const product = this.productService.getProduct(this.id);

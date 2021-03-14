@@ -276,6 +276,8 @@ const handleError = (errorRes: HttpErrorResponse | any) => {
                     return of(new InvoicesActions.InvoiceFail(errorRes));
                 else if(!errorRes.error.error)
                     return of(new InvoicesActions.InvoiceFail(errorRes.error));
+                else if(errorRes.error.message)
+                    return of(new InvoicesActions.InvoiceFail(errorRes.error.message));
                 else if(!errorRes.error.error.message)
                     return of(new InvoicesActions.InvoiceFail(errorRes.error.error));
 
