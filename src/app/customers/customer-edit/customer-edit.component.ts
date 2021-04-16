@@ -42,6 +42,23 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
           this.initForm();
         }
       );
+
+      // this.customerForm.get('mobile_no').valueChanges
+      // .pipe(
+      //   debounceTime(500),
+      //   distinctUntilChanged()
+      // )
+      // .subscribe((mobile_no:number) => {
+      //   //validations
+      //   if(mobile_no >100)
+      //   {
+      //     this.store.dispatch(new CustomerActions.CustomerFail("Invalid Mobile no."));
+      //     this.customerForm.get('mobile_no').setErrors({'incorrect': true});
+      //   }
+      //   else{
+      //     this.customerForm.get('mobile_no').setErrors(null);
+      //   }
+      // });
   }
 
   onSubmit() {
@@ -136,11 +153,12 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
       'id' : new FormControl(customerId),
       'name' : new FormControl(customerName, Validators.required),
       'mobile_no' : new FormControl(customerMobileNo, Validators.compose(
-        [Validators.required]
+        [Validators.required , Validators.pattern('^[6-9][0-9]{9}$')]
       )),
       'address' : new FormControl(customerAddress, Validators.required),
       'gst_no' : new FormControl(customerGstNo, Validators.compose(
-        [Validators.required, Validators.pattern('^[0-9]{10}$')]
+        [Validators.required] // , Validators.pattern('^[A-Z0-9]{15}$') 
+        //https://www.gstzen.in/a/format-of-a-gst-number-gstin.html
       )),
 
     });

@@ -238,7 +238,7 @@
                     *ngIf="!editMode"
                     type="submit" 
                     class="btn btn-success"
-                    [disabled]="!(selectedCustId_flag && selectedProdId_flag)">Create Invoice</button>
+                    [disabled]="!(selectedCustId_flag && selectedProdId_flag) || !invoiceForm.valid">Create Invoice</button>
                     <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
                 </div>
             </div>

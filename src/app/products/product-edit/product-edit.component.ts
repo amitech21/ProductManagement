@@ -47,6 +47,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe((price:number) => {
+        //validations
         if(price < 0)
         {
           this.store.dispatch(new ProductActions.ProductFail("Price cannot be Negative Value."));
