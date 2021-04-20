@@ -1,10 +1,5 @@
 version: 0.1
 
-env:
-    variables:
-        CACHE_CONTROL: "86400"
-        S3_BUCKET: "{{your_url}}"
-        BUILD_FOLDER: "dist"
 phases:
   install:
     runtime-versions:
