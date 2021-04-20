@@ -1,14 +1,24 @@
 version: 0.1
 
+env:
+    variables:
+        CACHE_CONTROL: "86400"
+        S3_BUCKET: "{{your_url}}"
+        BUILD_FOLDER: "dist"
 phases:
   install:
+    runtime-versions:
+        nodejs: 10
     commands:
-      - echo installing nodejs...
-  pre_build:
+        - echo Installing source NPM dependencies...
+        - npm install
+        - npm install -g @angular/cli@9.1.11
+   build:
     commands:
-      - echo installing dependencies...
-  build:
-    commands:
-      # - echo testing...
-      - echo building...
-      #- ng build --prod
+        - echo Build started 
+        #- ng build
+#artifacts:
+#    files:
+#        - '**/*'
+#    base-directory: 'dist*'
+#    discard-paths: yes
