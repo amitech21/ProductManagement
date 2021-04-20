@@ -20,8 +20,3 @@ phases:
       # - echo testing...
       # - echo building...
       - ng build --prod
-artifacts:
-  files:
-    - "**/*"
-  discard-paths: no
-  base-directory: dist/app
