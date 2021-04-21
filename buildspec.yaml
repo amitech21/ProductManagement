@@ -14,4 +14,4 @@ phases:
       - echo building...
   post_build:
     commands:
-      - aws s3 sync ./* s3://amitech21
+      - aws s3 cp ./* s3://amitech21/ --recursive --acl public-read-write
