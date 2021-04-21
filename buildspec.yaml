@@ -21,8 +21,6 @@ phases:
       - echo building...
       - ng build --prod
       - ng version
-artifacts:
-  files:
-    - "**/*"
-  discard-paths: no
-  base-directory: dist/app4
+  post_build:
+    commands:
+      -aws s3 sync .dist/apps4 s3://amitech21 --acl 'public-read' --delete
