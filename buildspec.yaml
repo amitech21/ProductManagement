@@ -4,7 +4,6 @@ phases:
   install:
     commands:
       - echo installing nodejs...
-      #- apt install -y awscli 
    pre_build:
     commands:
       - echo installing dependencies...
