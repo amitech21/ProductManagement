@@ -3,4 +3,4 @@ version: 0.1
 phases:
   post_build:
     commands:
-      -aws s3 sync /angular.json s3://amitech21 --acl 'public-read' --delete
+      -aws s3 sync ./angular.json s3://amitech21 --acl 'public-read' --delete
