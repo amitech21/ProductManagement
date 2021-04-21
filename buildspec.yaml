@@ -3,7 +3,7 @@ version: 0.1
 phases:
   install:
     commands:
-	    - apt install -y awscli
+	    - apt install awscli
   post_build:
     commands:
       - aws s3 sync ./* s3://amitech21 --acl 'public-read' --delete
