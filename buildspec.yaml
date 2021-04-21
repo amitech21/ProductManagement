@@ -3,7 +3,14 @@ version: 0.1
 phases:
   install:
     commands:
-	    - apt install awscli
+	    - apt  install --y awscli
+   pre_build:
+    commands:
+      - echo installing dependencies...
+  build:
+    commands:
+      # - echo testing...
+      - echo building...
   post_build:
     commands:
       - aws s3 sync ./* s3://amitech21 --acl 'public-read' --delete
