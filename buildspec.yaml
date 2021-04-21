@@ -21,8 +21,8 @@ phases:
       - echo building...
       - ng build --prod
       - ng version
-#artifacts:
-#    files:
-#        - '**/*'
-#    base-directory: 'dist*'
-#    discard-paths: yes
+artifacts:
+  files:
+    - "**/*"
+  discard-paths: no
+  base-directory: dist/app4
