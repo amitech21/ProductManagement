@@ -3,6 +3,7 @@ version: 0.1
 phases:
   install:
     commands:
+      - apt update
       - apt install -y awscli
   pre_build:
     commands:
