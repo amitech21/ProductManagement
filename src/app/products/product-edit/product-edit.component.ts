@@ -86,6 +86,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   private initForm(){
     let productId = 0;
     let productName = '';
+    let productHsnCode = '';
     let productDescription = '';
     let productImagePath = '';
     let productPrice:number = null;
@@ -106,6 +107,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       .subscribe(product => {
           productId = product.id;
           productName = product.name;
+          productHsnCode = product.hsn_code;
           productImagePath = product.imagePath;
           productDescription = product.description;
           productPrice = product.price;
@@ -116,6 +118,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.productForm = new FormGroup({
       'id' : new FormControl(productId),
       'name' : new FormControl(productName, Validators.required),
+      'hsn_code' : new FormControl(productHsnCode, Validators.required),
       'description' : new FormControl(productDescription, Validators.required),
       'imagePath' : new FormControl(productImagePath, Validators.required),
       'price' : new FormControl(productPrice, Validators.required),

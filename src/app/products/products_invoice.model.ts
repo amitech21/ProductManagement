@@ -4,6 +4,7 @@ import { Product } from './product.model';
 export class ProductInvoice {
     public id: number;
     public name: string;
+    public hsn_code: string;
     public description: string;
     public imagePath: string;
     public price: number;
@@ -21,6 +22,7 @@ export class ProductInvoice {
     constructor(product: Product, quantity: number){
         this.id = product.id;
         this.name = product.name;
+        this.hsn_code = product.hsn_code;
         this.description = product.description;
         this.imagePath = product.imagePath;
         this.price = product.price;

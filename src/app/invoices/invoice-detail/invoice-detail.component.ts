@@ -9,6 +9,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { LocalDataSource } from 'ng2-smart-table';
 import { Customer } from 'src/app/customers/customer.model';
 import { ProductInvoice } from 'src/app/products/products_invoice.model';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -79,10 +80,23 @@ export class InvoiceDetailComponent implements OnInit {
         this.invoiceForm.get('cDate').setValue(invoice[0].created_date_time);
         this.invoiceForm.get('uDate').setValue(invoice[0].updated_date_time);
         this.invoiceForm.get('iDate').setValue(invoice[0].invoice_date);
+        this.invoiceForm.get('products_price').setValue(invoice[0].products_price);
         this.invoiceForm.get('cgst').setValue(invoice[0].cgst);
         this.invoiceForm.get('sgst').setValue(invoice[0].sgst);
         this.invoiceForm.get('igst').setValue(invoice[0].igst);
-        this.invoiceForm.get('total_discount').setValue(invoice[0].discount);
+        this.invoiceForm.get('cgst_amount').setValue(invoice[0].cgst * invoice[0].products_price / 100);
+        this.invoiceForm.get('sgst_amount').setValue(invoice[0].sgst * invoice[0].products_price / 100);
+        this.invoiceForm.get('igst_amount').setValue(invoice[0].igst * invoice[0].products_price / 100);
+        this.invoiceForm.get('total_discount_amount').setValue(invoice[0].discount);
+
+        let gst_:number = +invoice[0].cgst + +invoice[0].sgst + +invoice[0].igst ;
+        let price_with_gst = invoice[0].products_price + ( invoice[0].products_price * gst_ ) / 100;
+        let discount_percentage_: number = (invoice[0].discount*100)/price_with_gst;
+        let str = discount_percentage_.toString();
+        discount_percentage_ = Number(str.slice(0, (str.indexOf("."))+3));
+
+        this.invoiceForm.get('total_discount').setValue(discount_percentage_);
+
         this.invoiceForm.get('total_price').setValue(invoice[0].total_price);
 
         this.customers[0] = invoice[0].customer;
@@ -101,7 +115,9 @@ export class InvoiceDetailComponent implements OnInit {
   }
 
   onPrintInvoice() {
-    this.store.dispatch(new InvoiceActions.PrintInvoice(this.id));
+    //this.store.dispatch(new InvoiceActions.PrintInvoice(this.id));
+    window.open( 
+      environment.webAppEndPoint+"/invoices/print/"+this.id, "_blank");
     // this.ngOnInit();
     //this.invoiceService.addIngredientsToShoppingList(this.invoice.ingredients);
     // this.store.dispatch(
@@ -141,11 +157,16 @@ export class InvoiceDetailComponent implements OnInit {
     let invoiceUDate = "";
     let invoiceIDate = "";
 
-    // let invoiceProducts_price = 0;
+    let invoiceProducts_price = 0;
     let invoiceTotal_cgst = 0;
     let invoiceTotal_sgst = 0;
     let invoiceTotal_igst = 0;
+    let invoiceTotal_cgst_amount = 0;        // Form Initialization
+    let invoiceTotal_sgst_amount = 0;        // Form Initialization
+    let invoiceTotal_igst_amount = 0;
     let invoiceTotal_discount = 0;
+    let invoiceTotal_discount_amount = 0;
+
     let invoiceTotal_price = 0;
 
     this.invoiceForm = new FormGroup({
@@ -153,11 +174,15 @@ export class InvoiceDetailComponent implements OnInit {
       'cDate' : new FormControl(invoiceCDate),
       'uDate' : new FormControl(invoiceUDate),
       'iDate' : new FormControl(invoiceIDate),
-      // 'products_price' : new FormControl(invoiceProducts_price),
+      'products_price' : new FormControl(invoiceProducts_price),
       'cgst' : new FormControl(invoiceTotal_cgst),
       'sgst' : new FormControl(invoiceTotal_sgst),
       'igst' : new FormControl(invoiceTotal_igst),
+      'cgst_amount' : new FormControl(invoiceTotal_cgst_amount),
+      'sgst_amount' : new FormControl(invoiceTotal_sgst_amount),
+      'igst_amount' : new FormControl(invoiceTotal_igst_amount),
       'total_discount' : new FormControl(invoiceTotal_discount),
+      'total_discount_amount' : new FormControl(invoiceTotal_discount_amount),
       'total_price' : new FormControl(invoiceTotal_price)
 
     });

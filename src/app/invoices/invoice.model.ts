@@ -8,6 +8,7 @@ export class Invoice {
     public invoice_date: string;
     public customer: Customer;
     public products: ProductInvoice[];
+    public products_price: number;
     public cgst: number;
     public sgst: number;
     public igst: number;
@@ -22,6 +23,7 @@ export class Invoice {
         invoice_date: string,
         customer: Customer,
         products:ProductInvoice[], 
+        products_price: number,
         cgst: number,
         sgst: number,
         igst: number,
@@ -34,6 +36,7 @@ export class Invoice {
         this.invoice_date = invoice_date;
         this.customer = customer;
         this.products = products;
+        this.products_price = products_price;
         this.cgst = cgst;
         this.sgst = sgst;
         this.igst = igst;

@@ -87,39 +87,99 @@
         </div>
     </div>
 </div> 
+
+<label for="products_price">Product's Price: </label>
+<input
+type="text"
+id="products_price"
+formControlName="products_price"
+class="form-control"
+[readonly]="true">
+
+<div class="row">
+    <div class="col-xs-6">
+        <label for="cgst">CGST in (%): </label>
+        <input
+        type="text"
+        id="cgst"
+        formControlName="cgst"
+        class="form-control"
+        [readonly]="true">
+    </div>
+    <div class="col-xs-6">
+        <label for="cgst_amount">CGST in amount: </label>
+        <input
+        type="text"
+        id="cgst_amount"
+        formControlName="cgst_amount"
+        class="form-control"
+        [readonly]="true">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-6">
+        <label for="sgst">SGST in (%): </label>
+        <input
+        type="text"
+        id="sgst"
+        formControlName="sgst"
+        class="form-control"
+        [readonly]="true">
+    </div>
+    <div class="col-xs-6">
+        <label for="sgst_amount">SGST in amount: </label>
+        <input
+        type="text"
+        id="sgst_amount"
+        formControlName="sgst_amount"
+        class="form-control"
+        [readonly]="true">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-6">
+        <label for="igst">IGST in (%): </label>
+        <input
+        type="text"
+        id="igst"
+        formControlName="igst"
+        class="form-control"
+        [readonly]="true">
+    </div>
+    <div class="col-xs-6">
+        <label for="igst_amount">IGST in amount: </label>
+        <input
+        type="text"
+        id="igst_amount"
+        formControlName="igst_amount"
+        class="form-control"
+        [readonly]="true">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-6">
+        <label for="total_discount">Discount in (%): </label>
+        <input
+        type="text"
+        id="total_discount"
+        formControlName="total_discount"
+        class="form-control"
+        [readonly]="true">
+    </div>
+    <div class="col-xs-6">
+        <label for="total_discount_amount">Discount in amount: </label>
+        <input
+        type="text"
+        id="total_discount_amount"
+        formControlName="total_discount_amount"
+        class="form-control"
+        [readonly]="true">
+    </div>
+</div>
 <div>
-    <label for="cgst">CGST in (%): </label>
-    <input
-    type="text"
-    id="cgst"
-    formControlName="cgst"
-    class="form-control"
-    [readonly]="true">
-
-    <label for="sgst">SGST in (%): </label>
-    <input
-    type="text"
-    id="sgst"
-    formControlName="sgst"
-    class="form-control"
-    [readonly]="true">
-
-    <label for="igst">IGST in (%): </label>
-    <input
-    type="text"
-    id="igst"
-    formControlName="igst"
-    class="form-control"
-    [readonly]="true">
-
-    <label for="total_discount">Total Discount: </label>
-    <input
-    type="text"
-    id="total_discount"
-    formControlName="total_discount"
-    class="form-control"
-    [readonly]="true">
-
     <label 
     for="total_price"
     style="color: red;">Total Price: </label>

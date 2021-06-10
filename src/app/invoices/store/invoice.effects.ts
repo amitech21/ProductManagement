@@ -145,6 +145,7 @@ export class InvoiceEffects {
                     invoiceData.payload.invoice_date,
                     invoiceData.payload.customer,
                     invoiceData.payload.products,
+                    invoiceData.payload.products_price,
                     invoiceData.payload.cgst,
                     invoiceData.payload.sgst,
                     invoiceData.payload.igst,

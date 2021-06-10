@@ -90,6 +90,7 @@ export class ProductEffects {
                 environment.webAppEndPoint + '/products/add' ,
                 new Product_add(
                     productData.payload.name,
+                    productData.payload.hsn_code,
                     productData.payload.description,
                     productData.payload.imagePath,
                     productData.payload.price
