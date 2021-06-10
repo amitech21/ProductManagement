@@ -759,9 +759,20 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       }
         
     });
-       this.selected_prod_source.load(this.sold_products);
-       this.invoiceForm.get('products_price').setValue(this.products_price); // Set Product's price
-       this.total_price = this.products_price;
+        this.selected_prod_source.load(this.sold_products);
+        this.invoiceForm.get('products_price').setValue(this.products_price); // Set Product's price
+        this.invoiceForm.get('cgst_amount').setValue(this.products_price * this.cgst_ / 100); 
+        this.invoiceForm.get('sgst_amount').setValue(this.products_price * this.sgst_ / 100); 
+        this.invoiceForm.get('igst_amount').setValue(this.products_price * this.igst_ / 100); 
+
+        let gst_:number = +this.cgst_ + +this.sgst_ + +this.igst_;
+        let price_with_gst = this.products_price + ( this.products_price * gst_ ) / 100;
+        let discount_percentage_: number = (this.discount_*100)/price_with_gst;
+        let str = discount_percentage_.toString();
+        discount_percentage_ = Number(str.slice(0, (str.indexOf("."))+3));
+
+       this.invoiceForm.get('total_discount').setValue(discount_percentage_ , { emitEvent: false });
+       //this.total_price = this.products_price;
 
        this.calculateTotalPrice(
         this.products_price,
@@ -772,7 +783,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       );
         this.invoiceForm.get('total_price').setValue(this.total_price);   // Set Total price
 
-       setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
+       setTimeout(() => {this.cust_divClick.nativeElement.click();}, 400);
   }
 
   public removeQuantity_prod(formData: any) {
@@ -801,9 +812,20 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       }
         
     });
-       this.selected_prod_source.load(this.sold_products);
-       this.invoiceForm.get('products_price').setValue(this.products_price); // Set Product's price
-       this.total_price = this.products_price;
+        this.selected_prod_source.load(this.sold_products);
+        this.invoiceForm.get('products_price').setValue(this.products_price); // Set Product's price
+        this.invoiceForm.get('cgst_amount').setValue(this.products_price * this.cgst_ / 100); 
+        this.invoiceForm.get('sgst_amount').setValue(this.products_price * this.sgst_ / 100); 
+        this.invoiceForm.get('igst_amount').setValue(this.products_price * this.igst_ / 100);
+
+        let gst_:number = +this.cgst_ + +this.sgst_ + +this.igst_;
+        let price_with_gst = this.products_price + ( this.products_price * gst_ ) / 100;
+        let discount_percentage_: number = (this.discount_*100)/price_with_gst;
+        let str = discount_percentage_.toString();
+        discount_percentage_ = Number(str.slice(0, (str.indexOf("."))+3));
+
+       this.invoiceForm.get('total_discount').setValue(discount_percentage_ , { emitEvent: false });
+       //this.total_price = this.products_price;
 
        this.calculateTotalPrice(
         this.products_price,
@@ -814,16 +836,27 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       );
         this.invoiceForm.get('total_price').setValue(this.total_price);   // Set Total price
 
-       setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
+       setTimeout(() => {this.cust_divClick.nativeElement.click();}, 400);
   }
 
   public removeRow_prod(formData: any) {
-    let product:ProductInvoice = formData;
-    this.sold_products = this.sold_products.filter(sold_product => sold_product.id !== product.id);
-    this.selected_prod_source.load(this.sold_products);
-    this.products_price = this.products_price - (product.price * product.quantity);
-    this.invoiceForm.get('products_price').setValue(this.products_price);
-    this.total_price = this.products_price;
+        let product:ProductInvoice = formData;
+        this.sold_products = this.sold_products.filter(sold_product => sold_product.id !== product.id);
+        this.selected_prod_source.load(this.sold_products);
+        this.products_price = this.products_price - (product.price * product.quantity);
+        this.invoiceForm.get('products_price').setValue(this.products_price);
+        this.invoiceForm.get('cgst_amount').setValue(this.products_price * this.cgst_ / 100); 
+        this.invoiceForm.get('sgst_amount').setValue(this.products_price * this.sgst_ / 100); 
+        this.invoiceForm.get('igst_amount').setValue(this.products_price * this.igst_ / 100); 
+
+        let gst_:number = +this.cgst_ + +this.sgst_ + +this.igst_;
+        let price_with_gst = this.products_price + ( this.products_price * gst_ ) / 100;
+        let discount_percentage_: number = (this.discount_*100)/price_with_gst;
+        let str = discount_percentage_.toString();
+        discount_percentage_ = Number(str.slice(0, (str.indexOf("."))+3));
+
+        this.invoiceForm.get('total_discount').setValue(discount_percentage_ , { emitEvent: false });
+    //this.total_price = this.products_price;
     this.calculateTotalPrice(
       this.products_price,
       this.cgst_,
@@ -832,7 +865,7 @@ export class InvoiceEditComponent implements OnInit, OnDestroy {
       this.discount_
     );
     this.invoiceForm.get('total_price').setValue(this.total_price);
-    setTimeout(() => {this.cust_divClick.nativeElement.click();}, 200);
+    setTimeout(() => {this.cust_divClick.nativeElement.click();}, 400);
   }
 
   public getProductPrice(sold_products: ProductInvoice[]){
