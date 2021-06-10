@@ -153,13 +153,10 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
       'id' : new FormControl(customerId),
       'name' : new FormControl(customerName, Validators.required),
       'mobile_no' : new FormControl(customerMobileNo, Validators.compose(
-        [Validators.required , Validators.pattern('^[6-9][0-9]{9}$')]
+        [ Validators.pattern('^[6-9][0-9]{9}$')]
       )),
-      'address' : new FormControl(customerAddress, Validators.required),
-      'gst_no' : new FormControl(customerGstNo, Validators.compose(
-        [Validators.required] // , Validators.pattern('^[A-Z0-9]{15}$') 
-        //https://www.gstzen.in/a/format-of-a-gst-number-gstin.html
-      )),
+      'address' : new FormControl(customerAddress),
+      'gst_no' : new FormControl(customerGstNo),
 
     });
 

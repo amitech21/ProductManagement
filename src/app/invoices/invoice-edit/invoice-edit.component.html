@@ -272,7 +272,7 @@
                     *ngIf="editMode"
                     type="submit" 
                     class="btn btn-success"
-                    [disabled]="!(selectedCustId_flag && selectedProdId_flag)">Update Invoice</button>
+                    [disabled]="!(selectedCustId_flag && selectedProdId_flag) || !invoiceForm.valid">Update Invoice</button>
                     <button 
                     *ngIf="!editMode"
                     type="submit" 
