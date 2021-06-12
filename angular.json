@@ -14,7 +14,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "deleteOutputPath": true,
-            "outputPath": "dist/app4",
+            "outputPath": "dist/app2",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",

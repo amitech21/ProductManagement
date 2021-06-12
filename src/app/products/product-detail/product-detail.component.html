@@ -2,7 +2,10 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <h3>ID : {{ product.id }}</h3>
+        <h3>Product Name : {{ product.name }}</h3>
+        <p>ID : {{ product.id }}</p>
+        <p>HSN code : {{ product.hsn_code }}</p>
+        <p>Price : {{ product.price }}</p>
     </div>
 </div>
 
@@ -13,14 +16,6 @@
         alt="{{ product.name }}" 
         class="img-responsive"
         style="max-height: 300px;">
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-12">
-        <h3>Name : {{ product.name }}</h3>
-        <h4>HSN code : {{ product.hsn_code }}</h4>
-        <h4>Price : {{ product.price }}</h4>
     </div>
 </div>
 
